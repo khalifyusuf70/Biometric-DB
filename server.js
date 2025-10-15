@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+// ADD THIS LINE TO SERVE STATIC FILES
+app.use(express.static('public'));
 
 // PostgreSQL connection
 const pool = new Pool({
