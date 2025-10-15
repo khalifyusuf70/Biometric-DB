@@ -25,6 +25,7 @@
         .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
         .success { background: #d4edda; color: #155724; }
         .error { background: #f8d7da; color: #721c24; }
+        .form-section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -45,120 +46,152 @@
         <div id="register" class="content active">
             <h2>Register New Soldier</h2>
             <form id="soldierForm">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <div class="form-group">
-                            <label>Full Names *</label>
-                            <input type="text" name="full_names" required>
+                <div class="form-section">
+                    <h3>Personal Information</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div class="form-group">
+                                <label>Full Names *</label>
+                                <input type="text" name="full_names" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Birth *</label>
+                                <input type="date" name="date_of_birth" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender *</label>
+                                <select name="gender" required>
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Photo URL</label>
+                                <input type="text" name="photo" placeholder="Enter image URL">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Date of Birth *</label>
-                            <input type="date" name="date_of_birth" required>
+                        <div>
+                            <div class="form-group">
+                                <label>Phone Number *</label>
+                                <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Clan</label>
+                                <input type="text" name="clan">
+                            </div>
+                            <div class="form-group">
+                                <label>Blood Group</label>
+                                <select name="blood_group">
+                                    <option value="">Select</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status">
+                                    <option value="Active">Active</option>
+                                    <option value="Wounded">Wounded</option>
+                                    <option value="Discharged">Discharged</option>
+                                    <option value="Dead">Dead</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Gender *</label>
-                            <select name="gender" required>
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Rank/Position *</label>
-                            <select name="rank_position" required>
-                                <option value="">Select</option>
-                                <option value="Lieutenant">Lieutenant</option>
-                                <option value="Captain">Captain</option>
-                                <option value="Major">Major</option>
-                                <option value="Colonel">Colonel</option>
-                                <option value="General">General</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Date of Enlistment *</label>
-                            <input type="date" name="date_of_enlistment" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Horin/Platoon *</label>
-                            <select name="horin_platoon" required>
-                                <option value="">Select</option>
-                                <option value="Horin1">Horin1</option>
-                                <option value="Horin2">Horin2</option>
-                                <option value="Horin3">Horin3</option>
-                                <option value="Horin4">Horin4</option>
-                                <option value="Horin5">Horin5</option>
-                                <option value="Taliska">Taliska</option>
-                                <option value="Fiat">Fiat</option>
-                                <option value="Gaadidka">Gaadidka</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="form-group">
-                            <label>Net Salary *</label>
-                            <input type="number" name="net_salary" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone Number *</label>
-                            <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Clan</label>
-                            <input type="text" name="clan">
-                        </div>
-                        <div class="form-group">
-                            <label>Blood Group</label>
-                            <select name="blood_group">
-                                <option value="">Select</option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="status">
-                                <option value="Active">Active</option>
-                                <option value="Wounded">Wounded</option>
-                                <option value="Discharged">Discharged</option>
-                                <option value="Dead">Dead</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3 style="margin: 20px 0 10px 0;">Guarantor Information</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>Guarantor Name</label>
-                        <input type="text" name="guarantor_name">
-                    </div>
-                    <div class="form-group">
-                        <label>Guarantor Phone</label>
-                        <input type="tel" name="guarantor_phone" pattern="[0-9]{10}">
                     </div>
                 </div>
 
-                <h3 style="margin: 20px 0 10px 0;">Emergency Contact</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div class="form-group">
-                        <label>Emergency Contact Name</label>
-                        <input type="text" name="emergency_contact_name">
-                    </div>
-                    <div class="form-group">
-                        <label>Emergency Contact Phone</label>
-                        <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}">
+                <div class="form-section">
+                    <h3>Military Information</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div class="form-group">
+                                <label>Rank/Position *</label>
+                                <select name="rank_position" required>
+                                    <option value="">Select</option>
+                                    <option value="Lieutenant">Lieutenant</option>
+                                    <option value="Captain">Captain</option>
+                                    <option value="Major">Major</option>
+                                    <option value="Colonel">Colonel</option>
+                                    <option value="General">General</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date of Enlistment *</label>
+                                <input type="date" name="date_of_enlistment" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Horin/Platoon *</label>
+                                <select name="horin_platoon" required>
+                                    <option value="">Select</option>
+                                    <option value="Horin1">Horin1</option>
+                                    <option value="Horin2">Horin2</option>
+                                    <option value="Horin3">Horin3</option>
+                                    <option value="Horin4">Horin4</option>
+                                    <option value="Horin5">Horin5</option>
+                                    <option value="Taliska">Taliska</option>
+                                    <option value="Fiat">Fiat</option>
+                                    <option value="Gaadidka">Gaadidka</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Horin/Platoon Commander *</label>
+                                <input type="text" name="horin_commander" required placeholder="Commander's full name">
+                            </div>
+                            <div class="form-group">
+                                <label>Net Salary *</label>
+                                <input type="number" name="net_salary" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Fingerprint Data</label>
+                                <textarea name="fingerprint_data" rows="3" placeholder="Paste fingerprint template data here"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Home Address</label>
-                    <textarea name="home_address" rows="3"></textarea>
+                <div class="form-section">
+                    <h3>Guarantor Information</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>Guarantor Name *</label>
+                            <input type="text" name="guarantor_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Guarantor Phone *</label>
+                            <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Emergency Contact</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>Emergency Contact Name *</label>
+                            <input type="text" name="emergency_contact_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Emergency Contact Phone *</label>
+                            <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Additional Information</h3>
+                    <div class="form-group">
+                        <label>Home Address</label>
+                        <textarea name="home_address" rows="3" placeholder="Full home address"></textarea>
+                    </div>
                 </div>
 
                 <button type="submit">Register Soldier</button>
@@ -252,19 +285,23 @@
                                     <th>Name</th>
                                     <th>Rank</th>
                                     <th>Platoon</th>
+                                    <th>Commander</th>
                                     <th>Salary</th>
                                     <th>Status</th>
+                                    <th>Phone</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${result.soldiers.map(soldier => `
                                     <tr>
-                                        <td>${soldier.soldier_id}</td>
+                                        <td><strong>${soldier.soldier_id}</strong></td>
                                         <td>${soldier.full_names}</td>
                                         <td>${soldier.rank_position}</td>
                                         <td>${soldier.horin_platoon}</td>
+                                        <td>${soldier.horin_commander || 'N/A'}</td>
                                         <td>$${soldier.net_salary}</td>
                                         <td>${soldier.status}</td>
+                                        <td>${soldier.tel_number}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -351,6 +388,7 @@
                             <p><strong>Soldier:</strong> ${result.soldier.full_names}</p>
                             <p><strong>ID:</strong> ${result.soldier.soldier_id}</p>
                             <p><strong>Rank:</strong> ${result.soldier.rank_position}</p>
+                            <p><strong>Platoon:</strong> ${result.soldier.horin_platoon}</p>
                             <p><strong>Salary:</strong> $${result.soldier.net_salary}</p>
                             <p><strong>Time:</strong> ${new Date(result.soldier.verified_at).toLocaleString()}</p>
                         </div>
