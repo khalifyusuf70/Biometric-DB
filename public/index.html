@@ -3,38 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Military Biometric System</title>
+    <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header { background: #2c3e50; color: white; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
-        .tabs { display: flex; margin-bottom: 20px; background: white; border-radius: 5px; }
-        .tab { padding: 15px 20px; cursor: pointer; border: none; background: none; }
-        .tab.active { background: #3498db; color: white; }
-        .content { display: none; background: white; padding: 20px; border-radius: 5px; }
-        .content.active { display: block; }
+        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        
+        /* Header Styles */
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        
+        /* Main Content Layout */
+        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
+        
+        /* Form Styles */
+        .form-section { margin-bottom: 20px; }
+        .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
+        
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+        
         .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background: #3498db; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #2980b9; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 8px 12px; 
+            border: 2px solid #bdc3c7; 
+            border-radius: 5px; 
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        /* Photo Section */
+        .photo-section { 
+            background: #ecf0f1; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center;
+            height: fit-content;
+        }
+        .photo-upload { 
+            border: 2px dashed #bdc3c7; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .photo-upload:hover {
+            border-color: #3498db;
+        }
+        .photo-preview { 
+            width: 150px; 
+            height: 180px; 
+            background: white; 
+            border: 1px solid #bdc3c7; 
+            margin: 0 auto 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        .upload-icon { 
+            font-size: 40px; 
+            color: #bdc3c7; 
+            margin-bottom: 10px;
+        }
+        
+        /* Fingerprint Section */
+        .fingerprint-section {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .fingerprint-icon {
+            font-size: 30px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        /* Button Styles */
+        .submit-btn { 
+            background: #27ae60; 
+            color: white; 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover { 
+            background: #219a52; 
+        }
+        
+        /* Tabs */
+        .tabs { 
+            display: flex; 
+            background: #34495e; 
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+        .tab { 
+            padding: 15px 20px; 
+            cursor: pointer; 
+            border: none; 
+            background: none; 
+            color: white;
+            flex: 1;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .tab.active { 
+            background: #3498db; 
+        }
+        .tab:hover {
+            background: #2980b9;
+        }
+        
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        /* Table Styles */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f8f9fa; }
+        th { background: #f8f9fa; color: #2c3e50; }
+        
         .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
-        .form-section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🇸🇴 Military Biometric System</h1>
-            <p>Soldier Management & Payroll Verification</p>
+            <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
+            <p>Military Personnel Management & Payroll System</p>
         </div>
 
+        <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
@@ -44,197 +170,210 @@
 
         <!-- Register Soldier Tab -->
         <div id="register" class="content active">
-            <h2>Register New Soldier</h2>
             <form id="soldierForm">
-                <div class="form-section">
-                    <h3>Personal Information</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <div class="form-group">
-                                <label>Full Names *</label>
-                                <input type="text" name="full_names" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Date of Birth *</label>
-                                <input type="date" name="date_of_birth" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Gender *</label>
-                                <select name="gender" required>
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Photo URL</label>
-                                <input type="text" name="photo" placeholder="Enter image URL">
+                <div class="main-content">
+                    <!-- Left Column - Form Fields -->
+                    <div class="form-column">
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h3>PERSONAL INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Soldier_ID</label>
+                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Full Names *</label>
+                                    <input type="text" name="full_names" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Birth *</label>
+                                    <input type="date" name="date_of_birth" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender *</label>
+                                    <select name="gender" required>
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rank/Position *</label>
+                                    <select name="rank_position" required>
+                                        <option value="">Select</option>
+                                        <option value="Lieutenant">Lieutenant</option>
+                                        <option value="Captain">Captain</option>
+                                        <option value="Major">Major</option>
+                                        <option value="Colonel">Colonel</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Enlistment *</label>
+                                    <input type="date" name="date_of_enlistment" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin/Platoon *</label>
+                                    <select name="horin_platoon" required>
+                                        <option value="">Select</option>
+                                        <option value="Horin1">Horin1</option>
+                                        <option value="Horin2">Horin2</option>
+                                        <option value="Horin3">Horin3</option>
+                                        <option value="Horin4">Horin4</option>
+                                        <option value="Horin5">Horin5</option>
+                                        <option value="Taliska">Taliska</option>
+                                        <option value="Fiat">Fiat</option>
+                                        <option value="Gaadidka">Gaadidka</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin Commander *</label>
+                                    <input type="text" name="horin_commander" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Net_Salary *</label>
+                                    <input type="number" name="net_salary" step="0.01" required>
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="form-group">
-                                <label>Phone Number *</label>
-                                <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
+
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h3>CONTACT INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Tel_Number (10 Digits) *</label>
+                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Clan</label>
+                                    <input type="text" name="clan">
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Name *</label>
+                                    <input type="text" name="guarantor_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Phone (10 Digits) *</label>
+                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Name *</label>
+                                    <input type="text" name="emergency_contact_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Phone *</label>
+                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Blood_Group</label>
+                                    <select name="blood_group">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status">
+                                        <option value="Active">Active</option>
+                                        <option value="Wounded">Wounded</option>
+                                        <option value="Discharged">Discharged</option>
+                                        <option value="Dead">Dead</option>
+                                    </select>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- Home Address -->
+                        <div class="form-section">
+                            <h3>HOME ADDRESS</h3>
                             <div class="form-group">
-                                <label>Clan</label>
-                                <input type="text" name="clan">
+                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label>Blood Group</label>
-                                <select name="blood_group">
-                                    <option value="">Select</option>
-                                    <option value="A+">A+</option>
-                                    <option value="A-">A-</option>
-                                    <option value="B+">B+</option>
-                                    <option value="B-">B-</option>
-                                    <option value="AB+">AB+</option>
-                                    <option value="AB-">AB-</option>
-                                    <option value="O+">O+</option>
-                                    <option value="O-">O-</option>
-                                </select>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Photo & Fingerprint -->
+                    <div class="photo-column">
+                        <!-- Photo Upload -->
+                        <div class="photo-section">
+                            <h3>PHOTO</h3>
+                            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                                <div class="photo-preview">
+                                    <img id="photoPreview" src="" alt="Photo Preview">
+                                    <div class="upload-icon">📷</div>
+                                </div>
+                                <p>Click to upload photo</p>
+                                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
                             </div>
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select name="status">
-                                    <option value="Active">Active</option>
-                                    <option value="Wounded">Wounded</option>
-                                    <option value="Discharged">Discharged</option>
-                                    <option value="Dead">Dead</option>
-                                </select>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                            
+                            <!-- Fingerprint Section -->
+                            <div class="fingerprint-section">
+                                <h3>Fingerprint</h3>
+                                <div class="fingerprint-icon">🖐️</div>
+                                <p>Fingerprint data will be captured</p>
+                                <p>using ZKTeco device</p>
+                                <textarea name="fingerprint_data" rows="4" placeholder="Fingerprint template data will appear here" style="margin-top: 10px; font-family: monospace;"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <h3>Military Information</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <div class="form-group">
-                                <label>Rank/Position *</label>
-                                <select name="rank_position" required>
-                                    <option value="">Select</option>
-                                    <option value="Lieutenant">Lieutenant</option>
-                                    <option value="Captain">Captain</option>
-                                    <option value="Major">Major</option>
-                                    <option value="Colonel">Colonel</option>
-                                    <option value="General">General</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Date of Enlistment *</label>
-                                <input type="date" name="date_of_enlistment" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Horin/Platoon *</label>
-                                <select name="horin_platoon" required>
-                                    <option value="">Select</option>
-                                    <option value="Horin1">Horin1</option>
-                                    <option value="Horin2">Horin2</option>
-                                    <option value="Horin3">Horin3</option>
-                                    <option value="Horin4">Horin4</option>
-                                    <option value="Horin5">Horin5</option>
-                                    <option value="Taliska">Taliska</option>
-                                    <option value="Fiat">Fiat</option>
-                                    <option value="Gaadidka">Gaadidka</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group">
-                                <label>Horin/Platoon Commander *</label>
-                                <input type="text" name="horin_commander" required placeholder="Commander's full name">
-                            </div>
-                            <div class="form-group">
-                                <label>Net Salary *</label>
-                                <input type="number" name="net_salary" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Fingerprint Data</label>
-                                <textarea name="fingerprint_data" rows="3" placeholder="Paste fingerprint template data here"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Guarantor Information</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div class="form-group">
-                            <label>Guarantor Name *</label>
-                            <input type="text" name="guarantor_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Guarantor Phone *</label>
-                            <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Emergency Contact</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div class="form-group">
-                            <label>Emergency Contact Name *</label>
-                            <input type="text" name="emergency_contact_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Emergency Contact Phone *</label>
-                            <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Additional Information</h3>
-                    <div class="form-group">
-                        <label>Home Address</label>
-                        <textarea name="home_address" rows="3" placeholder="Full home address"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit">Register Soldier</button>
+                <button type="submit" class="submit-btn">REGISTER SOLDIER</button>
+                <div id="formMessage"></div>
             </form>
-            <div id="formMessage"></div>
         </div>
 
         <!-- View Soldiers Tab -->
         <div id="soldiers" class="content">
-            <h2>All Soldiers</h2>
-            <button onclick="loadSoldiers()">Refresh List</button>
-            <div id="soldiersList"></div>
+            <h2 style="padding: 20px;">All Soldiers</h2>
+            <button onclick="loadSoldiers()" style="margin: 0 20px;">Refresh List</button>
+            <div id="soldiersList" style="padding: 20px;"></div>
         </div>
 
         <!-- Monthly Payroll Tab -->
         <div id="payroll" class="content">
-            <h2>Monthly Payroll Report</h2>
-            <div class="form-group">
-                <label>Month</label>
-                <input type="number" id="payrollMonth" min="1" max="12" value="10">
+            <h2 style="padding: 20px;">Monthly Payroll Report</h2>
+            <div style="padding: 0 20px;">
+                <div class="form-group">
+                    <label>Month</label>
+                    <input type="number" id="payrollMonth" min="1" max="12" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="number" id="payrollYear" value="2025">
+                </div>
+                <button onclick="generatePayroll()">Generate Report</button>
             </div>
-            <div class="form-group">
-                <label>Year</label>
-                <input type="number" id="payrollYear" value="2025">
-            </div>
-            <button onclick="generatePayroll()">Generate Report</button>
-            <div id="payrollReport"></div>
+            <div id="payrollReport" style="padding: 20px;"></div>
         </div>
 
         <!-- Fingerprint Verify Tab -->
         <div id="verify" class="content">
-            <h2>Fingerprint Verification</h2>
-            <div class="form-group">
-                <label>Fingerprint Template (Simulated)</label>
-                <input type="text" id="fingerprintInput" placeholder="Enter fingerprint data">
+            <h2 style="padding: 20px;">Fingerprint Verification</h2>
+            <div style="padding: 0 20px;">
+                <div class="form-group">
+                    <label>Fingerprint Template (Simulated)</label>
+                    <input type="text" id="fingerprintInput" placeholder="Enter fingerprint data">
+                </div>
+                <button onclick="verifyFingerprint()">Verify Fingerprint</button>
             </div>
-            <button onclick="verifyFingerprint()">Verify Fingerprint</button>
-            <div id="verificationResult"></div>
+            <div id="verificationResult" style="padding: 20px;"></div>
         </div>
     </div>
 
     <script>
         const API_BASE = 'https://biometric-db.onrender.com';
+        let photoBase64 = '';
 
         function showTab(tabName) {
             document.querySelectorAll('.content').forEach(tab => tab.classList.remove('active'));
@@ -243,11 +382,30 @@
             event.target.classList.add('active');
         }
 
+        // Photo Upload Functionality
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.querySelector('.upload-icon').style.display = 'none';
+                    photoBase64 = e.target.result; // Store base64 for submission
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         // Register Soldier
         document.getElementById('soldierForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
+            
+            // Add photo data to submission
+            data.photo = photoBase64;
 
             try {
                 const response = await fetch(`${API_BASE}/soldiers`, {
@@ -262,6 +420,10 @@
                 if (result.success) {
                     messageDiv.innerHTML = `<div class="alert success">Soldier registered successfully! ID: ${result.soldier.soldier_id}</div>`;
                     e.target.reset();
+                    // Reset photo preview
+                    document.getElementById('photoPreview').style.display = 'none';
+                    document.querySelector('.upload-icon').style.display = 'block';
+                    photoBase64 = '';
                 } else {
                     messageDiv.innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
                 }
