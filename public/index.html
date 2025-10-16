@@ -10,7 +10,22 @@
         .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         
         /* Header Styles */
-        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 10px 10px 0 0;
+            position: relative;
+        }
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        .logo { height: 60px; }
+        .header-text { text-align: center; }
         .header h1 { font-size: 24px; margin-bottom: 5px; }
         .header p { font-size: 16px; opacity: 0.9; }
         
@@ -156,8 +171,13 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
-            <p>Military Personnel Management & Payroll System</p>
+            <div class="header-content">
+                <img src="logo.png" alt="Jubaland Logo" class="logo">
+                <div class="header-text">
+                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
+                    <p>Military Personnel Management & Payroll System</p>
+                </div>
+            </div>
         </div>
 
         <!-- Tabs -->
@@ -200,7 +220,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Rank/Position *</label>
-                                    <select name="rank_position" required>
+                                    <select name="rank_position" required onchange="updateSalary()">
                                         <option value="">Select</option>
                                         <option value="Lieutenant">Lieutenant</option>
                                         <option value="Captain">Captain</option>
@@ -215,7 +235,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Horin/Platoon *</label>
-                                    <select name="horin_platoon" required>
+                                    <select name="horin_platoon" required onchange="updateCommander()">
                                         <option value="">Select</option>
                                         <option value="Horin1">Horin1</option>
                                         <option value="Horin2">Horin2</option>
@@ -229,11 +249,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Horin Commander *</label>
-                                    <input type="text" name="horin_commander" required>
+                                    <input type="text" name="horin_commander" required id="horin_commander">
                                 </div>
                                 <div class="form-group">
                                     <label>Net_Salary *</label>
-                                    <input type="number" name="net_salary" step="0.01" required>
+                                    <input type="number" name="net_salary" step="0.01" required id="net_salary">
                                 </div>
                             </div>
                         </div>
@@ -382,10 +402,47 @@
             event.target.classList.add('active');
         }
 
+        // Auto-fill Horin Commander based on Platoon selection
+        function updateCommander() {
+            const platoon = document.querySelector('[name="horin_platoon"]').value;
+            const commanders = {
+                'Horin1': 'Taliye Moge',
+                'Horin2': 'Taliye hareri', 
+                'Horin3': 'Taliye Farax',
+                'Horin4': 'Taliye Fatule',
+                'Horin5': 'Taliye Mohamed',
+                'Taliska': 'Taliye Gowrac',
+                'Fiat': 'Taliye Xiis',
+                'Gaadidka': 'Taliye Qoxoti'
+            };
+            
+            document.getElementById('horin_commander').value = commanders[platoon] || '';
+        }
+
+        // Auto-fill Salary based on Rank selection
+        function updateSalary() {
+            const rank = document.querySelector('[name="rank_position"]').value;
+            const salaries = {
+                'Lieutenant': '200',
+                'Captain': '250', 
+                'Major': '300',
+                'Colonel': '400',
+                'General': '500'
+            };
+            
+            document.getElementById('net_salary').value = salaries[rank] || '';
+        }
+
         // Photo Upload Functionality
         function previewPhoto(event) {
             const file = event.target.files[0];
             if (file) {
+                // Check file size (2MB limit)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size too large! Please select an image under 2MB.');
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const preview = document.getElementById('photoPreview');
@@ -568,3 +625,4 @@
     </script>
 </body>
 </html>
+
