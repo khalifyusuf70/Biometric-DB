@@ -7,7 +7,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-// ADD THIS LINE TO SERVE STATIC FILES
 app.use(express.static('public'));
 
 // PostgreSQL connection
@@ -41,9 +40,9 @@ app.get('/setup-soldiers', async (req, res) => {
         gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
         photo TEXT,
         fingerprint_data TEXT,
-        rank_position VARCHAR(50) CHECK (rank_position IN ('Lieutenant', 'Captain', 'Major', 'Colonel', 'General')),
+        rank_position VARCHAR(50) CHECK (rank_position IN ('Askari', 'Taliye Unug', 'Taliye Koox', 'Taliye Horin', 'Abandule', 'Taliye Guuto')),
         date_of_enlistment DATE NOT NULL,
-        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Taliska', 'Fiat', 'Gaadidka')),
+        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
         horin_commander VARCHAR(255),
         net_salary DECIMAL(10,2),
         tel_number VARCHAR(15) UNIQUE,
