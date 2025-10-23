@@ -119,7 +119,7 @@
         
         /* Button Styles */
         .submit-btn { 
-            background: #27ae60; 
+            background: #3498db; 
             color: white; 
             padding: 12px 30px; 
             border: none; 
@@ -128,12 +128,16 @@
             font-size: 16px;
             font-weight: bold;
             display: block;
-            margin: 20px auto;
+            margin: 10px 0;
             transition: background 0.3s;
         }
         .submit-btn:hover { 
-            background: #219a52; 
+            background: #2980b9; 
         }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #219a52; }
+        .btn-danger { background: #e74c3c; }
+        .btn-danger:hover { background: #c0392b; }
         
         /* Tabs */
         .tabs { 
@@ -170,6 +174,7 @@
         .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
         .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
     </style>
 </head>
 <body>
@@ -202,6 +207,7 @@
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
+            <button class="tab" onclick="showTab('fingerprint')">Fingerprint Management</button>
             <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
             <button class="tab" onclick="showTab('verify')">Fingerprint Verify</button>
         </div>
@@ -367,7 +373,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">REGISTER SOLDIER</button>
+                <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
                 <div id="formMessage"></div>
             </form>
         </div>
@@ -375,8 +381,52 @@
         <!-- View Soldiers Tab -->
         <div id="soldiers" class="content">
             <h2 style="padding: 20px;">All Soldiers</h2>
-            <button onclick="loadSoldiers()" style="margin: 0 20px;">Refresh List</button>
+            <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
             <div id="soldiersList" style="padding: 20px;"></div>
+        </div>
+
+        <!-- Fingerprint Management Tab -->
+        <div id="fingerprint" class="content">
+            <h2 style="padding: 20px;">Fingerprint Management</h2>
+            <div style="padding: 20px;">
+                
+                <!-- Enroll Fingerprint Section -->
+                <div class="form-section">
+                    <h3>Enroll New Fingerprint</h3>
+                    <div class="form-group">
+                        <label>Soldier ID *</label>
+                        <input type="text" id="enrollSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)" style="width: 300px;">
+                    </div>
+                    <button onclick="enrollFingerprint()" class="submit-btn btn-success">Start Fingerprint Enrollment</button>
+                    <div id="enrollMessage"></div>
+                </div>
+
+                <!-- Verify Fingerprint Section -->
+                <div class="form-section">
+                    <h3>Live Fingerprint Verification</h3>
+                    <button onclick="verifyLiveFingerprint()" class="submit-btn">
+                        Scan Fingerprint for Verification
+                    </button>
+                    <div id="verifyLiveResult" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Device Management Section -->
+                <div class="form-section">
+                    <h3>Device Management</h3>
+                    <button onclick="getDeviceUsers()" class="submit-btn">Get Device Users</button>
+                    <button onclick="clearDeviceData()" class="submit-btn btn-danger">Clear Device Data</button>
+                    <div id="deviceManagementResult" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="form-section" style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <h4>📋 Instructions:</h4>
+                    <p><strong>Enrollment:</strong> Enter Soldier ID, click "Start Fingerprint Enrollment", then place finger on device when prompted.</p>
+                    <p><strong>Verification:</strong> Click "Scan Fingerprint for Verification", then place finger on device.</p>
+                    <p><strong>Device IP:</strong> Make sure ZKTeco K40 is connected to network and IP is configured in environment variables.</p>
+                </div>
+
+            </div>
         </div>
 
         <!-- Monthly Payroll Tab -->
@@ -391,7 +441,7 @@
                     <label>Year</label>
                     <input type="number" id="payrollYear" value="2025">
                 </div>
-                <button onclick="generatePayroll()">Generate Report</button>
+                <button onclick="generatePayroll()" class="submit-btn">Generate Report</button>
             </div>
             <div id="payrollReport" style="padding: 20px;"></div>
         </div>
@@ -404,7 +454,7 @@
                     <label>Fingerprint Template (Simulated)</label>
                     <input type="text" id="fingerprintInput" placeholder="Enter fingerprint data">
                 </div>
-                <button onclick="verifyFingerprint()">Verify Fingerprint</button>
+                <button onclick="verifyFingerprint()" class="submit-btn">Verify Fingerprint</button>
             </div>
             <div id="verificationResult" style="padding: 20px;"></div>
         </div>
@@ -487,6 +537,124 @@
                     photoBase64 = e.target.result;
                 }
                 reader.readAsDataURL(file);
+            }
+        }
+
+        // Fingerprint Management Functions
+        async function enrollFingerprint() {
+            const soldierId = document.getElementById('enrollSoldierId').value.trim();
+            
+            if (!soldierId) {
+                alert('Please enter Soldier ID');
+                return;
+            }
+
+            try {
+                document.getElementById('enrollMessage').innerHTML = '<div class="alert info">🔄 Please place finger on device now...</div>';
+                
+                const response = await fetch(`${API_BASE}/enroll-fingerprint`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ soldier_id: soldierId })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('enrollMessage').innerHTML = 
+                        `<div class="alert success">✅ ${result.message}<br>Soldier ID: ${result.soldier_id}<br>Device User ID: ${result.device_user_id}</div>`;
+                    document.getElementById('enrollSoldierId').value = '';
+                } else {
+                    document.getElementById('enrollMessage').innerHTML = 
+                        `<div class="alert error">❌ ${result.error || result.message}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('enrollMessage').innerHTML = 
+                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        async function verifyLiveFingerprint() {
+            try {
+                document.getElementById('verifyLiveResult').innerHTML = '<div class="alert info">🔄 Please place finger on device for verification...</div>';
+                
+                const response = await fetch(`${API_BASE}/verify-fingerprint-live`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    const soldier = result.soldier;
+                    document.getElementById('verifyLiveResult').innerHTML = `
+                        <div class="alert success">
+                            <h3>✅ ${result.message}</h3>
+                            <p><strong>Soldier:</strong> ${soldier.full_names}</p>
+                            <p><strong>ID:</strong> ${soldier.soldier_id}</p>
+                            <p><strong>Rank:</strong> ${soldier.rank_position}</p>
+                            <p><strong>Platoon:</strong> ${soldier.horin_platoon}</p>
+                            <p><strong>Salary:</strong> $${soldier.net_salary}</p>
+                            <p><strong>Time:</strong> ${new Date(soldier.verified_at).toLocaleString()}</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('verifyLiveResult').innerHTML = 
+                        `<div class="alert error">❌ ${result.message || result.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('verifyLiveResult').innerHTML = 
+                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        async function getDeviceUsers() {
+            try {
+                const response = await fetch(`${API_BASE}/device-users`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    let usersHtml = '<h4>Device Users:</h4>';
+                    if (result.users && result.users.length > 0) {
+                        usersHtml += '<table><tr><th>User ID</th><th>Name</th></tr>';
+                        result.users.forEach(user => {
+                            usersHtml += `<tr><td>${user.userId}</td><td>${user.name}</td></tr>`;
+                        });
+                        usersHtml += '</table>';
+                    } else {
+                        usersHtml += '<p>No users found on device</p>';
+                    }
+                    document.getElementById('deviceManagementResult').innerHTML = usersHtml;
+                }
+            } catch (error) {
+                document.getElementById('deviceManagementResult').innerHTML = 
+                    `<div class="alert error">Error: ${error.message}</div>`;
+            }
+        }
+
+        async function clearDeviceData() {
+            if (!confirm('Are you sure you want to clear all data from the fingerprint device? This cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/clear-device`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('deviceManagementResult').innerHTML = 
+                        `<div class="alert success">✅ ${result.message}</div>`;
+                } else {
+                    document.getElementById('deviceManagementResult').innerHTML = 
+                        `<div class="alert error">❌ ${result.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('deviceManagementResult').innerHTML = 
+                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
             }
         }
 
