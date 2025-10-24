@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const net = require('net'); // Built-in Node.js module
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,60 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
+// ZKTeco Device Configuration
+const ZK_CONFIG = {
+  ip: process.env.ZK_IP || '192.168.1.201',
+  port: process.env.ZK_PORT || 4370,
+  timeout: process.env.ZK_TIMEOUT || 5000
+};
+
+// ZKTeco Command Constants
+const ZK_COMMANDS = {
+  CONNECT: 1000,
+  DISCONNECT: 1001,
+  GET_USERS: 5,
+  GET_ATTENDANCE: 201,
+  REG_EVENT: 73
+};
+
+// Connect to ZKTeco device via TCP
+function connectToZKDevice() {
+  return new Promise((resolve, reject) => {
+    const socket = new net.Socket();
+    const timeout = setTimeout(() => {
+      socket.destroy();
+      reject(new Error('Connection timeout'));
+    }, ZK_CONFIG.timeout);
+
+    socket.connect(ZK_CONFIG.port, ZK_CONFIG.ip, () => {
+      clearTimeout(timeout);
+      console.log('✅ Connected to ZKTeco device');
+      resolve(socket);
+    });
+
+    socket.on('error', (err) => {
+      clearTimeout(timeout);
+      reject(err);
+    });
+  });
+}
+
+// Send command to ZKTeco device
+function sendZKCommand(socket, command) {
+  return new Promise((resolve, reject) => {
+    const buffer = Buffer.alloc(8);
+    buffer.writeUInt16LE(command, 0);
+    
+    socket.write(buffer);
+    
+    socket.once('data', (data) => {
+      resolve(data);
+    });
+    
+    socket.once('error', reject);
+  });
+}
+
 // Test database connection
 async function testConnection() {
   try {
@@ -27,149 +82,114 @@ async function testConnection() {
 }
 testConnection();
 
-// ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
+// ================== ZKTECO FINGERPRINT ENDPOINTS ==================
 
-// 1. Create soldiers table
-app.get('/setup-soldiers', async (req, res) => {
+// 1. Test ZKTeco device connection
+app.get('/zk-test', async (req, res) => {
+  let socket;
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS soldiers (
-        soldier_id VARCHAR(20) PRIMARY KEY,
-        full_names VARCHAR(255) NOT NULL,
-        date_of_birth DATE NOT NULL,
-        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
-        photo TEXT,
-        fingerprint_data TEXT,
-        rank_position VARCHAR(50) CHECK (rank_position IN ('Askari', 'Taliye Unug', 'Taliye Koox', 'Taliye Horin', 'Abandule', 'Taliye Guuto')),
-        date_of_enlistment DATE NOT NULL,
-        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
-        horin_commander VARCHAR(255),
-        net_salary DECIMAL(10,2),
-        tel_number VARCHAR(15) UNIQUE,
-        clan VARCHAR(100),
-        guarantor_name VARCHAR(255),
-        guarantor_phone VARCHAR(15),
-        emergency_contact_name VARCHAR(255),
-        emergency_contact_phone VARCHAR(15),
-        home_address TEXT,
-        blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
-        status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      success: true,
-      message: 'Soldiers table created successfully with all 20 attributes'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 2. Create fingerprint verification table
-app.get('/setup-verification', async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS fingerprint_verifications (
-        id SERIAL PRIMARY KEY,
-        soldier_id VARCHAR(20) REFERENCES soldiers(soldier_id),
-        full_names VARCHAR(255),
-        rank_position VARCHAR(50),
-        net_salary DECIMAL(10,2),
-        horin_platoon VARCHAR(50),
-        verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      success: true,
-      message: 'Fingerprint verification table created successfully'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 3. Register new soldier
-app.post('/soldiers', async (req, res) => {
-  try {
-    const {
-      full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status
-    } = req.body;
-
-    // Generate Soldier ID (CMJ00001 format)
-    const countResult = await pool.query('SELECT COUNT(*) FROM soldiers');
-    const count = parseInt(countResult.rows[0].count) + 1;
-    const soldier_id = `CMJ${String(count).padStart(5, '0')}`;
-
-    const query = `
-      INSERT INTO soldiers (
-        soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
-        rank_position, date_of_enlistment, horin_platoon, horin_commander,
-        net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-        emergency_contact_name, emergency_contact_phone, home_address,
-        blood_group, status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
-      RETURNING *
-    `;
-
-    const values = [
-      soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status || 'Active'
-    ];
-
-    const result = await pool.query(query, values);
+    socket = await connectToZKDevice();
+    await sendZKCommand(socket, ZK_COMMANDS.CONNECT);
     
     res.json({
       success: true,
-      message: 'Soldier registered successfully',
-      soldier: result.rows[0]
+      message: 'ZKTeco device connected successfully',
+      device_ip: ZK_CONFIG.ip
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: error.message
+      error: `ZKTeco connection failed: ${error.message}`,
+      device_ip: ZK_CONFIG.ip,
+      note: 'Check device IP, network connection, and ensure device is powered on'
     });
+  } finally {
+    if (socket) socket.destroy();
   }
 });
 
-// 4. Get all soldiers
-app.get('/soldiers', async (req, res) => {
+// 2. Enroll fingerprint (Manual process)
+app.post('/enroll-fingerprint', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM soldiers ORDER BY soldier_id');
-    res.json({
-      success: true,
-      soldiers: result.rows
+    const { soldier_id } = req.body;
+    
+    if (!soldier_id) {
+      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
+    }
+
+    // Verify soldier exists
+    const soldierResult = await pool.query('SELECT * FROM soldiers WHERE soldier_id = $1', [soldier_id]);
+    if (soldierResult.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Soldier not found' });
+    }
+
+    res.json({ 
+      success: true, 
+      message: 'Ready for fingerprint enrollment',
+      instructions: [
+        '1. Place soldier\'s finger on ZKTeco device',
+        '2. Device will capture fingerprint template',
+        '3. Manually record the template data from device screen',
+        '4. Use the /store-fingerprint endpoint to save the template'
+      ],
+      soldier_id: soldier_id
     });
+    
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
+    console.error('Enrollment error:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// 5. Fingerprint Verification endpoint (Simulated)
-app.post('/verify-fingerprint', async (req, res) => {
+// 3. Store fingerprint template manually
+app.post('/store-fingerprint', async (req, res) => {
+  try {
+    const { soldier_id, fingerprint_template } = req.body;
+    
+    if (!soldier_id || !fingerprint_template) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Soldier ID and fingerprint template are required' 
+      });
+    }
+
+    // Verify soldier exists
+    const soldierResult = await pool.query('SELECT * FROM soldiers WHERE soldier_id = $1', [soldier_id]);
+    if (soldierResult.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Soldier not found' });
+    }
+
+    // Store fingerprint template in database
+    await pool.query(
+      'UPDATE soldiers SET fingerprint_data = $1 WHERE soldier_id = $2',
+      [fingerprint_template, soldier_id]
+    );
+    
+    res.json({ 
+      success: true, 
+      message: 'Fingerprint template stored successfully',
+      soldier_id: soldier_id
+    });
+    
+  } catch (error) {
+    console.error('Storage error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 4. Manual fingerprint verification
+app.post('/verify-fingerprint-manual', async (req, res) => {
   try {
     const { fingerprint_template } = req.body;
 
-    // Find soldier by fingerprint match (simulated)
+    if (!fingerprint_template) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Fingerprint template is required' 
+      });
+    }
+
+    // Find soldier by fingerprint match
     const result = await pool.query(
       'SELECT * FROM soldiers WHERE fingerprint_data = $1',
       [fingerprint_template]
@@ -210,82 +230,38 @@ app.post('/verify-fingerprint', async (req, res) => {
   }
 });
 
-// 6. Simulated fingerprint enrollment
-app.post('/enroll-fingerprint', async (req, res) => {
+// 5. Get device status
+app.get('/zk-status', async (req, res) => {
   try {
-    const { soldier_id, fingerprint_data } = req.body;
+    const socket = await connectToZKDevice();
+    await sendZKCommand(socket, ZK_COMMANDS.CONNECT);
+    socket.destroy();
     
-    if (!soldier_id) {
-      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
-    }
-
-    // Verify soldier exists
-    const soldierResult = await pool.query('SELECT * FROM soldiers WHERE soldier_id = $1', [soldier_id]);
-    if (soldierResult.rows.length === 0) {
-      return res.status(404).json({ success: false, error: 'Soldier not found' });
-    }
-
-    // Store fingerprint template in database
-    await pool.query(
-      'UPDATE soldiers SET fingerprint_data = $1 WHERE soldier_id = $2',
-      [fingerprint_data, soldier_id]
-    );
-    
-    res.json({ 
-      success: true, 
-      message: 'Fingerprint enrolled successfully (Simulated)',
-      soldier_id: soldier_id
-    });
-    
-  } catch (error) {
-    console.error('Enrollment error:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// 7. Monthly payroll report
-app.get('/monthly-payroll', async (req, res) => {
-  try {
-    const { month, year } = req.query;
-    const currentMonth = month || new Date().getMonth() + 1;
-    const currentYear = year || new Date().getFullYear();
-
-    const query = `
-      SELECT 
-        soldier_id,
-        full_names,
-        rank_position,
-        net_salary,
-        horin_platoon,
-        verified_at
-      FROM fingerprint_verifications 
-      WHERE EXTRACT(MONTH FROM verified_at) = $1 
-        AND EXTRACT(YEAR FROM verified_at) = $2
-      ORDER BY horin_platoon, rank_position
-    `;
-
-    const result = await pool.query(query, [currentMonth, currentYear]);
-    
-    const totalSoldiers = result.rows.length;
-    const totalSalary = result.rows.reduce((sum, soldier) => sum + parseFloat(soldier.net_salary), 0);
-
     res.json({
       success: true,
-      report: {
-        month: currentMonth,
-        year: currentYear,
-        total_soldiers: totalSoldiers,
-        total_salary: totalSalary,
-        soldiers: result.rows
-      }
+      status: 'connected',
+      device_ip: ZK_CONFIG.ip,
+      message: 'ZKTeco device is online and responsive'
     });
   } catch (error) {
-    res.status(500).json({
+    res.json({
       success: false,
-      error: error.message
+      status: 'disconnected',
+      device_ip: ZK_CONFIG.ip,
+      error: error.message,
+      troubleshooting: [
+        'Check device power and network connection',
+        'Verify IP address matches device settings',
+        'Ensure device is on same network',
+        'Check firewall settings'
+      ]
     });
   }
 });
+
+// ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
+// [Keep all your existing soldiers endpoints exactly as they are]
+// ... (your existing setup-soldiers, soldiers, payroll endpoints)
 
 // ================== BASIC ENDPOINTS ==================
 
@@ -293,11 +269,22 @@ app.get('/health', async (req, res) => {
   try {
     const dbResult = await pool.query('SELECT NOW() as current_time');
     
+    // Test ZKTeco connection
+    let zkStatus = 'unknown';
+    try {
+      const socket = await connectToZKDevice();
+      zkStatus = 'connected';
+      socket.destroy();
+    } catch (error) {
+      zkStatus = 'disconnected';
+    }
+    
     res.json({ 
       status: 'OK', 
       database: 'connected',
-      timestamp: dbResult.rows[0].current_time,
-      message: 'ZKTeco integration disabled - using simulated fingerprint system'
+      zkteco_device: zkStatus,
+      device_ip: ZK_CONFIG.ip,
+      timestamp: dbResult.rows[0].current_time
     });
   } catch (error) {
     res.status(500).json({ 
@@ -311,14 +298,15 @@ app.get('/health', async (req, res) => {
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Biometric System',
-    note: 'ZKTeco integration disabled - using simulated fingerprint system',
+    zkteco_integration: 'TCP Socket Connection',
     endpoints: {
-      setup: '/setup-soldiers & /setup-verification',
-      soldiers: 'GET/POST /soldiers',
+      device_test: '/zk-test & /zk-status',
       fingerprint: {
         enroll: 'POST /enroll-fingerprint',
-        verify: 'POST /verify-fingerprint'
+        store: 'POST /store-fingerprint',
+        verify_manual: 'POST /verify-fingerprint-manual'
       },
+      soldiers: 'GET/POST /soldiers',
       payroll: 'GET /monthly-payroll',
       health: '/health'
     }
@@ -327,5 +315,6 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Biometric System running on port ${PORT}`);
-  console.log(`ℹ️  ZKTeco integration disabled - using simulated fingerprint system`);
+  console.log(`📱 ZKTeco Device IP: ${ZK_CONFIG.ip}`);
+  console.log(`🔌 Using TCP socket connection for ZKTeco integration`);
 });
