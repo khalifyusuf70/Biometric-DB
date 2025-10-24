@@ -826,3 +826,110 @@
     </script>
 </body>
 </html>
+// ZKTeco Device Management Functions
+async function testZKDevice() {
+    try {
+        const response = await fetch(`${API_BASE}/zk-test`);
+        const result = await response.json();
+        
+        if (result.success) {
+            alert(`✅ ${result.message}\nDevice IP: ${result.device_ip}`);
+        } else {
+            alert(`❌ ${result.error}\nDevice IP: ${result.device_ip}\n\nNote: ${result.note}`);
+        }
+    } catch (error) {
+        alert(`❌ Network error: ${error.message}`);
+    }
+}
+
+async function getZKStatus() {
+    try {
+        const response = await fetch(`${API_BASE}/zk-status`);
+        const result = await response.json();
+        
+        let statusHtml = `<h4>ZKTeco Device Status</h4>`;
+        statusHtml += `<p><strong>IP:</strong> ${result.device_ip}</p>`;
+        statusHtml += `<p><strong>Status:</strong> ${result.status}</p>`;
+        
+        if (result.success) {
+            statusHtml += `<div class="alert success">${result.message}</div>`;
+        } else {
+            statusHtml += `<div class="alert error">${result.error}</div>`;
+            statusHtml += `<div class="alert info"><strong>Troubleshooting:</strong><ul>`;
+            result.troubleshooting.forEach(item => {
+                statusHtml += `<li>${item}</li>`;
+            });
+            statusHtml += `</ul></div>`;
+        }
+        
+        document.getElementById('deviceManagementResult').innerHTML = statusHtml;
+    } catch (error) {
+        document.getElementById('deviceManagementResult').innerHTML = 
+            `<div class="alert error">Network error: ${error.message}</div>`;
+    }
+}
+
+async function enrollFingerprintManual() {
+    const soldierId = document.getElementById('enrollSoldierId').value.trim();
+    
+    if (!soldierId) {
+        alert('Please enter Soldier ID');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/enroll-fingerprint`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ soldier_id: soldierId })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            let message = `✅ ${result.message}\n\n`;
+            result.instructions.forEach(instruction => {
+                message += `${instruction}\n`;
+            });
+            message += `\nSoldier ID: ${result.soldier_id}`;
+            
+            alert(message);
+            document.getElementById('enrollSoldierId').value = '';
+        } else {
+            alert(`❌ ${result.error}`);
+        }
+    } catch (error) {
+        alert(`❌ Network error: ${error.message}`);
+    }
+}
+
+async function storeFingerprintTemplate() {
+    const soldierId = prompt('Enter Soldier ID:');
+    const template = prompt('Enter fingerprint template data from device:');
+    
+    if (!soldierId || !template) {
+        alert('Soldier ID and template data are required');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/store-fingerprint`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                soldier_id: soldierId, 
+                fingerprint_template: template 
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            alert(`✅ ${result.message}\nSoldier ID: ${result.soldier_id}`);
+        } else {
+            alert(`❌ ${result.error}`);
+        }
+    } catch (error) {
+        alert(`❌ Network error: ${error.message}`);
+    }
+}
