@@ -335,3 +335,34 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
 });
+// Simple fingerprint management (add to server.js)
+app.post('/store-fingerprint', async (req, res) => {
+  try {
+    const { soldier_id, fingerprint_data } = req.body;
+    
+    if (!soldier_id) {
+      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
+    }
+
+    // Verify soldier exists
+    const soldierResult = await pool.query('SELECT * FROM soldiers WHERE soldier_id = $1', [soldier_id]);
+    if (soldierResult.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Soldier not found' });
+    }
+
+    // Store fingerprint data
+    await pool.query(
+      'UPDATE soldiers SET fingerprint_data = $1 WHERE soldier_id = $2',
+      [fingerprint_data, soldier_id]
+    );
+    
+    res.json({ 
+      success: true, 
+      message: 'Fingerprint data stored successfully',
+      soldier_id: soldier_id
+    });
+    
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
