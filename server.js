@@ -10,13 +10,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Serve HTML for all non-API routes
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  }
-});
-
 // PostgreSQL connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -338,6 +331,11 @@ app.get('/api', (req, res) => {
       health: '/api/health'
     }
   });
+});
+
+// Serve HTML for all non-API routes (MUST BE LAST)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
