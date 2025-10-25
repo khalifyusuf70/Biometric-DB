@@ -1,337 +1,686 @@
-const express = require('express');
-const { Pool } = require('pg');
-const cors = require('cors');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        
+        /* Header Styles */
+        .header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 10px 10px 0 0;
+        }
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        .logo { height: 60px; }
+        .header-text { text-align: center; }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        
+        /* Main Content Layout */
+        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
+        
+        /* Form Styles */
+        .form-section { margin-bottom: 20px; }
+        .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
+        
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 8px 12px; 
+            border: 2px solid #bdc3c7; 
+            border-radius: 5px; 
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        input[readonly] {
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+        
+        /* Photo Section */
+        .photo-section { 
+            background: #ecf0f1; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center;
+            height: fit-content;
+        }
+        .photo-upload { 
+            border: 2px dashed #bdc3c7; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .photo-upload:hover {
+            border-color: #3498db;
+        }
+        .photo-preview { 
+            width: 150px; 
+            height: 180px; 
+            background: white; 
+            border: 1px solid #bdc3c7; 
+            margin: 0 auto 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        .upload-icon { 
+            font-size: 40px; 
+            color: #bdc3c7; 
+            margin-bottom: 10px;
+        }
+        
+        /* Button Styles */
+        .submit-btn { 
+            background: #3498db; 
+            color: white; 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover { 
+            background: #2980b9; 
+        }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #219a52; }
+        
+        /* Tabs */
+        .tabs { 
+            display: flex; 
+            background: #34495e; 
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+        .tab { 
+            padding: 15px 20px; 
+            cursor: pointer; 
+            border: none; 
+            background: none; 
+            color: white;
+            flex: 1;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .tab.active { 
+            background: #3498db; 
+        }
+        .tab:hover {
+            background: #2980b9;
+        }
+        
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; color: #2c3e50; }
+        
+        .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <!-- Password Protection -->
+    <div id="loginOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#2c3e50;color:white;padding:40px;border-radius:10px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom:20px;">🇸🇴 JUBALAND STATEHOUSE FORCES</h2>
+            <h3 style="margin-bottom:20px;">Enter System Password</h3>
+            <input type="password" id="passwordInput" placeholder="Enter password" style="padding:12px;margin:10px;width:250px;border-radius:5px;border:none;font-size:16px;">
+            <br>
+            <button onclick="checkPassword()" style="padding:12px 30px;background:#27ae60;color:white;border:none;border-radius:5px;cursor:pointer;font-size:16px;margin-top:10px;">Access System</button>
+            <p style="margin-top:15px;font-size:12px;opacity:0.8;">Authorized Personnel Only</p>
+        </div>
+    </div>
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <img src="logo.png" alt="Jubaland Logo" class="logo">
+                <div class="header-text">
+                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
+                    <p>Military Personnel Management & Payroll System</p>
+                </div>
+            </div>
+        </div>
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static('public'));
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('register')">Register Soldier</button>
+            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
+            <button class="tab" onclick="showTab('verification')">Verification</button>
+            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
+        </div>
 
-// PostgreSQL connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+        <!-- Register Soldier Tab -->
+        <div id="register" class="content active">
+            <form id="soldierForm">
+                <div class="main-content">
+                    <!-- Left Column - Form Fields -->
+                    <div class="form-column">
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h3>PERSONAL INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Soldier_ID</label>
+                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Full Names *</label>
+                                    <input type="text" name="full_names" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Birth *</label>
+                                    <input type="date" name="date_of_birth" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender *</label>
+                                    <select name="gender" required>
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rank/Position *</label>
+                                    <select name="rank_position" required onchange="updateSalary()">
+                                        <option value="">Select</option>
+                                        <option value="Askari">Askari</option>
+                                        <option value="Taliye Unug">Taliye Unug</option>
+                                        <option value="Taliye Koox">Taliye Koox</option>
+                                        <option value="Taliye Horin">Taliye Horin</option>
+                                        <option value="Abandule">Abandule</option>
+                                        <option value="Taliye Guuto">Taliye Guuto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Enlistment *</label>
+                                    <input type="date" name="date_of_enlistment" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin/Platoon *</label>
+                                    <select name="horin_platoon" required onchange="updateCommander()">
+                                        <option value="">Select</option>
+                                        <option value="Horin1">Horin1</option>
+                                        <option value="Horin2">Horin2</option>
+                                        <option value="Horin3">Horin3</option>
+                                        <option value="Horin4">Horin4</option>
+                                        <option value="Horin5">Horin5</option>
+                                        <option value="Horin6">Horin6</option>
+                                        <option value="Taliska">Taliska</option>
+                                        <option value="Fiat">Fiat</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin Commander *</label>
+                                    <input type="text" name="horin_commander" required id="horin_commander" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Net_Salary *</label>
+                                    <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
+                                </div>
+                            </div>
+                        </div>
 
-// Test database connection
-async function testConnection() {
-  try {
-    const client = await pool.connect();
-    console.log('✅ PostgreSQL connected successfully');
-    client.release();
-  } catch (error) {
-    console.log('❌ Database connection failed:', error.message);
-  }
-}
-testConnection();
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h3>CONTACT INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Tel_Number (10 Digits) *</label>
+                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Clan</label>
+                                    <input type="text" name="clan">
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Name *</label>
+                                    <input type="text" name="guarantor_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Phone (10 Digits) *</label>
+                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Name *</label>
+                                    <input type="text" name="emergency_contact_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Phone *</label>
+                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Blood_Group</label>
+                                    <select name="blood_group">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status">
+                                        <option value="Active">Active</option>
+                                        <option value="Wounded">Wounded</option>
+                                        <option value="Discharged">Discharged</option>
+                                        <option value="Dead">Dead</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-// ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
+                        <!-- Home Address -->
+                        <div class="form-section">
+                            <h3>HOME ADDRESS</h3>
+                            <div class="form-group">
+                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
+                            </div>
+                        </div>
+                    </div>
 
-// 1. Create soldiers table
-app.get('/setup-soldiers', async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS soldiers (
-        soldier_id VARCHAR(20) PRIMARY KEY,
-        full_names VARCHAR(255) NOT NULL,
-        date_of_birth DATE NOT NULL,
-        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
-        photo TEXT,
-        fingerprint_data TEXT,
-        rank_position VARCHAR(50) CHECK (rank_position IN ('Askari', 'Taliye Unug', 'Taliye Koox', 'Taliye Horin', 'Abandule', 'Taliye Guuto')),
-        date_of_enlistment DATE NOT NULL,
-        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
-        horin_commander VARCHAR(255),
-        net_salary DECIMAL(10,2),
-        tel_number VARCHAR(15) UNIQUE,
-        clan VARCHAR(100),
-        guarantor_name VARCHAR(255),
-        guarantor_phone VARCHAR(15),
-        emergency_contact_name VARCHAR(255),
-        emergency_contact_phone VARCHAR(15),
-        home_address TEXT,
-        blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
-        status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+                    <!-- Right Column - Photo -->
+                    <div class="photo-column">
+                        <!-- Photo Upload -->
+                        <div class="photo-section">
+                            <h3>PHOTO</h3>
+                            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                                <div class="photo-preview">
+                                    <img id="photoPreview" src="" alt="Photo Preview">
+                                    <div class="upload-icon">📷</div>
+                                </div>
+                                <p>Click to upload photo</p>
+                                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
+                            </div>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                        </div>
+                    </div>
+                </div>
 
-    res.json({
-      success: true,
-      message: 'Soldiers table created successfully with all 20 attributes'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+                <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
+                <div id="formMessage"></div>
+            </form>
+        </div>
 
-// 2. Create fingerprint verification table
-app.get('/setup-verification', async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS fingerprint_verifications (
-        id SERIAL PRIMARY KEY,
-        soldier_id VARCHAR(20) REFERENCES soldiers(soldier_id),
-        full_names VARCHAR(255),
-        rank_position VARCHAR(50),
-        net_salary DECIMAL(10,2),
-        horin_platoon VARCHAR(50),
-        verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+        <!-- View Soldiers Tab -->
+        <div id="soldiers" class="content">
+            <h2 style="padding: 20px;">All Soldiers</h2>
+            <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
+            <div id="soldiersList" style="padding: 20px;"></div>
+        </div>
 
-    res.json({
-      success: true,
-      message: 'Fingerprint verification table created successfully'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+        <!-- Verification Tab -->
+        <div id="verification" class="content">
+            <h2 style="padding: 20px;">Daily Verification</h2>
+            <div style="padding: 20px;">
+                
+                <!-- Manual Verification -->
+                <div class="form-section">
+                    <h3>Manual Verification Entry</h3>
+                    <div class="form-group">
+                        <label>Soldier ID:</label>
+                        <input type="text" id="manualSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)">
+                    </div>
+                    <button onclick="manualVerification()" class="submit-btn">Record Verification</button>
+                    <div id="manualResult" style="margin-top: 20px;"></div>
+                </div>
 
-// 3. Register new soldier
-app.post('/soldiers', async (req, res) => {
-  try {
-    const {
-      full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status
-    } = req.body;
+                <!-- Today's Report -->
+                <div class="form-section">
+                    <h3>Today's Verification Report</h3>
+                    <button onclick="loadTodayReport()" class="submit-btn">Refresh Report</button>
+                    <div id="todayReport" style="margin-top: 20px;"></div>
+                </div>
 
-    // Generate Soldier ID (CMJ00001 format)
-    const countResult = await pool.query('SELECT COUNT(*) FROM soldiers');
-    const count = parseInt(countResult.rows[0].count) + 1;
-    const soldier_id = `CMJ${String(count).padStart(5, '0')}`;
+            </div>
+        </div>
 
-    const query = `
-      INSERT INTO soldiers (
-        soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
-        rank_position, date_of_enlistment, horin_platoon, horin_commander,
-        net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-        emergency_contact_name, emergency_contact_phone, home_address,
-        blood_group, status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
-      RETURNING *
-    `;
+        <!-- Monthly Payroll Tab -->
+        <div id="payroll" class="content">
+            <h2 style="padding: 20px;">Monthly Payroll Report</h2>
+            <div style="padding: 0 20px;">
+                <div class="form-group">
+                    <label>Month</label>
+                    <input type="number" id="payrollMonth" min="1" max="12" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="number" id="payrollYear" value="2025">
+                </div>
+                <button onclick="generatePayroll()" class="submit-btn">Generate Report</button>
+            </div>
+            <div id="payrollReport" style="padding: 20px;"></div>
+        </div>
+    </div>
 
-    const values = [
-      soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status || 'Active'
-    ];
+    <script>
+        const API_BASE = 'https://biometric-db.onrender.com';
+        let photoBase64 = '';
 
-    const result = await pool.query(query, values);
-    
-    res.json({
-      success: true,
-      message: 'Soldier registered successfully',
-      soldier: result.rows[0]
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+        // Password Protection
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === 'Jubaland2024') { 
+                document.getElementById('loginOverlay').style.display = 'none';
+            } else {
+                alert('❌ Incorrect password! Access denied.');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
 
-// 4. Get all soldiers
-app.get('/soldiers', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM soldiers ORDER BY soldier_id');
-    res.json({
-      success: true,
-      soldiers: result.rows
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+        function showTab(tabName) {
+            document.querySelectorAll('.content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
 
-// 5. Manual verification entry
-app.post('/manual-verification', async (req, res) => {
-  try {
-    const { soldier_id } = req.body;
-    
-    if (!soldier_id) {
-      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
-    }
+        // Auto-fill Horin Commander based on Platoon selection
+        function updateCommander() {
+            const platoon = document.querySelector('[name="horin_platoon"]').value;
+            const commanders = {
+                'Horin1': 'Mohamed Abdi yusuf',
+                'Horin2': 'Moge Hussein Guled', 
+                'Horin3': 'Weli Fatule',
+                'Horin4': 'Hareri Kulow Keynan',
+                'Horin5': 'Blank1',
+                'Horin6': 'Gowracdiid',
+                'Taliska': 'Gowracdiid',
+                'Fiat': 'Hiis Abdi Ali'
+            };
+            
+            document.getElementById('horin_commander').value = commanders[platoon] || '';
+        }
 
-    // Find soldier
-    const soldierResult = await pool.query(
-      'SELECT * FROM soldiers WHERE soldier_id = $1',
-      [soldier_id]
-    );
-    
-    if (soldierResult.rows.length === 0) {
-      return res.status(404).json({ success: false, error: 'Soldier not found' });
-    }
+        // Auto-fill Salary based on Rank selection
+        function updateSalary() {
+            const rank = document.querySelector('[name="rank_position"]').value;
+            const salaries = {
+                'Askari': '200',
+                'Taliye Unug': '250', 
+                'Taliye Koox': '300',
+                'Taliye Horin': '350',
+                'Abandule': '450',
+                'Taliye Guuto': '500'
+            };
+            
+            document.getElementById('net_salary').value = salaries[rank] || '';
+        }
 
-    const soldier = soldierResult.rows[0];
-    const currentTime = new Date();
+        // Photo Upload Functionality
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('File size too large! Please select an image under 2MB.');
+                    return;
+                }
 
-    // Record verification
-    await pool.query(
-      `INSERT INTO fingerprint_verifications 
-       (soldier_id, full_names, rank_position, net_salary, horin_platoon, verified_at) 
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [
-        soldier.soldier_id, 
-        soldier.full_names, 
-        soldier.rank_position, 
-        soldier.net_salary, 
-        soldier.horin_platoon,
-        currentTime
-      ]
-    );
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.querySelector('.upload-icon').style.display = 'none';
+                    photoBase64 = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-    res.json({
-      success: true,
-      message: 'Manual verification recorded successfully',
-      soldier: {
-        soldier_id: soldier.soldier_id,
-        full_names: soldier.full_names,
-        verified_at: currentTime
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+        // Register Soldier
+        document.getElementById('soldierForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            data.photo = photoBase64;
 
-// 6. Get today's verification report
-app.get('/today-verifications', async (req, res) => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const result = await pool.query(`
-      SELECT 
-        fv.soldier_id,
-        fv.full_names,
-        fv.rank_position,
-        fv.horin_platoon,
-        fv.verified_at,
-        s.status
-      FROM fingerprint_verifications fv
-      LEFT JOIN soldiers s ON fv.soldier_id = s.soldier_id
-      WHERE DATE(fv.verified_at) = $1
-      ORDER BY fv.verified_at
-    `, [today]);
-    
-    const totalSoldiers = await pool.query('SELECT COUNT(*) FROM soldiers WHERE status = $1', ['Active']);
-    const verifiedCount = result.rows.length;
-    const missingCount = parseInt(totalSoldiers.rows[0].count) - verifiedCount;
-    
-    res.json({
-      success: true,
-      date: today,
-      summary: {
-        total_soldiers: parseInt(totalSoldiers.rows[0].count),
-        verified_today: verifiedCount,
-        missing_verification: missingCount
-      },
-      verifications: result.rows
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+            try {
+                const response = await fetch(`${API_BASE}/soldiers`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
 
-// 7. Monthly payroll report
-app.get('/monthly-payroll', async (req, res) => {
-  try {
-    const { month, year } = req.query;
-    const currentMonth = month || new Date().getMonth() + 1;
-    const currentYear = year || new Date().getFullYear();
+                const result = await response.json();
+                
+                const messageDiv = document.getElementById('formMessage');
+                if (result.success) {
+                    messageDiv.innerHTML = `<div class="alert success">Soldier registered successfully! ID: ${result.soldier.soldier_id}</div>`;
+                    e.target.reset();
+                    document.getElementById('photoPreview').style.display = 'none';
+                    document.querySelector('.upload-icon').style.display = 'block';
+                    photoBase64 = '';
+                } else {
+                    messageDiv.innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('formMessage').innerHTML = `<div class="alert error">Network error: ${error.message}</div>`;
+            }
+        });
 
-    const query = `
-      SELECT 
-        soldier_id,
-        full_names,
-        rank_position,
-        net_salary,
-        horin_platoon,
-        verified_at
-      FROM fingerprint_verifications 
-      WHERE EXTRACT(MONTH FROM verified_at) = $1 
-        AND EXTRACT(YEAR FROM verified_at) = $2
-      ORDER BY horin_platoon, rank_position
-    `;
+        // Load Soldiers
+        async function loadSoldiers() {
+            try {
+                const response = await fetch(`${API_BASE}/soldiers`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const soldiersHtml = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Rank</th>
+                                    <th>Platoon</th>
+                                    <th>Commander</th>
+                                    <th>Salary</th>
+                                    <th>Status</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${result.soldiers.map(soldier => `
+                                    <tr>
+                                        <td><strong>${soldier.soldier_id}</strong></td>
+                                        <td>${soldier.full_names}</td>
+                                        <td>${soldier.rank_position}</td>
+                                        <td>${soldier.horin_platoon}</td>
+                                        <td>${soldier.horin_commander || 'N/A'}</td>
+                                        <td>$${soldier.net_salary}</td>
+                                        <td>${soldier.status}</td>
+                                        <td>${soldier.tel_number}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    document.getElementById('soldiersList').innerHTML = soldiersHtml;
+                }
+            } catch (error) {
+                document.getElementById('soldiersList').innerHTML = `<div class="alert error">Error loading soldiers: ${error.message}</div>`;
+            }
+        }
 
-    const result = await pool.query(query, [currentMonth, currentYear]);
-    
-    const totalSoldiers = result.rows.length;
-    const totalSalary = result.rows.reduce((sum, soldier) => sum + parseFloat(soldier.net_salary), 0);
+        // Manual Verification
+        async function manualVerification() {
+            const soldierId = document.getElementById('manualSoldierId').value.trim();
+            
+            if (!soldierId) {
+                alert('Please enter Soldier ID');
+                return;
+            }
 
-    res.json({
-      success: true,
-      report: {
-        month: currentMonth,
-        year: currentYear,
-        total_soldiers: totalSoldiers,
-        total_salary: totalSalary,
-        soldiers: result.rows
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+            try {
+                const response = await fetch(`${API_BASE}/manual-verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ soldier_id: soldierId })
+                });
 
-// ================== BASIC ENDPOINTS ==================
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('manualResult').innerHTML = 
+                        `<div class="alert success">✅ ${result.message}<br>
+                         Soldier: ${result.soldier.full_names}<br>
+                         Time: ${new Date(result.soldier.verified_at).toLocaleString()}</div>`;
+                    document.getElementById('manualSoldierId').value = '';
+                } else {
+                    document.getElementById('manualResult').innerHTML = 
+                        `<div class="alert error">❌ ${result.error}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('manualResult').innerHTML = 
+                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
+            }
+        }
 
-app.get('/health', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW() as current_time');
-    res.json({ 
-      status: 'OK', 
-      database: 'connected',
-      timestamp: result.rows[0].current_time
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      status: 'ERROR', 
-      database: 'disconnected',
-      error: error.message 
-    });
-  }
-});
+        // Load Today's Report
+        async function loadTodayReport() {
+            try {
+                const response = await fetch(`${API_BASE}/today-verifications`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    let html = `<div class="alert info">`;
+                    html += `<h4>📊 Daily Report - ${result.date}</h4>`;
+                    html += `<p><strong>Total Soldiers:</strong> ${result.summary.total_soldiers}</p>`;
+                    html += `<p><strong>Verified Today:</strong> ${result.summary.verified_today}</p>`;
+                    html += `<p><strong>Missing Verification:</strong> ${result.summary.missing_verification}</p>`;
+                    html += `</div>`;
+                    
+                    if (result.verifications.length > 0) {
+                        html += `<table><tr><th>Soldier ID</th><th>Name</th><th>Rank</th><th>Platoon</th><th>Verification Time</th></tr>`;
+                        result.verifications.forEach(verification => {
+                            html += `<tr>
+                                <td>${verification.soldier_id}</td>
+                                <td>${verification.full_names}</td>
+                                <td>${verification.rank_position}</td>
+                                <td>${verification.horin_platoon}</td>
+                                <td>${new Date(verification.verified_at).toLocaleString()}</td>
+                            </tr>`;
+                        });
+                        html += `</table>`;
+                    } else {
+                        html += `<p>No verifications recorded for today.</p>`;
+                    }
+                    
+                    document.getElementById('todayReport').innerHTML = html;
+                }
+            } catch (error) {
+                document.getElementById('todayReport').innerHTML = 
+                    `<div class="alert error">Error: ${error.message}</div>`;
+            }
+        }
 
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Jubaland Statehouse Forces Database System',
-    endpoints: {
-      setup: '/setup-soldiers & /setup-verification',
-      soldiers: 'GET/POST /soldiers',
-      verification: {
-        manual: 'POST /manual-verification',
-        today_report: 'GET /today-verifications'
-      },
-      payroll: 'GET /monthly-payroll',
-      health: '/health'
-    }
-  });
-});
+        // Generate Payroll
+        async function generatePayroll() {
+            const month = document.getElementById('payrollMonth').value;
+            const year = document.getElementById('payrollYear').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const report = result.report;
+                    const payrollHtml = `
+                        <div class="alert success">
+                            <h3>Payroll Report - ${report.month}/${report.year}</h3>
+                            <p>Total Soldiers: ${report.total_soldiers} | Total Salary: $${report.total_salary}</p>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Rank</th>
+                                    <th>Platoon</th>
+                                    <th>Salary</th>
+                                    <th>Verified At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${report.soldiers.map(soldier => `
+                                    <tr>
+                                        <td>${soldier.soldier_id}</td>
+                                        <td>${soldier.full_names}</td>
+                                        <td>${soldier.rank_position}</td>
+                                        <td>${soldier.horin_platoon}</td>
+                                        <td>$${soldier.net_salary}</td>
+                                        <td>${new Date(soldier.verified_at).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    document.getElementById('payrollReport').innerHTML = payrollHtml;
+                }
+            } catch (error) {
+                document.getElementById('payrollReport').innerHTML = `<div class="alert error">Error generating payroll: ${error.message}</div>`;
+            }
+        }
 
-app.listen(PORT, () => {
-  console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
-});
+        // Load soldiers when tab is shown
+        document.querySelector('[onclick="showTab(\'soldiers\')"]').addEventListener('click', loadSoldiers);
+        // Load today's report when tab is shown
+        document.querySelector('[onclick="showTab(\'verification\')"]').addEventListener('click', loadTodayReport);
+    </script>
+</body>
+</html>
