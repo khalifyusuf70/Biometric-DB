@@ -335,34 +335,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
 });
-// Simple fingerprint storage (add to script section)
-async function storeFingerprint() {
-    const soldierId = prompt('Enter Soldier ID:');
-    const template = prompt('Enter fingerprint data (any format):');
-    
-    if (!soldierId || !template) {
-        alert('Soldier ID and fingerprint data are required');
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/store-fingerprint`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                soldier_id: soldierId, 
-                fingerprint_data: template 
-            })
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-            alert(`✅ ${result.message}\nSoldier ID: ${result.soldier_id}`);
-        } else {
-            alert(`❌ ${result.error}`);
-        }
-    } catch (error) {
-        alert(`❌ Network error: ${error.message}`);
-    }
-}
