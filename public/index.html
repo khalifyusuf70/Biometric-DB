@@ -1,935 +1,337 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        
-        /* Header Styles */
-        .header { 
-            background: #2c3e50; 
-            color: white; 
-            padding: 20px; 
-            text-align: center; 
-            border-radius: 10px 10px 0 0;
-            position: relative;
-        }
-        .header-content { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px; 
-        }
-        .logo { height: 60px; }
-        .header-text { text-align: center; }
-        .header h1 { font-size: 24px; margin-bottom: 5px; }
-        .header p { font-size: 16px; opacity: 0.9; }
-        
-        /* Main Content Layout */
-        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
-        
-        /* Form Styles */
-        .form-section { margin-bottom: 20px; }
-        .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
-        
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-        }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
-        input, select, textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            border: 2px solid #bdc3c7; 
-            border-radius: 5px; 
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        input[readonly] {
-            background-color: #ecf0f1;
-            color: #7f8c8d;
-            cursor: not-allowed;
-        }
-        
-        /* Photo Section */
-        .photo-section { 
-            background: #ecf0f1; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center;
-            height: fit-content;
-        }
-        .photo-upload { 
-            border: 2px dashed #bdc3c7; 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .photo-upload:hover {
-            border-color: #3498db;
-        }
-        .photo-preview { 
-            width: 150px; 
-            height: 180px; 
-            background: white; 
-            border: 1px solid #bdc3c7; 
-            margin: 0 auto 15px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .photo-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-        }
-        .upload-icon { 
-            font-size: 40px; 
-            color: #bdc3c7; 
-            margin-bottom: 10px;
-        }
-        
-        /* Fingerprint Section */
-        .fingerprint-section {
-            background: #ecf0f1;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .fingerprint-icon {
-            font-size: 30px;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        /* Button Styles */
-        .submit-btn { 
-            background: #3498db; 
-            color: white; 
-            padding: 12px 30px; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0;
-            transition: background 0.3s;
-        }
-        .submit-btn:hover { 
-            background: #2980b9; 
-        }
-        .btn-success { background: #27ae60; }
-        .btn-success:hover { background: #219a52; }
-        .btn-danger { background: #e74c3c; }
-        .btn-danger:hover { background: #c0392b; }
-        
-        /* Tabs */
-        .tabs { 
-            display: flex; 
-            background: #34495e; 
-            border-radius: 5px 5px 0 0;
-            overflow: hidden;
-        }
-        .tab { 
-            padding: 15px 20px; 
-            cursor: pointer; 
-            border: none; 
-            background: none; 
-            color: white;
-            flex: 1;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        .tab.active { 
-            background: #3498db; 
-        }
-        .tab:hover {
-            background: #2980b9;
-        }
-        
-        .content { display: none; }
-        .content.active { display: block; }
-        
-        /* Table Styles */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f8f9fa; color: #2c3e50; }
-        
-        .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
-        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-    </style>
-</head>
-<body>
-    <!-- ======= PASSWORD PROTECTION ======= -->
-    <div id="loginOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;">
-        <div style="background:#2c3e50;color:white;padding:40px;border-radius:10px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,0.3);">
-            <h2 style="margin-bottom:20px;">🇸🇴 JUBALAND STATEHOUSE FORCES</h2>
-            <h3 style="margin-bottom:20px;">Enter System Password</h3>
-            <input type="password" id="passwordInput" placeholder="Enter password" style="padding:12px;margin:10px;width:250px;border-radius:5px;border:none;font-size:16px;">
-            <br>
-            <button onclick="checkPassword()" style="padding:12px 30px;background:#27ae60;color:white;border:none;border-radius:5px;cursor:pointer;font-size:16px;margin-top:10px;">Access System</button>
-            <p style="margin-top:15px;font-size:12px;opacity:0.8;">Authorized Personnel Only</p>
-        </div>
-    </div>
-    <!-- ======= END PASSWORD PROTECTION ======= -->
+const express = require('express');
+const { Pool } = require('pg');
+const cors = require('cors');
 
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <img src="logo.png" alt="Jubaland Logo" class="logo">
-                <div class="header-text">
-                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
-                    <p>Military Personnel Management & Payroll System</p>
-                </div>
-            </div>
-        </div>
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('register')">Register Soldier</button>
-            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
-            <button class="tab" onclick="showTab('fingerprint')">Fingerprint Management</button>
-            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
-            <button class="tab" onclick="showTab('verify')">Fingerprint Verify</button>
-        </div>
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
 
-        <!-- Register Soldier Tab -->
-        <div id="register" class="content active">
-            <form id="soldierForm">
-                <div class="main-content">
-                    <!-- Left Column - Form Fields -->
-                    <div class="form-column">
-                        <!-- Personal Information -->
-                        <div class="form-section">
-                            <h3>PERSONAL INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Soldier_ID</label>
-                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
-                                </div>
-                                <div class="form-group">
-                                    <label>Full Names *</label>
-                                    <input type="text" name="full_names" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Birth *</label>
-                                    <input type="date" name="date_of_birth" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Gender *</label>
-                                    <select name="gender" required>
-                                        <option value="">Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Rank/Position *</label>
-                                    <select name="rank_position" required onchange="updateSalary()">
-                                        <option value="">Select</option>
-                                        <option value="Askari">Askari</option>
-                                        <option value="Taliye Unug">Taliye Unug</option>
-                                        <option value="Taliye Koox">Taliye Koox</option>
-                                        <option value="Taliye Horin">Taliye Horin</option>
-                                        <option value="Abandule">Abandule</option>
-                                        <option value="Taliye Guuto">Taliye Guuto</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Enlistment *</label>
-                                    <input type="date" name="date_of_enlistment" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin/Platoon *</label>
-                                    <select name="horin_platoon" required onchange="updateCommander()">
-                                        <option value="">Select</option>
-                                        <option value="Horin1">Horin1</option>
-                                        <option value="Horin2">Horin2</option>
-                                        <option value="Horin3">Horin3</option>
-                                        <option value="Horin4">Horin4</option>
-                                        <option value="Horin5">Horin5</option>
-                                        <option value="Horin6">Horin6</option>
-                                        <option value="Taliska">Taliska</option>
-                                        <option value="Fiat">Fiat</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin Commander *</label>
-                                    <input type="text" name="horin_commander" required id="horin_commander" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Net_Salary *</label>
-                                    <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
-                                </div>
-                            </div>
-                        </div>
+// PostgreSQL connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-                        <!-- Contact Information -->
-                        <div class="form-section">
-                            <h3>CONTACT INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Tel_Number (10 Digits) *</label>
-                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Clan</label>
-                                    <input type="text" name="clan">
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Name *</label>
-                                    <input type="text" name="guarantor_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Phone (10 Digits) *</label>
-                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Name *</label>
-                                    <input type="text" name="emergency_contact_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Phone *</label>
-                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Blood_Group</label>
-                                    <select name="blood_group">
-                                        <option value="">Select</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Wounded">Wounded</option>
-                                        <option value="Discharged">Discharged</option>
-                                        <option value="Dead">Dead</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Home Address -->
-                        <div class="form-section">
-                            <h3>HOME ADDRESS</h3>
-                            <div class="form-group">
-                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column - Photo & Fingerprint -->
-                    <div class="photo-column">
-                        <!-- Photo Upload -->
-                        <div class="photo-section">
-                            <h3>PHOTO</h3>
-                            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                                <div class="photo-preview">
-                                    <img id="photoPreview" src="" alt="Photo Preview">
-                                    <div class="upload-icon">📷</div>
-                                </div>
-                                <p>Click to upload photo</p>
-                                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
-                            </div>
-                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-                            
-                            <!-- Fingerprint Section -->
-                            <div class="fingerprint-section">
-                                <h3>Fingerprint</h3>
-                                <div class="fingerprint-icon">🖐️</div>
-                                <p>Fingerprint data will be captured</p>
-                                <p>using ZKTeco device</p>
-                                <textarea name="fingerprint_data" rows="4" placeholder="Fingerprint template data will appear here" style="margin-top: 10px; font-family: monospace;"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
-                <div id="formMessage"></div>
-            </form>
-        </div>
-
-        <!-- View Soldiers Tab -->
-        <div id="soldiers" class="content">
-            <h2 style="padding: 20px;">All Soldiers</h2>
-            <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
-            <div id="soldiersList" style="padding: 20px;"></div>
-        </div>
-
-        <!-- Fingerprint Management Tab -->
-        <div id="fingerprint" class="content">
-            <h2 style="padding: 20px;">Fingerprint Management</h2>
-            <div style="padding: 20px;">
-                
-                <!-- Enroll Fingerprint Section -->
-                <div class="form-section">
-                    <h3>Enroll New Fingerprint</h3>
-                    <div class="form-group">
-                        <label>Soldier ID *</label>
-                        <input type="text" id="enrollSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)" style="width: 300px;">
-                    </div>
-                    <button onclick="enrollFingerprint()" class="submit-btn btn-success">Start Fingerprint Enrollment</button>
-                    <div id="enrollMessage"></div>
-                </div>
-
-                <!-- Verify Fingerprint Section -->
-                <div class="form-section">
-                    <h3>Live Fingerprint Verification</h3>
-                    <button onclick="verifyLiveFingerprint()" class="submit-btn">
-                        Scan Fingerprint for Verification
-                    </button>
-                    <div id="verifyLiveResult" style="margin-top: 20px;"></div>
-                </div>
-
-                <!-- Device Management Section -->
-                <div class="form-section">
-                    <h3>Device Management</h3>
-                    <button onclick="getDeviceUsers()" class="submit-btn">Get Device Users</button>
-                    <button onclick="clearDeviceData()" class="submit-btn btn-danger">Clear Device Data</button>
-                    <div id="deviceManagementResult" style="margin-top: 20px;"></div>
-                </div>
-
-                <!-- Instructions -->
-                <div class="form-section" style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
-                    <h4>📋 Instructions:</h4>
-                    <p><strong>Enrollment:</strong> Enter Soldier ID, click "Start Fingerprint Enrollment", then place finger on device when prompted.</p>
-                    <p><strong>Verification:</strong> Click "Scan Fingerprint for Verification", then place finger on device.</p>
-                    <p><strong>Device IP:</strong> Make sure ZKTeco K40 is connected to network and IP is configured in environment variables.</p>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Monthly Payroll Tab -->
-        <div id="payroll" class="content">
-            <h2 style="padding: 20px;">Monthly Payroll Report</h2>
-            <div style="padding: 0 20px;">
-                <div class="form-group">
-                    <label>Month</label>
-                    <input type="number" id="payrollMonth" min="1" max="12" value="10">
-                </div>
-                <div class="form-group">
-                    <label>Year</label>
-                    <input type="number" id="payrollYear" value="2025">
-                </div>
-                <button onclick="generatePayroll()" class="submit-btn">Generate Report</button>
-            </div>
-            <div id="payrollReport" style="padding: 20px;"></div>
-        </div>
-
-        <!-- Fingerprint Verify Tab -->
-        <div id="verify" class="content">
-            <h2 style="padding: 20px;">Fingerprint Verification</h2>
-            <div style="padding: 0 20px;">
-                <div class="form-group">
-                    <label>Fingerprint Template (Simulated)</label>
-                    <input type="text" id="fingerprintInput" placeholder="Enter fingerprint data">
-                </div>
-                <button onclick="verifyFingerprint()" class="submit-btn">Verify Fingerprint</button>
-            </div>
-            <div id="verificationResult" style="padding: 20px;"></div>
-        </div>
-    </div>
-
-    <script>
-        const API_BASE = 'https://biometric-db.onrender.com';
-        let photoBase64 = '';
-
-        // Password Protection
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'Jubaland2024') { 
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else {
-                alert('❌ Incorrect password! Access denied.');
-                document.getElementById('passwordInput').value = '';
-            }
-        }
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
-        });
-
-        function showTab(tabName) {
-            document.querySelectorAll('.content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // Auto-fill Horin Commander based on Platoon selection
-        function updateCommander() {
-            const platoon = document.querySelector('[name="horin_platoon"]').value;
-            const commanders = {
-                'Horin1': 'Mohamed Abdi yusuf',
-                'Horin2': 'Moge Hussein Guled', 
-                'Horin3': 'Weli Fatule',
-                'Horin4': 'Hareri Kulow Keynan',
-                'Horin5': 'Blank1',
-                'Horin6': 'Gowracdiid',
-                'Taliska': 'Gowracdiid',
-                'Fiat': 'Hiis Abdi Ali'
-            };
-            
-            document.getElementById('horin_commander').value = commanders[platoon] || '';
-        }
-
-        // Auto-fill Salary based on Rank selection
-        function updateSalary() {
-            const rank = document.querySelector('[name="rank_position"]').value;
-            const salaries = {
-                'Askari': '200',
-                'Taliye Unug': '250', 
-                'Taliye Koox': '300',
-                'Taliye Horin': '350',
-                'Abandule': '450',
-                'Taliye Guuto': '500'
-            };
-            
-            document.getElementById('net_salary').value = salaries[rank] || '';
-        }
-
-        // Photo Upload Functionality
-        function previewPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('File size too large! Please select an image under 2MB.');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('photoPreview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    document.querySelector('.upload-icon').style.display = 'none';
-                    photoBase64 = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Fingerprint Management Functions
-        async function enrollFingerprint() {
-            const soldierId = document.getElementById('enrollSoldierId').value.trim();
-            
-            if (!soldierId) {
-                alert('Please enter Soldier ID');
-                return;
-            }
-
-            try {
-                document.getElementById('enrollMessage').innerHTML = '<div class="alert info">🔄 Please place finger on device now...</div>';
-                
-                const response = await fetch(`${API_BASE}/enroll-fingerprint`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ soldier_id: soldierId })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    document.getElementById('enrollMessage').innerHTML = 
-                        `<div class="alert success">✅ ${result.message}<br>Soldier ID: ${result.soldier_id}<br>Device User ID: ${result.device_user_id}</div>`;
-                    document.getElementById('enrollSoldierId').value = '';
-                } else {
-                    document.getElementById('enrollMessage').innerHTML = 
-                        `<div class="alert error">❌ ${result.error || result.message}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('enrollMessage').innerHTML = 
-                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
-            }
-        }
-
-        async function verifyLiveFingerprint() {
-            try {
-                document.getElementById('verifyLiveResult').innerHTML = '<div class="alert info">🔄 Please place finger on device for verification...</div>';
-                
-                const response = await fetch(`${API_BASE}/verify-fingerprint-live`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    const soldier = result.soldier;
-                    document.getElementById('verifyLiveResult').innerHTML = `
-                        <div class="alert success">
-                            <h3>✅ ${result.message}</h3>
-                            <p><strong>Soldier:</strong> ${soldier.full_names}</p>
-                            <p><strong>ID:</strong> ${soldier.soldier_id}</p>
-                            <p><strong>Rank:</strong> ${soldier.rank_position}</p>
-                            <p><strong>Platoon:</strong> ${soldier.horin_platoon}</p>
-                            <p><strong>Salary:</strong> $${soldier.net_salary}</p>
-                            <p><strong>Time:</strong> ${new Date(soldier.verified_at).toLocaleString()}</p>
-                        </div>
-                    `;
-                } else {
-                    document.getElementById('verifyLiveResult').innerHTML = 
-                        `<div class="alert error">❌ ${result.message || result.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('verifyLiveResult').innerHTML = 
-                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
-            }
-        }
-
-        async function getDeviceUsers() {
-            try {
-                const response = await fetch(`${API_BASE}/device-users`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    let usersHtml = '<h4>Device Users:</h4>';
-                    if (result.users && result.users.length > 0) {
-                        usersHtml += '<table><tr><th>User ID</th><th>Name</th></tr>';
-                        result.users.forEach(user => {
-                            usersHtml += `<tr><td>${user.userId}</td><td>${user.name}</td></tr>`;
-                        });
-                        usersHtml += '</table>';
-                    } else {
-                        usersHtml += '<p>No users found on device</p>';
-                    }
-                    document.getElementById('deviceManagementResult').innerHTML = usersHtml;
-                }
-            } catch (error) {
-                document.getElementById('deviceManagementResult').innerHTML = 
-                    `<div class="alert error">Error: ${error.message}</div>`;
-            }
-        }
-
-        async function clearDeviceData() {
-            if (!confirm('Are you sure you want to clear all data from the fingerprint device? This cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE}/clear-device`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    document.getElementById('deviceManagementResult').innerHTML = 
-                        `<div class="alert success">✅ ${result.message}</div>`;
-                } else {
-                    document.getElementById('deviceManagementResult').innerHTML = 
-                        `<div class="alert error">❌ ${result.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('deviceManagementResult').innerHTML = 
-                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
-            }
-        }
-
-        // Register Soldier
-        document.getElementById('soldierForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            data.photo = photoBase64;
-
-            try {
-                const response = await fetch(`${API_BASE}/soldiers`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                const messageDiv = document.getElementById('formMessage');
-                if (result.success) {
-                    messageDiv.innerHTML = `<div class="alert success">Soldier registered successfully! ID: ${result.soldier.soldier_id}</div>`;
-                    e.target.reset();
-                    document.getElementById('photoPreview').style.display = 'none';
-                    document.querySelector('.upload-icon').style.display = 'block';
-                    photoBase64 = '';
-                } else {
-                    messageDiv.innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('formMessage').innerHTML = `<div class="alert error">Network error: ${error.message}</div>`;
-            }
-        });
-
-        // Load Soldiers
-        async function loadSoldiers() {
-            try {
-                const response = await fetch(`${API_BASE}/soldiers`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    const soldiersHtml = `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Rank</th>
-                                    <th>Platoon</th>
-                                    <th>Commander</th>
-                                    <th>Salary</th>
-                                    <th>Status</th>
-                                    <th>Phone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${result.soldiers.map(soldier => `
-                                    <tr>
-                                        <td><strong>${soldier.soldier_id}</strong></td>
-                                        <td>${soldier.full_names}</td>
-                                        <td>${soldier.rank_position}</td>
-                                        <td>${soldier.horin_platoon}</td>
-                                        <td>${soldier.horin_commander || 'N/A'}</td>
-                                        <td>$${soldier.net_salary}</td>
-                                        <td>${soldier.status}</td>
-                                        <td>${soldier.tel_number}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
-                    document.getElementById('soldiersList').innerHTML = soldiersHtml;
-                }
-            } catch (error) {
-                document.getElementById('soldiersList').innerHTML = `<div class="alert error">Error loading soldiers: ${error.message}</div>`;
-            }
-        }
-
-        // Generate Payroll
-        async function generatePayroll() {
-            const month = document.getElementById('payrollMonth').value;
-            const year = document.getElementById('payrollYear').value;
-            
-            try {
-                const response = await fetch(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    const report = result.report;
-                    const payrollHtml = `
-                        <div class="alert success">
-                            <h3>Payroll Report - ${report.month}/${report.year}</h3>
-                            <p>Total Soldiers: ${report.total_soldiers} | Total Salary: $${report.total_salary}</p>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Rank</th>
-                                    <th>Platoon</th>
-                                    <th>Salary</th>
-                                    <th>Verified At</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${report.soldiers.map(soldier => `
-                                    <tr>
-                                        <td>${soldier.soldier_id}</td>
-                                        <td>${soldier.full_names}</td>
-                                        <td>${soldier.rank_position}</td>
-                                        <td>${soldier.horin_platoon}</td>
-                                        <td>$${soldier.net_salary}</td>
-                                        <td>${new Date(soldier.verified_at).toLocaleDateString()}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
-                    document.getElementById('payrollReport').innerHTML = payrollHtml;
-                }
-            } catch (error) {
-                document.getElementById('payrollReport').innerHTML = `<div class="alert error">Error generating payroll: ${error.message}</div>`;
-            }
-        }
-
-        // Verify Fingerprint
-        async function verifyFingerprint() {
-            const fingerprint = document.getElementById('fingerprintInput').value;
-            
-            if (!fingerprint) {
-                alert('Please enter fingerprint data');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/verify-fingerprint`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fingerprint_template: fingerprint })
-                });
-
-                const result = await response.json();
-                const resultDiv = document.getElementById('verificationResult');
-                
-                if (result.success) {
-                    resultDiv.innerHTML = `
-                        <div class="alert success">
-                            <h3>✅ Verification Successful!</h3>
-                            <p><strong>Soldier:</strong> ${result.soldier.full_names}</p>
-                            <p><strong>ID:</strong> ${result.soldier.soldier_id}</p>
-                            <p><strong>Rank:</strong> ${result.soldier.rank_position}</p>
-                            <p><strong>Platoon:</strong> ${result.soldier.horin_platoon}</p>
-                            <p><strong>Salary:</strong> $${result.soldier.net_salary}</p>
-                            <p><strong>Time:</strong> ${new Date(result.soldier.verified_at).toLocaleString()}</p>
-                        </div>
-                    `;
-                } else {
-                    resultDiv.innerHTML = `<div class="alert error">❌ ${result.message}</div>`;
-                }
-            } catch (error) {
-                document.getElementById('verificationResult').innerHTML = `<div class="alert error">Network error: ${error.message}</div>`;
-            }
-        }
-
-        // Load soldiers when tab is shown
-        document.querySelector('[onclick="showTab(\'soldiers\')"]').addEventListener('click', loadSoldiers);
-    </script>
-</body>
-</html>
-// ZKTeco Device Management Functions
-async function testZKDevice() {
-    try {
-        const response = await fetch(`${API_BASE}/zk-test`);
-        const result = await response.json();
-        
-        if (result.success) {
-            alert(`✅ ${result.message}\nDevice IP: ${result.device_ip}`);
-        } else {
-            alert(`❌ ${result.error}\nDevice IP: ${result.device_ip}\n\nNote: ${result.note}`);
-        }
-    } catch (error) {
-        alert(`❌ Network error: ${error.message}`);
-    }
+// Test database connection
+async function testConnection() {
+  try {
+    const client = await pool.connect();
+    console.log('✅ PostgreSQL connected successfully');
+    client.release();
+  } catch (error) {
+    console.log('❌ Database connection failed:', error.message);
+  }
 }
+testConnection();
 
-async function getZKStatus() {
-    try {
-        const response = await fetch(`${API_BASE}/zk-status`);
-        const result = await response.json();
-        
-        let statusHtml = `<h4>ZKTeco Device Status</h4>`;
-        statusHtml += `<p><strong>IP:</strong> ${result.device_ip}</p>`;
-        statusHtml += `<p><strong>Status:</strong> ${result.status}</p>`;
-        
-        if (result.success) {
-            statusHtml += `<div class="alert success">${result.message}</div>`;
-        } else {
-            statusHtml += `<div class="alert error">${result.error}</div>`;
-            statusHtml += `<div class="alert info"><strong>Troubleshooting:</strong><ul>`;
-            result.troubleshooting.forEach(item => {
-                statusHtml += `<li>${item}</li>`;
-            });
-            statusHtml += `</ul></div>`;
-        }
-        
-        document.getElementById('deviceManagementResult').innerHTML = statusHtml;
-    } catch (error) {
-        document.getElementById('deviceManagementResult').innerHTML = 
-            `<div class="alert error">Network error: ${error.message}</div>`;
-    }
-}
+// ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
-async function enrollFingerprintManual() {
-    const soldierId = document.getElementById('enrollSoldierId').value.trim();
+// 1. Create soldiers table
+app.get('/setup-soldiers', async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS soldiers (
+        soldier_id VARCHAR(20) PRIMARY KEY,
+        full_names VARCHAR(255) NOT NULL,
+        date_of_birth DATE NOT NULL,
+        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
+        photo TEXT,
+        fingerprint_data TEXT,
+        rank_position VARCHAR(50) CHECK (rank_position IN ('Askari', 'Taliye Unug', 'Taliye Koox', 'Taliye Horin', 'Abandule', 'Taliye Guuto')),
+        date_of_enlistment DATE NOT NULL,
+        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
+        horin_commander VARCHAR(255),
+        net_salary DECIMAL(10,2),
+        tel_number VARCHAR(15) UNIQUE,
+        clan VARCHAR(100),
+        guarantor_name VARCHAR(255),
+        guarantor_phone VARCHAR(15),
+        emergency_contact_name VARCHAR(255),
+        emergency_contact_phone VARCHAR(15),
+        home_address TEXT,
+        blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+        status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      success: true,
+      message: 'Soldiers table created successfully with all 20 attributes'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// 2. Create fingerprint verification table
+app.get('/setup-verification', async (req, res) => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS fingerprint_verifications (
+        id SERIAL PRIMARY KEY,
+        soldier_id VARCHAR(20) REFERENCES soldiers(soldier_id),
+        full_names VARCHAR(255),
+        rank_position VARCHAR(50),
+        net_salary DECIMAL(10,2),
+        horin_platoon VARCHAR(50),
+        verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      success: true,
+      message: 'Fingerprint verification table created successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// 3. Register new soldier
+app.post('/soldiers', async (req, res) => {
+  try {
+    const {
+      full_names, date_of_birth, gender, photo, fingerprint_data,
+      rank_position, date_of_enlistment, horin_platoon, horin_commander,
+      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
+      emergency_contact_name, emergency_contact_phone, home_address,
+      blood_group, status
+    } = req.body;
+
+    // Generate Soldier ID (CMJ00001 format)
+    const countResult = await pool.query('SELECT COUNT(*) FROM soldiers');
+    const count = parseInt(countResult.rows[0].count) + 1;
+    const soldier_id = `CMJ${String(count).padStart(5, '0')}`;
+
+    const query = `
+      INSERT INTO soldiers (
+        soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
+        rank_position, date_of_enlistment, horin_platoon, horin_commander,
+        net_salary, tel_number, clan, guarantor_name, guarantor_phone,
+        emergency_contact_name, emergency_contact_phone, home_address,
+        blood_group, status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+      RETURNING *
+    `;
+
+    const values = [
+      soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
+      rank_position, date_of_enlistment, horin_platoon, horin_commander,
+      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
+      emergency_contact_name, emergency_contact_phone, home_address,
+      blood_group, status || 'Active'
+    ];
+
+    const result = await pool.query(query, values);
     
-    if (!soldierId) {
-        alert('Please enter Soldier ID');
-        return;
-    }
+    res.json({
+      success: true,
+      message: 'Soldier registered successfully',
+      soldier: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
-    try {
-        const response = await fetch(`${API_BASE}/enroll-fingerprint`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ soldier_id: soldierId })
-        });
+// 4. Get all soldiers
+app.get('/soldiers', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM soldiers ORDER BY soldier_id');
+    res.json({
+      success: true,
+      soldiers: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
-        const result = await response.json();
-        
-        if (result.success) {
-            let message = `✅ ${result.message}\n\n`;
-            result.instructions.forEach(instruction => {
-                message += `${instruction}\n`;
-            });
-            message += `\nSoldier ID: ${result.soldier_id}`;
-            
-            alert(message);
-            document.getElementById('enrollSoldierId').value = '';
-        } else {
-            alert(`❌ ${result.error}`);
-        }
-    } catch (error) {
-        alert(`❌ Network error: ${error.message}`);
-    }
-}
-
-async function storeFingerprintTemplate() {
-    const soldierId = prompt('Enter Soldier ID:');
-    const template = prompt('Enter fingerprint template data from device:');
+// 5. Manual verification entry
+app.post('/manual-verification', async (req, res) => {
+  try {
+    const { soldier_id } = req.body;
     
-    if (!soldierId || !template) {
-        alert('Soldier ID and template data are required');
-        return;
+    if (!soldier_id) {
+      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
     }
 
-    try {
-        const response = await fetch(`${API_BASE}/store-fingerprint`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                soldier_id: soldierId, 
-                fingerprint_template: template 
-            })
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-            alert(`✅ ${result.message}\nSoldier ID: ${result.soldier_id}`);
-        } else {
-            alert(`❌ ${result.error}`);
-        }
-    } catch (error) {
-        alert(`❌ Network error: ${error.message}`);
+    // Find soldier
+    const soldierResult = await pool.query(
+      'SELECT * FROM soldiers WHERE soldier_id = $1',
+      [soldier_id]
+    );
+    
+    if (soldierResult.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Soldier not found' });
     }
-}
+
+    const soldier = soldierResult.rows[0];
+    const currentTime = new Date();
+
+    // Record verification
+    await pool.query(
+      `INSERT INTO fingerprint_verifications 
+       (soldier_id, full_names, rank_position, net_salary, horin_platoon, verified_at) 
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        soldier.soldier_id, 
+        soldier.full_names, 
+        soldier.rank_position, 
+        soldier.net_salary, 
+        soldier.horin_platoon,
+        currentTime
+      ]
+    );
+
+    res.json({
+      success: true,
+      message: 'Manual verification recorded successfully',
+      soldier: {
+        soldier_id: soldier.soldier_id,
+        full_names: soldier.full_names,
+        verified_at: currentTime
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 6. Get today's verification report
+app.get('/today-verifications', async (req, res) => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const result = await pool.query(`
+      SELECT 
+        fv.soldier_id,
+        fv.full_names,
+        fv.rank_position,
+        fv.horin_platoon,
+        fv.verified_at,
+        s.status
+      FROM fingerprint_verifications fv
+      LEFT JOIN soldiers s ON fv.soldier_id = s.soldier_id
+      WHERE DATE(fv.verified_at) = $1
+      ORDER BY fv.verified_at
+    `, [today]);
+    
+    const totalSoldiers = await pool.query('SELECT COUNT(*) FROM soldiers WHERE status = $1', ['Active']);
+    const verifiedCount = result.rows.length;
+    const missingCount = parseInt(totalSoldiers.rows[0].count) - verifiedCount;
+    
+    res.json({
+      success: true,
+      date: today,
+      summary: {
+        total_soldiers: parseInt(totalSoldiers.rows[0].count),
+        verified_today: verifiedCount,
+        missing_verification: missingCount
+      },
+      verifications: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 7. Monthly payroll report
+app.get('/monthly-payroll', async (req, res) => {
+  try {
+    const { month, year } = req.query;
+    const currentMonth = month || new Date().getMonth() + 1;
+    const currentYear = year || new Date().getFullYear();
+
+    const query = `
+      SELECT 
+        soldier_id,
+        full_names,
+        rank_position,
+        net_salary,
+        horin_platoon,
+        verified_at
+      FROM fingerprint_verifications 
+      WHERE EXTRACT(MONTH FROM verified_at) = $1 
+        AND EXTRACT(YEAR FROM verified_at) = $2
+      ORDER BY horin_platoon, rank_position
+    `;
+
+    const result = await pool.query(query, [currentMonth, currentYear]);
+    
+    const totalSoldiers = result.rows.length;
+    const totalSalary = result.rows.reduce((sum, soldier) => sum + parseFloat(soldier.net_salary), 0);
+
+    res.json({
+      success: true,
+      report: {
+        month: currentMonth,
+        year: currentYear,
+        total_soldiers: totalSoldiers,
+        total_salary: totalSalary,
+        soldiers: result.rows
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// ================== BASIC ENDPOINTS ==================
+
+app.get('/health', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW() as current_time');
+    res.json({ 
+      status: 'OK', 
+      database: 'connected',
+      timestamp: result.rows[0].current_time
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'ERROR', 
+      database: 'disconnected',
+      error: error.message 
+    });
+  }
+});
+
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Jubaland Statehouse Forces Database System',
+    endpoints: {
+      setup: '/setup-soldiers & /setup-verification',
+      soldiers: 'GET/POST /soldiers',
+      verification: {
+        manual: 'POST /manual-verification',
+        today_report: 'GET /today-verifications'
+      },
+      payroll: 'GET /monthly-payroll',
+      health: '/health'
+    }
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
+});
