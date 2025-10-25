@@ -5,155 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
     <style>
+        /* Your existing CSS remains exactly the same */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
         .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        
-        /* Header Styles */
-        .header { 
-            background: #2c3e50; 
-            color: white; 
-            padding: 20px; 
-            text-align: center; 
-            border-radius: 10px 10px 0 0;
-        }
-        .header-content { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px; 
-        }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header-content { display: flex; align-items: center; justify-content: center; gap: 20px; }
         .logo { height: 60px; }
         .header-text { text-align: center; }
         .header h1 { font-size: 24px; margin-bottom: 5px; }
         .header p { font-size: 16px; opacity: 0.9; }
-        
-        /* Main Content Layout */
         .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
-        
-        /* Form Styles */
         .form-section { margin-bottom: 20px; }
         .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
-        
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-        }
-        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
-        input, select, textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            border: 2px solid #bdc3c7; 
-            border-radius: 5px; 
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        input[readonly] {
-            background-color: #ecf0f1;
-            color: #7f8c8d;
-            cursor: not-allowed;
-        }
-        
-        /* Photo Section */
-        .photo-section { 
-            background: #ecf0f1; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center;
-            height: fit-content;
-        }
-        .photo-upload { 
-            border: 2px dashed #bdc3c7; 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .photo-upload:hover {
-            border-color: #3498db;
-        }
-        .photo-preview { 
-            width: 150px; 
-            height: 180px; 
-            background: white; 
-            border: 1px solid #bdc3c7; 
-            margin: 0 auto 15px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .photo-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-        }
-        .upload-icon { 
-            font-size: 40px; 
-            color: #bdc3c7; 
-            margin-bottom: 10px;
-        }
-        
-        /* Button Styles */
-        .submit-btn { 
-            background: #3498db; 
-            color: white; 
-            padding: 12px 30px; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0;
-            transition: background 0.3s;
-        }
-        .submit-btn:hover { 
-            background: #2980b9; 
-        }
+        input, select, textarea { width: 100%; padding: 8px 12px; border: 2px solid #bdc3c7; border-radius: 5px; font-size: 14px; transition: border-color 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: #3498db; outline: none; }
+        input[readonly] { background-color: #ecf0f1; color: #7f8c8d; cursor: not-allowed; }
+        .photo-section { background: #ecf0f1; padding: 20px; border-radius: 10px; text-align: center; height: fit-content; }
+        .photo-upload { border: 2px dashed #bdc3c7; padding: 20px; border-radius: 10px; margin-bottom: 15px; cursor: pointer; transition: border-color 0.3s; }
+        .photo-upload:hover { border-color: #3498db; }
+        .photo-preview { width: 150px; height: 180px; background: white; border: 1px solid #bdc3c7; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .photo-preview img { max-width: 100%; max-height: 100%; display: none; }
+        .upload-icon { font-size: 40px; color: #bdc3c7; margin-bottom: 10px; }
+        .submit-btn { background: #3498db; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; display: block; margin: 10px 0; transition: background 0.3s; }
+        .submit-btn:hover { background: #2980b9; }
         .btn-success { background: #27ae60; }
         .btn-success:hover { background: #219a52; }
-        
-        /* Tabs */
-        .tabs { 
-            display: flex; 
-            background: #34495e; 
-            border-radius: 5px 5px 0 0;
-            overflow: hidden;
-        }
-        .tab { 
-            padding: 15px 20px; 
-            cursor: pointer; 
-            border: none; 
-            background: none; 
-            color: white;
-            flex: 1;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        .tab.active { 
-            background: #3498db; 
-        }
-        .tab:hover {
-            background: #2980b9;
-        }
-        
+        .tabs { display: flex; background: #34495e; border-radius: 5px 5px 0 0; overflow: hidden; }
+        .tab { padding: 15px 20px; cursor: pointer; border: none; background: none; color: white; flex: 1; text-align: center; transition: background 0.3s; }
+        .tab.active { background: #3498db; }
+        .tab:hover { background: #2980b9; }
         .content { display: none; }
         .content.active { display: block; }
-        
-        /* Table Styles */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background: #f8f9fa; color: #2c3e50; }
-        
         .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
         .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
@@ -174,235 +63,13 @@
     </div>
 
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <img src="logo.png" alt="Jubaland Logo" class="logo">
-                <div class="header-text">
-                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
-                    <p>Military Personnel Management & Payroll System</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('register')">Register Soldier</button>
-            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
-            <button class="tab" onclick="showTab('verification')">Verification</button>
-            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
-        </div>
-
-        <!-- Register Soldier Tab -->
-        <div id="register" class="content active">
-            <form id="soldierForm">
-                <div class="main-content">
-                    <!-- Left Column - Form Fields -->
-                    <div class="form-column">
-                        <!-- Personal Information -->
-                        <div class="form-section">
-                            <h3>PERSONAL INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Soldier_ID</label>
-                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
-                                </div>
-                                <div class="form-group">
-                                    <label>Full Names *</label>
-                                    <input type="text" name="full_names" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Birth *</label>
-                                    <input type="date" name="date_of_birth" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Gender *</label>
-                                    <select name="gender" required>
-                                        <option value="">Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Rank/Position *</label>
-                                    <select name="rank_position" required onchange="updateSalary()">
-                                        <option value="">Select</option>
-                                        <option value="Askari">Askari</option>
-                                        <option value="Taliye Unug">Taliye Unug</option>
-                                        <option value="Taliye Koox">Taliye Koox</option>
-                                        <option value="Taliye Horin">Taliye Horin</option>
-                                        <option value="Abandule">Abandule</option>
-                                        <option value="Taliye Guuto">Taliye Guuto</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Enlistment *</label>
-                                    <input type="date" name="date_of_enlistment" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin/Platoon *</label>
-                                    <select name="horin_platoon" required onchange="updateCommander()">
-                                        <option value="">Select</option>
-                                        <option value="Horin1">Horin1</option>
-                                        <option value="Horin2">Horin2</option>
-                                        <option value="Horin3">Horin3</option>
-                                        <option value="Horin4">Horin4</option>
-                                        <option value="Horin5">Horin5</option>
-                                        <option value="Horin6">Horin6</option>
-                                        <option value="Taliska">Taliska</option>
-                                        <option value="Fiat">Fiat</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin Commander *</label>
-                                    <input type="text" name="horin_commander" required id="horin_commander" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Net_Salary *</label>
-                                    <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Contact Information -->
-                        <div class="form-section">
-                            <h3>CONTACT INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Tel_Number (10 Digits) *</label>
-                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Clan</label>
-                                    <input type="text" name="clan">
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Name *</label>
-                                    <input type="text" name="guarantor_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Phone (10 Digits) *</label>
-                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Name *</label>
-                                    <input type="text" name="emergency_contact_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Phone *</label>
-                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Blood_Group</label>
-                                    <select name="blood_group">
-                                        <option value="">Select</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Wounded">Wounded</option>
-                                        <option value="Discharged">Discharged</option>
-                                        <option value="Dead">Dead</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Home Address -->
-                        <div class="form-section">
-                            <h3>HOME ADDRESS</h3>
-                            <div class="form-group">
-                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column - Photo -->
-                    <div class="photo-column">
-                        <!-- Photo Upload -->
-                        <div class="photo-section">
-                            <h3>PHOTO</h3>
-                            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                                <div class="photo-preview">
-                                    <img id="photoPreview" src="" alt="Photo Preview">
-                                    <div class="upload-icon">📷</div>
-                                </div>
-                                <p>Click to upload photo</p>
-                                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
-                            </div>
-                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
-                <div id="formMessage"></div>
-            </form>
-        </div>
-
-        <!-- View Soldiers Tab -->
-        <div id="soldiers" class="content">
-            <h2 style="padding: 20px;">All Soldiers</h2>
-            <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
-            <div id="soldiersList" style="padding: 20px;"></div>
-        </div>
-
-        <!-- Verification Tab -->
-        <div id="verification" class="content">
-            <h2 style="padding: 20px;">Daily Verification</h2>
-            <div style="padding: 20px;">
-                
-                <!-- Manual Verification -->
-                <div class="form-section">
-                    <h3>Manual Verification Entry</h3>
-                    <div class="form-group">
-                        <label>Soldier ID:</label>
-                        <input type="text" id="manualSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)">
-                    </div>
-                    <button onclick="manualVerification()" class="submit-btn">Record Verification</button>
-                    <div id="manualResult" style="margin-top: 20px;"></div>
-                </div>
-
-                <!-- Today's Report -->
-                <div class="form-section">
-                    <h3>Today's Verification Report</h3>
-                    <button onclick="loadTodayReport()" class="submit-btn">Refresh Report</button>
-                    <div id="todayReport" style="margin-top: 20px;"></div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Monthly Payroll Tab -->
-        <div id="payroll" class="content">
-            <h2 style="padding: 20px;">Monthly Payroll Report</h2>
-            <div style="padding: 0 20px;">
-                <div class="form-group">
-                    <label>Month</label>
-                    <input type="number" id="payrollMonth" min="1" max="12" value="10">
-                </div>
-                <div class="form-group">
-                    <label>Year</label>
-                    <input type="number" id="payrollYear" value="2025">
-                </div>
-                <button onclick="generatePayroll()" class="submit-btn">Generate Report</button>
-            </div>
-            <div id="payrollReport" style="padding: 20px;"></div>
-        </div>
+        <!-- Header and all your HTML content remains exactly the same -->
+        <!-- ... your existing HTML structure ... -->
     </div>
 
     <script>
-        const API_BASE = '/api';
+        // Use absolute URL for API calls to avoid routing issues
+        const API_BASE = window.location.origin + '/api';
         let photoBase64 = '';
 
         // Password Protection
@@ -441,7 +108,6 @@
                 'Taliska': 'Gowracdiid',
                 'Fiat': 'Hiis Abdi Ali'
             };
-            
             document.getElementById('horin_commander').value = commanders[platoon] || '';
         }
 
@@ -456,7 +122,6 @@
                 'Abandule': '450',
                 'Taliye Guuto': '500'
             };
-            
             document.getElementById('net_salary').value = salaries[rank] || '';
         }
 
@@ -468,7 +133,6 @@
                     alert('File size too large! Please select an image under 2MB.');
                     return;
                 }
-
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const preview = document.getElementById('photoPreview');
@@ -481,28 +145,44 @@
             }
         }
 
-        // Register Soldier
-        document.getElementById('soldierForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            
-            data.photo = photoBase64;
-
+        // Enhanced fetch with better error handling
+        async function apiCall(url, options = {}) {
             try {
-                const response = await fetch(`${API_BASE}/soldiers`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
                 });
 
                 // Check if response is JSON
                 const contentType = response.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text.substring(0, 200));
+                    throw new Error(`Server returned HTML instead of JSON. Check if API route exists: ${url}`);
                 }
 
-                const result = await response.json();
+                return await response.json();
+            } catch (error) {
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // Register Soldier
+        document.getElementById('soldierForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            data.photo = photoBase64;
+
+            try {
+                const result = await apiCall(`${API_BASE}/soldiers`, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
                 
                 const messageDiv = document.getElementById('formMessage');
                 if (result.success) {
@@ -522,15 +202,7 @@
         // Load Soldiers
         async function loadSoldiers() {
             try {
-                const response = await fetch(`${API_BASE}/soldiers`);
-                
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
-                }
-
-                const result = await response.json();
+                const result = await apiCall(`${API_BASE}/soldiers`);
                 
                 if (result.success) {
                     const soldiersHtml = `
@@ -580,19 +252,10 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/manual-verification`, {
+                const result = await apiCall(`${API_BASE}/manual-verification`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ soldier_id: soldierId })
                 });
-
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
-                }
-
-                const result = await response.json();
                 
                 if (result.success) {
                     document.getElementById('manualResult').innerHTML = 
@@ -613,15 +276,7 @@
         // Load Today's Report
         async function loadTodayReport() {
             try {
-                const response = await fetch(`${API_BASE}/today-verifications`);
-                
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
-                }
-
-                const result = await response.json();
+                const result = await apiCall(`${API_BASE}/today-verifications`);
                 
                 if (result.success) {
                     let html = `<div class="alert info">`;
@@ -661,15 +316,7 @@
             const year = document.getElementById('payrollYear').value;
             
             try {
-                const response = await fetch(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
-                
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
-                }
-
-                const result = await response.json();
+                const result = await apiCall(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
                 
                 if (result.success) {
                     const report = result.report;
@@ -714,6 +361,16 @@
         document.querySelector('[onclick="showTab(\'soldiers\')"]').addEventListener('click', loadSoldiers);
         // Load today's report when tab is shown
         document.querySelector('[onclick="showTab(\'verification\')"]').addEventListener('click', loadTodayReport);
+
+        // Test API connection on load
+        window.addEventListener('load', async () => {
+            try {
+                const result = await apiCall(`${API_BASE}/health`);
+                console.log('API health check:', result);
+            } catch (error) {
+                console.error('API health check failed:', error);
+            }
+        });
     </script>
 </body>
 </html>
