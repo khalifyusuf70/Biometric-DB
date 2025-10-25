@@ -1,10 +1,12 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
@@ -316,8 +318,13 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// ROOT ENDPOINT - Add this to fix the blank page
+// ROOT ENDPOINT - Serve the frontend
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// API Root endpoint
+app.get('/api', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Database System',
     endpoints: {
@@ -333,6 +340,13 @@ app.get('/', (req, res) => {
   });
 });
 
+// Catch all handler - serve index.html for any other route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
+  console.log(`📱 Frontend: https://biometric-db.onrender.com`);
+  console.log(`🔧 API: https://biometric-db.onrender.com/api`);
 });
