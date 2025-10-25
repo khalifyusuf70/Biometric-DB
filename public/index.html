@@ -1,24 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        
+        /* Header Styles */
+        .header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            border-radius: 10px 10px 0 0;
+        }
+        .header-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        .logo { height: 60px; }
+        .header-text { text-align: center; }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { font-size: 16px; opacity: 0.9; }
+        
+        /* Main Content Layout */
+        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
+        
+        /* Form Styles */
+        .form-section { margin-bottom: 20px; }
+        .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
+        
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 8px 12px; 
+            border: 2px solid #bdc3c7; 
+            border-radius: 5px; 
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        input[readonly] {
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+        
+        /* Photo Section */
+        .photo-section { 
+            background: #ecf0f1; 
+            padding: 20px; 
+            border-radius: 10px; 
+            text-align: center;
+            height: fit-content;
+        }
+        .photo-upload { 
+            border: 2px dashed #bdc3c7; 
+            padding: 20px; 
+            border-radius: 10px; 
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .photo-upload:hover {
+            border-color: #3498db;
+        }
+        .photo-preview { 
+            width: 150px; 
+            height: 180px; 
+            background: white; 
+            border: 1px solid #bdc3c7; 
+            margin: 0 auto 15px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+        .upload-icon { 
+            font-size: 40px; 
+            color: #bdc3c7; 
+            margin-bottom: 10px;
+        }
+        
+        /* Button Styles */
+        .submit-btn { 
+            background: #3498db; 
+            color: white; 
+            padding: 12px 30px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        .submit-btn:hover { 
+            background: #2980b9; 
+        }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #219a52; }
+        
+        /* Tabs */
+        .tabs { 
+            display: flex; 
+            background: #34495e; 
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+        }
+        .tab { 
+            padding: 15px 20px; 
+            cursor: pointer; 
+            border: none; 
+            background: none; 
+            color: white;
+            flex: 1;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .tab.active { 
+            background: #3498db; 
+        }
+        .tab:hover {
+            background: #2980b9;
+        }
+        
+        .content { display: none; }
+        .content.active { display: block; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; color: #2c3e50; }
+        
+        .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <!-- Password Protection -->
+    <div id="loginOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="background:#2c3e50;color:white;padding:40px;border-radius:10px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,0.3);">
+            <h2 style="margin-bottom:20px;">🇸🇴 JUBALAND STATEHOUSE FORCES</h2>
+            <h3 style="margin-bottom:20px;">Enter System Password</h3>
+            <input type="password" id="passwordInput" placeholder="Enter password" style="padding:12px;margin:10px;width:250px;border-radius:5px;border:none;font-size:16px;">
+            <br>
+            <button onclick="checkPassword()" style="padding:12px 30px;background:#27ae60;color:white;border:none;border-radius:5px;cursor:pointer;font-size:16px;margin-top:10px;">Access System</button>
+            <p style="margin-top:15px;font-size:12px;opacity:0.8;">Authorized Personnel Only</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <img src="logo.png" alt="Jubaland Logo" class="logo">
+                <div class="header-text">
+                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
+                    <p>Military Personnel Management & Payroll System</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('register')">Register Soldier</button>
+            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
+            <button class="tab" onclick="showTab('verification')">Verification</button>
+            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
+        </div>
+
+        <!-- Register Soldier Tab -->
+        <div id="register" class="content active">
+            <form id="soldierForm">
+                <div class="main-content">
+                    <!-- Left Column - Form Fields -->
+                    <div class="form-column">
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h3>PERSONAL INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Soldier_ID</label>
+                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Full Names *</label>
+                                    <input type="text" name="full_names" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Birth *</label>
+                                    <input type="date" name="date_of_birth" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender *</label>
+                                    <select name="gender" required>
+                                        <option value="">Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rank/Position *</label>
+                                    <select name="rank_position" required onchange="updateSalary()">
+                                        <option value="">Select</option>
+                                        <option value="Askari">Askari</option>
+                                        <option value="Taliye Unug">Taliye Unug</option>
+                                        <option value="Taliye Koox">Taliye Koox</option>
+                                        <option value="Taliye Horin">Taliye Horin</option>
+                                        <option value="Abandule">Abandule</option>
+                                        <option value="Taliye Guuto">Taliye Guuto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date_of_Enlistment *</label>
+                                    <input type="date" name="date_of_enlistment" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin/Platoon *</label>
+                                    <select name="horin_platoon" required onchange="updateCommander()">
+                                        <option value="">Select</option>
+                                        <option value="Horin1">Horin1</option>
+                                        <option value="Horin2">Horin2</option>
+                                        <option value="Horin3">Horin3</option>
+                                        <option value="Horin4">Horin4</option>
+                                        <option value="Horin5">Horin5</option>
+                                        <option value="Horin6">Horin6</option>
+                                        <option value="Taliska">Taliska</option>
+                                        <option value="Fiat">Fiat</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Horin Commander *</label>
+                                    <input type="text" name="horin_commander" required id="horin_commander" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Net_Salary *</label>
+                                    <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <h3>CONTACT INFORMATION</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Tel_Number (10 Digits) *</label>
+                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Clan</label>
+                                    <input type="text" name="clan">
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Name *</label>
+                                    <input type="text" name="guarantor_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Guarantor_Phone (10 Digits) *</label>
+                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Name *</label>
+                                    <input type="text" name="emergency_contact_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Emergency_Contact_Phone *</label>
+                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Blood_Group</label>
+                                    <select name="blood_group">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status">
+                                        <option value="Active">Active</option>
+                                        <option value="Wounded">Wounded</option>
+                                        <option value="Discharged">Discharged</option>
+                                        <option value="Dead">Dead</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Home Address -->
+                        <div class="form-section">
+                            <h3>HOME ADDRESS</h3>
+                            <div class="form-group">
+                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Photo -->
+                    <div class="photo-column">
+                        <!-- Photo Upload -->
+                        <div class="photo-section">
+                            <h3>PHOTO</h3>
+                            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                                <div class="photo-preview">
+                                    <img id="photoPreview" src="" alt="Photo Preview">
+                                    <div class="upload-icon">📷</div>
+                                </div>
+                                <p>Click to upload photo</p>
+                                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
+                            </div>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
+                <div id="formMessage"></div>
+            </form>
+        </div>
+
+        <!-- View Soldiers Tab -->
+        <div id="soldiers" class="content">
+            <h2 style="padding: 20px;">All Soldiers</h2>
+            <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
+            <div id="soldiersList" style="padding: 20px;"></div>
+        </div>
+
+        <!-- Verification Tab -->
+        <div id="verification" class="content">
+            <h2 style="padding: 20px;">Daily Verification</h2>
+            <div style="padding: 20px;">
+                
+                <!-- Manual Verification -->
+                <div class="form-section">
+                    <h3>Manual Verification Entry</h3>
+                    <div class="form-group">
+                        <label>Soldier ID:</label>
+                        <input type="text" id="manualSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)">
+                    </div>
+                    <button onclick="manualVerification()" class="submit-btn">Record Verification</button>
+                    <div id="manualResult" style="margin-top: 20px;"></div>
+                </div>
+
+                <!-- Today's Report -->
+                <div class="form-section">
+                    <h3>Today's Verification Report</h3>
+                    <button onclick="loadTodayReport()" class="submit-btn">Refresh Report</button>
+                    <div id="todayReport" style="margin-top: 20px;"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Monthly Payroll Tab -->
+        <div id="payroll" class="content">
+            <h2 style="padding: 20px;">Monthly Payroll Report</h2>
+            <div style="padding: 0 20px;">
+                <div class="form-group">
+                    <label>Month</label>
+                    <input type="number" id="payrollMonth" min="1" max="12" value="10">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="number" id="payrollYear" value="2025">
+                </div>
+                <button onclick="generatePayroll()" class="submit-btn">Generate Report</button>
+            </div>
+            <div id="payrollReport" style="padding: 20px;"></div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = 'https://biometric-db.onrender.com';
         let photoBase64 = '';
-
-        console.log('API Base URL:', API_BASE);
-
-        // Test connection on load
-        fetch(`${API_BASE}/health`)
-          .then(r => r.text())
-          .then(text => {
-              console.log('Health check raw response:', text);
-              try {
-                  const json = JSON.parse(text);
-                  console.log('Health check JSON:', json);
-              } catch (e) {
-                  console.log('Health check NOT JSON - this is the problem!');
-              }
-          })
-          .catch(err => {
-              console.log('Health check failed:', err);
-          });
 
         // Password Protection
         function checkPassword() {
@@ -96,73 +481,43 @@
             }
         }
 
-        // Register Soldier with Debug
+        // Register Soldier
         document.getElementById('soldierForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('Form submitted - starting registration...');
-            
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
+            
             data.photo = photoBase64;
 
-            console.log('Form data being sent:', data);
-
             try {
-                console.log('Sending request to:', `${API_BASE}/soldiers`);
-                
                 const response = await fetch(`${API_BASE}/soldiers`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                console.log('Response status:', response.status);
-                const responseText = await response.text();
-                console.log('Raw response:', responseText);
-
-                // Try to parse as JSON
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                    console.log('Parsed JSON result:', result);
-                } catch (parseError) {
-                    console.error('Failed to parse JSON:', parseError);
-                    throw new Error(`Server returned non-JSON: ${responseText.substring(0, 100)}...`);
-                }
-
+                const result = await response.json();
+                
                 const messageDiv = document.getElementById('formMessage');
                 if (result.success) {
-                    messageDiv.innerHTML = `<div class="alert success">✅ Soldier registered successfully! ID: ${result.soldier.soldier_id}</div>`;
+                    messageDiv.innerHTML = `<div class="alert success">Soldier registered successfully! ID: ${result.soldier.soldier_id}</div>`;
                     e.target.reset();
                     document.getElementById('photoPreview').style.display = 'none';
                     document.querySelector('.upload-icon').style.display = 'block';
                     photoBase64 = '';
                 } else {
-                    messageDiv.innerHTML = `<div class="alert error">❌ Error: ${result.error}</div>`;
+                    messageDiv.innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
                 }
             } catch (error) {
-                console.error('Registration failed:', error);
-                document.getElementById('formMessage').innerHTML = 
-                    `<div class="alert error">❌ Registration failed: ${error.message}. Check browser console for details.</div>`;
+                document.getElementById('formMessage').innerHTML = `<div class="alert error">Network error: ${error.message}</div>`;
             }
         });
 
-        // Load Soldiers with Debug
+        // Load Soldiers
         async function loadSoldiers() {
-            console.log('Loading soldiers from:', `${API_BASE}/soldiers`);
-            
             try {
                 const response = await fetch(`${API_BASE}/soldiers`);
-                const responseText = await response.text();
-                console.log('Soldiers raw response:', responseText);
-                
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    console.error('Failed to parse soldiers JSON:', parseError);
-                    throw new Error(`Server returned non-JSON: ${responseText.substring(0, 100)}...`);
-                }
+                const result = await response.json();
                 
                 if (result.success) {
                     const soldiersHtml = `
@@ -196,17 +551,13 @@
                         </table>
                     `;
                     document.getElementById('soldiersList').innerHTML = soldiersHtml;
-                } else {
-                    document.getElementById('soldiersList').innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
                 }
             } catch (error) {
-                console.error('Load soldiers failed:', error);
-                document.getElementById('soldiersList').innerHTML = 
-                    `<div class="alert error">❌ Failed to load soldiers: ${error.message}. Check browser console.</div>`;
+                document.getElementById('soldiersList').innerHTML = `<div class="alert error">Error loading soldiers: ${error.message}</div>`;
             }
         }
 
-        // Manual Verification with Debug
+        // Manual Verification
         async function manualVerification() {
             const soldierId = document.getElementById('manualSoldierId').value.trim();
             
@@ -215,8 +566,6 @@
                 return;
             }
 
-            console.log('Manual verification for:', soldierId);
-
             try {
                 const response = await fetch(`${API_BASE}/manual-verification`, {
                     method: 'POST',
@@ -224,16 +573,8 @@
                     body: JSON.stringify({ soldier_id: soldierId })
                 });
 
-                const responseText = await response.text();
-                console.log('Manual verification raw response:', responseText);
+                const result = await response.json();
                 
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    throw new Error(`Server returned non-JSON: ${responseText.substring(0, 100)}...`);
-                }
-
                 if (result.success) {
                     document.getElementById('manualResult').innerHTML = 
                         `<div class="alert success">✅ ${result.message}<br>
@@ -245,27 +586,16 @@
                         `<div class="alert error">❌ ${result.error}</div>`;
                 }
             } catch (error) {
-                console.error('Manual verification failed:', error);
                 document.getElementById('manualResult').innerHTML = 
-                    `<div class="alert error">❌ Failed: ${error.message}. Check browser console.</div>`;
+                    `<div class="alert error">❌ Network error: ${error.message}</div>`;
             }
         }
 
-        // Load Today's Report with Debug
+        // Load Today's Report
         async function loadTodayReport() {
-            console.log('Loading today report from:', `${API_BASE}/today-verifications`);
-            
             try {
                 const response = await fetch(`${API_BASE}/today-verifications`);
-                const responseText = await response.text();
-                console.log('Today report raw response:', responseText);
-                
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    throw new Error(`Server returned non-JSON: ${responseText.substring(0, 100)}...`);
-                }
+                const result = await response.json();
                 
                 if (result.success) {
                     let html = `<div class="alert info">`;
@@ -294,30 +624,19 @@
                     document.getElementById('todayReport').innerHTML = html;
                 }
             } catch (error) {
-                console.error('Load today report failed:', error);
                 document.getElementById('todayReport').innerHTML = 
-                    `<div class="alert error">❌ Failed to load report: ${error.message}. Check browser console.</div>`;
+                    `<div class="alert error">Error: ${error.message}</div>`;
             }
         }
 
-        // Generate Payroll with Debug
+        // Generate Payroll
         async function generatePayroll() {
             const month = document.getElementById('payrollMonth').value;
             const year = document.getElementById('payrollYear').value;
             
-            console.log('Generating payroll for:', month, year);
-            
             try {
                 const response = await fetch(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
-                const responseText = await response.text();
-                console.log('Payroll raw response:', responseText);
-                
-                let result;
-                try {
-                    result = JSON.parse(responseText);
-                } catch (parseError) {
-                    throw new Error(`Server returned non-JSON: ${responseText.substring(0, 100)}...`);
-                }
+                const result = await response.json();
                 
                 if (result.success) {
                     const report = result.report;
@@ -352,13 +671,9 @@
                         </table>
                     `;
                     document.getElementById('payrollReport').innerHTML = payrollHtml;
-                } else {
-                    document.getElementById('payrollReport').innerHTML = `<div class="alert error">Error: ${result.error}</div>`;
                 }
             } catch (error) {
-                console.error('Generate payroll failed:', error);
-                document.getElementById('payrollReport').innerHTML = 
-                    `<div class="alert error">❌ Failed to generate payroll: ${error.message}. Check browser console.</div>`;
+                document.getElementById('payrollReport').innerHTML = `<div class="alert error">Error generating payroll: ${error.message}</div>`;
             }
         }
 
@@ -367,3 +682,5 @@
         // Load today's report when tab is shown
         document.querySelector('[onclick="showTab(\'verification\')"]').addEventListener('click', loadTodayReport);
     </script>
+</body>
+</html>
