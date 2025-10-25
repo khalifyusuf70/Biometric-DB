@@ -316,6 +316,7 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// ROOT ENDPOINT - Add this to fix the blank page
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Database System',
