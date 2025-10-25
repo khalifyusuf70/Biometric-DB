@@ -402,7 +402,7 @@
     </div>
 
     <script>
-        const API_BASE = '/api'; // Changed to relative path
+        const API_BASE = '/api';
         let photoBase64 = '';
 
         // Password Protection
@@ -496,6 +496,12 @@
                     body: JSON.stringify(data)
                 });
 
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                }
+
                 const result = await response.json();
                 
                 const messageDiv = document.getElementById('formMessage');
@@ -517,6 +523,13 @@
         async function loadSoldiers() {
             try {
                 const response = await fetch(`${API_BASE}/soldiers`);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                }
+
                 const result = await response.json();
                 
                 if (result.success) {
@@ -573,6 +586,12 @@
                     body: JSON.stringify({ soldier_id: soldierId })
                 });
 
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                }
+
                 const result = await response.json();
                 
                 if (result.success) {
@@ -595,6 +614,13 @@
         async function loadTodayReport() {
             try {
                 const response = await fetch(`${API_BASE}/today-verifications`);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                }
+
                 const result = await response.json();
                 
                 if (result.success) {
@@ -636,6 +662,13 @@
             
             try {
                 const response = await fetch(`${API_BASE}/monthly-payroll?month=${month}&year=${year}`);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
+                }
+
                 const result = await response.json();
                 
                 if (result.success) {
