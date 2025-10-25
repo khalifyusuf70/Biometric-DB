@@ -4,10 +4,11 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
+// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(express.static('public'));
 
 // PostgreSQL connection
@@ -28,7 +29,42 @@ async function testConnection() {
 }
 testConnection();
 
-// ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
+// ================== API ROUTES ==================
+
+// Health check
+app.get('/api/health', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW() as current_time');
+    res.json({ 
+      status: 'OK', 
+      database: 'connected',
+      timestamp: result.rows[0].current_time
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'ERROR', 
+      database: 'disconnected',
+      error: error.message 
+    });
+  }
+});
+
+// API info
+app.get('/api', (req, res) => {
+  res.json({ 
+    message: 'Jubaland Statehouse Forces Database System',
+    endpoints: {
+      setup: '/api/setup-soldiers & /api/setup-verification',
+      soldiers: 'GET/POST /api/soldiers',
+      verification: {
+        manual: 'POST /api/manual-verification',
+        today_report: 'GET /api/today-verifications'
+      },
+      payroll: 'GET /api/monthly-payroll',
+      health: '/api/health'
+    }
+  });
+});
 
 // 1. Create soldiers table
 app.get('/api/setup-soldiers', async (req, res) => {
@@ -298,48 +334,16 @@ app.get('/api/monthly-payroll', async (req, res) => {
   }
 });
 
-// ================== BASIC ENDPOINTS ==================
+// ================== CLIENT ROUTES ==================
 
-app.get('/api/health', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW() as current_time');
-    res.json({ 
-      status: 'OK', 
-      database: 'connected',
-      timestamp: result.rows[0].current_time
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      status: 'ERROR', 
-      database: 'disconnected',
-      error: error.message 
-    });
-  }
-});
-
-app.get('/api', (req, res) => {
-  res.json({ 
-    message: 'Jubaland Statehouse Forces Database System',
-    endpoints: {
-      setup: '/api/setup-soldiers & /api/setup-verification',
-      soldiers: 'GET/POST /api/soldiers',
-      verification: {
-        manual: 'POST /api/manual-verification',
-        today_report: 'GET /api/today-verifications'
-      },
-      payroll: 'GET /api/monthly-payroll',
-      health: '/api/health'
-    }
-  });
-});
-
-// Serve HTML for all non-API routes (MUST BE LAST)
+// Serve the frontend for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
-  console.log(`📱 Frontend: http://localhost:${PORT}`);
-  console.log(`🔧 API: http://localhost:${PORT}/api`);
+  console.log(`📱 Frontend: https://biometric-db.onrender.com`);
+  console.log(`🔧 API: https://biometric-db.onrender.com/api`);
+  console.log('✅ PostgreSQL connected successfully');
 });
