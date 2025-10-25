@@ -1,6 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,6 +9,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+
+// Serve HTML for all non-API routes
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+});
 
 // PostgreSQL connection
 const pool = new Pool({
@@ -30,7 +38,7 @@ testConnection();
 // ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
 // 1. Create soldiers table
-app.get('/setup-soldiers', async (req, res) => {
+app.get('/api/setup-soldiers', async (req, res) => {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS soldiers (
@@ -72,7 +80,7 @@ app.get('/setup-soldiers', async (req, res) => {
 });
 
 // 2. Create fingerprint verification table
-app.get('/setup-verification', async (req, res) => {
+app.get('/api/setup-verification', async (req, res) => {
   try {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS fingerprint_verifications (
@@ -99,7 +107,7 @@ app.get('/setup-verification', async (req, res) => {
 });
 
 // 3. Register new soldier
-app.post('/soldiers', async (req, res) => {
+app.post('/api/soldiers', async (req, res) => {
   try {
     const {
       full_names, date_of_birth, gender, photo, fingerprint_data,
@@ -149,7 +157,7 @@ app.post('/soldiers', async (req, res) => {
 });
 
 // 4. Get all soldiers
-app.get('/soldiers', async (req, res) => {
+app.get('/api/soldiers', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM soldiers ORDER BY soldier_id');
     res.json({
@@ -165,7 +173,7 @@ app.get('/soldiers', async (req, res) => {
 });
 
 // 5. Manual verification entry
-app.post('/manual-verification', async (req, res) => {
+app.post('/api/manual-verification', async (req, res) => {
   try {
     const { soldier_id } = req.body;
     
@@ -216,7 +224,7 @@ app.post('/manual-verification', async (req, res) => {
 });
 
 // 6. Get today's verification report
-app.get('/today-verifications', async (req, res) => {
+app.get('/api/today-verifications', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
     
@@ -254,7 +262,7 @@ app.get('/today-verifications', async (req, res) => {
 });
 
 // 7. Monthly payroll report
-app.get('/monthly-payroll', async (req, res) => {
+app.get('/api/monthly-payroll', async (req, res) => {
   try {
     const { month, year } = req.query;
     const currentMonth = month || new Date().getMonth() + 1;
@@ -299,7 +307,7 @@ app.get('/monthly-payroll', async (req, res) => {
 
 // ================== BASIC ENDPOINTS ==================
 
-app.get('/health', async (req, res) => {
+app.get('/api/health', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW() as current_time');
     res.json({ 
@@ -316,22 +324,24 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Database System',
     endpoints: {
-      setup: '/setup-soldiers & /setup-verification',
-      soldiers: 'GET/POST /soldiers',
+      setup: '/api/setup-soldiers & /api/setup-verification',
+      soldiers: 'GET/POST /api/soldiers',
       verification: {
-        manual: 'POST /manual-verification',
-        today_report: 'GET /today-verifications'
+        manual: 'POST /api/manual-verification',
+        today_report: 'GET /api/today-verifications'
       },
-      payroll: 'GET /monthly-payroll',
-      health: '/health'
+      payroll: 'GET /api/monthly-payroll',
+      health: '/api/health'
     }
   });
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
+  console.log(`📱 Frontend: http://localhost:${PORT}`);
+  console.log(`🔧 API: http://localhost:${PORT}/api`);
 });
