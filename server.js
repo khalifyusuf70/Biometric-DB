@@ -73,32 +73,6 @@ app.get('/api/setup-soldiers', async (req, res) => {
   }
 });
 
-// 2. Create fingerprint verification table
-app.get('/api/setup-verification', async (req, res) => {
-  try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS fingerprint_verifications (
-        id SERIAL PRIMARY KEY,
-        soldier_id VARCHAR(20) REFERENCES soldiers(soldier_id),
-        full_names VARCHAR(255),
-        rank_position VARCHAR(50),
-        net_salary DECIMAL(10,2),
-        horin_platoon VARCHAR(50),
-        verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    res.json({
-      success: true,
-      message: 'Fingerprint verification table created successfully'
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
 
 // 3. Register new soldier
 app.post('/api/soldiers', async (req, res) => {
