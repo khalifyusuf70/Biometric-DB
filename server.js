@@ -124,6 +124,7 @@ app.post('/api/soldiers', async (req, res) => {
   }
 });
 
+
 // 4. Get all soldiers
 app.get('/api/soldiers', async (req, res) => {
   try {
@@ -137,95 +138,6 @@ app.get('/api/soldiers', async (req, res) => {
       success: false,
       error: error.message
     });
-  }
-});
-
-// 5. Manual verification entry
-app.post('/api/manual-verification', async (req, res) => {
-  try {
-    const { soldier_id } = req.body;
-    
-    if (!soldier_id) {
-      return res.status(400).json({ success: false, error: 'Soldier ID is required' });
-    }
-
-    // Find soldier
-    const soldierResult = await pool.query(
-      'SELECT * FROM soldiers WHERE soldier_id = $1',
-      [soldier_id]
-    );
-    
-    if (soldierResult.rows.length === 0) {
-      return res.status(404).json({ success: false, error: 'Soldier not found' });
-    }
-
-    const soldier = soldierResult.rows[0];
-    const currentTime = new Date();
-
-    // Record verification
-    await pool.query(
-      `INSERT INTO fingerprint_verifications 
-       (soldier_id, full_names, rank_position, net_salary, horin_platoon, verified_at) 
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [
-        soldier.soldier_id, 
-        soldier.full_names, 
-        soldier.rank_position, 
-        soldier.net_salary, 
-        soldier.horin_platoon,
-        currentTime
-      ]
-    );
-
-    res.json({
-      success: true,
-      message: 'Manual verification recorded successfully',
-      soldier: {
-        soldier_id: soldier.soldier_id,
-        full_names: soldier.full_names,
-        verified_at: currentTime
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// 6. Get today's verification report
-app.get('/api/today-verifications', async (req, res) => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const result = await pool.query(`
-      SELECT 
-        fv.soldier_id,
-        fv.full_names,
-        fv.rank_position,
-        fv.horin_platoon,
-        fv.verified_at,
-        s.status
-      FROM fingerprint_verifications fv
-      LEFT JOIN soldiers s ON fv.soldier_id = s.soldier_id
-      WHERE DATE(fv.verified_at) = $1
-      ORDER BY fv.verified_at
-    `, [today]);
-    
-    const totalSoldiers = await pool.query('SELECT COUNT(*) FROM soldiers WHERE status = $1', ['Active']);
-    const verifiedCount = result.rows.length;
-    const missingCount = parseInt(totalSoldiers.rows[0].count) - verifiedCount;
-    
-    res.json({
-      success: true,
-      date: today,
-      summary: {
-        total_soldiers: parseInt(totalSoldiers.rows[0].count),
-        verified_today: verifiedCount,
-        missing_verification: missingCount
-      },
-      verifications: result.rows
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
   }
 });
 
