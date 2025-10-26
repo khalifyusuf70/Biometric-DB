@@ -42,7 +42,7 @@ app.get('/api/setup-soldiers', async (req, res) => {
         gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
         photo TEXT,
         fingerprint_data TEXT,
-        
+        rank_position VARCHAR(50) 
         date_of_enlistment DATE NOT NULL,
         horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
         horin_commander VARCHAR(255),
