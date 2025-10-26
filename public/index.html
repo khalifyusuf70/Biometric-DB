@@ -189,7 +189,6 @@
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
-            <button class="tab" onclick="showTab('verification')">Verification</button>
             <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
         </div>
 
@@ -356,22 +355,6 @@
             <button onclick="loadSoldiers()" class="submit-btn">Refresh List</button>
             <div id="soldiersList" style="padding: 20px;"></div>
         </div>
-
-        <!-- Verification Tab -->
-        <div id="verification" class="content">
-            <h2 style="padding: 20px;">Daily Verification</h2>
-            <div style="padding: 20px;">
-                
-                <!-- Manual Verification -->
-                <div class="form-section">
-                    <h3>Manual Verification Entry</h3>
-                    <div class="form-group">
-                        <label>Soldier ID:</label>
-                        <input type="text" id="manualSoldierId" placeholder="Enter Soldier ID (e.g., CMJ00001)">
-                    </div>
-                    <button onclick="manualVerification()" class="submit-btn">Record Verification</button>
-                    <div id="manualResult" style="margin-top: 20px;"></div>
-                </div>
 
                 <!-- Today's Report -->
                 <div class="form-section">
