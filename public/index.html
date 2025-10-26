@@ -593,51 +593,6 @@
             }
         }
 
-        // Load Today's Report
-        async function loadTodayReport() {
-            try {
-                const response = await fetch(`${API_BASE}/today-verifications`);
-                
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Server returned HTML instead of JSON. Check API routes.');
-                }
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    let html = `<div class="alert info">`;
-                    html += `<h4>📊 Daily Report - ${result.date}</h4>`;
-                    html += `<p><strong>Total Soldiers:</strong> ${result.summary.total_soldiers}</p>`;
-                    html += `<p><strong>Verified Today:</strong> ${result.summary.verified_today}</p>`;
-                    html += `<p><strong>Missing Verification:</strong> ${result.summary.missing_verification}</p>`;
-                    html += `</div>`;
-                    
-                    if (result.verifications.length > 0) {
-                        html += `<table><tr><th>Soldier ID</th><th>Name</th><th>Rank</th><th>Platoon</th><th>Verification Time</th></tr>`;
-                        result.verifications.forEach(verification => {
-                            html += `<tr>
-                                <td>${verification.soldier_id}</td>
-                                <td>${verification.full_names}</td>
-                                <td>${verification.rank_position}</td>
-                                <td>${verification.horin_platoon}</td>
-                                <td>${new Date(verification.verified_at).toLocaleString()}</td>
-                            </tr>`;
-                        });
-                        html += `</table>`;
-                    } else {
-                        html += `<p>No verifications recorded for today.</p>`;
-                    }
-                    
-                    document.getElementById('todayReport').innerHTML = html;
-                }
-            } catch (error) {
-                document.getElementById('todayReport').innerHTML = 
-                    `<div class="alert error">Error: ${error.message}</div>`;
-            }
-        }
-
         // Generate Payroll
         async function generatePayroll() {
             const month = document.getElementById('payrollMonth').value;
