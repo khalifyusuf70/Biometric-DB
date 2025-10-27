@@ -31,18 +31,18 @@ testConnection();
 
 // ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
-// 1. Create soldiers table
+// 1. Create soldiersRepository table
 app.get('/api/setup-soldiers', async (req, res) => {
   try {
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS soldiers (
+      CREATE TABLE IF NOT EXISTS soldiersRepository (
         soldier_id VARCHAR(20) PRIMARY KEY,
         full_names VARCHAR(255) NOT NULL,
         date_of_birth DATE NOT NULL,
         gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
         photo TEXT,
         fingerprint_data TEXT,
-        rank_position VARCHAR(50) CHECK (rank_position IN ('Askari', 'Taliye Unug', 'Taliye Koox', 'Taliye Horin', 'Abandule', 'Taliye Guuto')),
+        rank_position VARCHAR(50),
         date_of_enlistment DATE NOT NULL,
         horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
         horin_commander VARCHAR(255),
@@ -86,12 +86,12 @@ app.post('/api/soldiers', async (req, res) => {
     } = req.body;
 
     // Generate Soldier ID (CMJ00001 format)
-    const countResult = await pool.query('SELECT COUNT(*) FROM soldiers');
+    const countResult = await pool.query('SELECT COUNT(*) FROM soldiersRepository');
     const count = parseInt(countResult.rows[0].count) + 1;
     const soldier_id = `CMJ${String(count).padStart(5, '0')}`;
 
     const query = `
-      INSERT INTO soldiers (
+      INSERT INTO soldiersRepository (
         soldier_id, full_names, date_of_birth, gender, photo, fingerprint_data,
         rank_position, date_of_enlistment, horin_platoon, horin_commander,
         net_salary, tel_number, clan, guarantor_name, guarantor_phone,
@@ -128,7 +128,7 @@ app.post('/api/soldiers', async (req, res) => {
 // 4. Get all soldiers
 app.get('/api/soldiers', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM soldiers ORDER BY soldier_id');
+    const result = await pool.query('SELECT * FROM soldiersRepository ORDER BY soldier_id');
     res.json({
       success: true,
       soldiers: result.rows
