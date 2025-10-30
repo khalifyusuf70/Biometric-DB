@@ -7,7 +7,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
         
         /* Header Styles */
         .header { 
@@ -236,6 +236,73 @@
             cursor: pointer;
             color: #7f8c8d;
         }
+
+        /* View Soldiers Table Layout */
+        .soldiers-table-container {
+            overflow-x: auto;
+        }
+        
+        .soldiers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .soldiers-table th {
+            background: #34495e;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .soldiers-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        .soldiers-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .left-column {
+            width: 30%;
+            vertical-align: top;
+        }
+        
+        .middle-column {
+            width: 20%;
+            text-align: center;
+            vertical-align: top;
+        }
+        
+        .right-column {
+            width: 50%;
+            vertical-align: top;
+        }
+        
+        .attribute-row {
+            margin-bottom: 8px;
+        }
+        
+        .attribute-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 12px;
+        }
+        
+        .attribute-value {
+            color: #34495e;
+            font-size: 13px;
+        }
+        
+        .full-name-display {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -314,6 +381,10 @@
                     <div class="form-group">
                         <label>Net_Salary *</label>
                         <input type="number" id="editNetSalary" step="0.01" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Gun Number</label>
+                        <input type="text" id="editGunNumber" placeholder="Enter gun number">
                     </div>
                     <div class="form-group">
                         <label>Tel_Number (10 Digits) *</label>
@@ -467,6 +538,10 @@
                                 <div class="form-group">
                                     <label>Net_Salary *</label>
                                     <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gun Number</label>
+                                    <input type="text" name="gun_number" placeholder="Enter gun number">
                                 </div>
                             </div>
                         </div>
@@ -710,6 +785,7 @@
                 emergency_contact_phone: formData.get('emergency_contact_phone'),
                 home_address: formData.get('home_address'),
                 blood_group: formData.get('blood_group'),
+                gun_number: formData.get('gun_number'),
                 status: formData.get('status')
             };
             
@@ -791,7 +867,7 @@
             loadSoldiers();
         }
 
-        // Display soldiers in table
+        // Display soldiers in table matching Excel layout
         function displaySoldiers(soldiers) {
             const container = document.getElementById('soldiersList');
             
@@ -801,20 +877,16 @@
             }
             
             let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Photo</th>
-                            <th>Soldier ID</th>
-                            <th>Full Names</th>
-                            <th>Rank</th>
-                            <th>Platoon</th>
-                            <th>Phone</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="soldiers-table-container">
+                    <table class="soldiers-table">
+                        <thead>
+                            <tr>
+                                <th class="left-column">Left Column</th>
+                                <th class="middle-column">Photo</th>
+                                <th class="right-column">Right Column</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             soldiers.forEach(soldier => {
@@ -822,22 +894,95 @@
                 
                 html += `
                     <tr>
-                        <td><img src="${photoSrc}" alt="Photo" class="soldier-photo"></td>
-                        <td>${soldier.soldier_id}</td>
-                        <td>${soldier.full_names}</td>
-                        <td>${soldier.rank_position}</td>
-                        <td>${soldier.horin_platoon}</td>
-                        <td>${soldier.tel_number}</td>
-                        <td>${soldier.status}</td>
-                        <td>
-                            <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
-                            <button class="action-btn btn-danger" onclick="deleteSoldier('${soldier.soldier_id}')">Delete</button>
+                        <td class="left-column">
+                            <div class="attribute-row">
+                                <div class="attribute-label">Soldier_id</div>
+                                <div class="attribute-value">${soldier.soldier_id}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Date_of_birth</div>
+                                <div class="attribute-value">${new Date(soldier.date_of_birth).toLocaleDateString()}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Gender</div>
+                                <div class="attribute-value">${soldier.gender}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Fingerprint_data</div>
+                                <div class="attribute-value">${soldier.fingerprint_data ? 'Registered' : 'Not Registered'}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Rank_position</div>
+                                <div class="attribute-value">${soldier.rank_position}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Date_of_enlistment</div>
+                                <div class="attribute-value">${new Date(soldier.date_of_enlistment).toLocaleDateString()}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Horin_platoon</div>
+                                <div class="attribute-value">${soldier.horin_platoon}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Horin_commander</div>
+                                <div class="attribute-value">${soldier.horin_commander || 'N/A'}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Gun_number</div>
+                                <div class="attribute-value">${soldier.gun_number || 'N/A'}</div>
+                            </div>
+                        </td>
+                        <td class="middle-column">
+                            <img src="${photoSrc}" alt="Photo" class="soldier-photo">
+                            <div class="full-name-display">${soldier.full_names}</div>
+                            <div style="margin-top: 10px;">
+                                <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
+                                <button class="action-btn btn-danger" onclick="deleteSoldier('${soldier.soldier_id}')">Delete</button>
+                            </div>
+                        </td>
+                        <td class="right-column">
+                            <div class="attribute-row">
+                                <div class="attribute-label">Net_salary</div>
+                                <div class="attribute-value">$${soldier.net_salary}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Tel_number</div>
+                                <div class="attribute-value">${soldier.tel_number}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Clan</div>
+                                <div class="attribute-value">${soldier.clan || 'N/A'}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Guarantor_name</div>
+                                <div class="attribute-value">${soldier.guarantor_name}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Guarantor_phone</div>
+                                <div class="attribute-value">${soldier.guarantor_phone}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Emergency_contact_name</div>
+                                <div class="attribute-value">${soldier.emergency_contact_name}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Emergency_contact_phone</div>
+                                <div class="attribute-value">${soldier.emergency_contact_phone}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Home_address</div>
+                                <div class="attribute-value">${soldier.home_address || 'N/A'}</div>
+                            </div>
+                            <div class="attribute-row">
+                                <div class="attribute-label">Blood_group</div>
+                                <div class="attribute-value">${soldier.blood_group || 'N/A'}</div>
+                            </div>
                         </td>
                     </tr>
                 `;
             });
             
-            html += '</tbody></table>';
+            html += '</tbody></table></div>';
             container.innerHTML = html;
         }
 
@@ -860,6 +1005,7 @@
                     document.getElementById('editHorinPlatoon').value = soldier.horin_platoon;
                     document.getElementById('editHorinCommander').value = soldier.horin_commander;
                     document.getElementById('editNetSalary').value = soldier.net_salary;
+                    document.getElementById('editGunNumber').value = soldier.gun_number || '';
                     document.getElementById('editTelNumber').value = soldier.tel_number;
                     document.getElementById('editClan').value = soldier.clan || '';
                     document.getElementById('editGuarantorName').value = soldier.guarantor_name;
@@ -983,6 +1129,7 @@
                 emergency_contact_phone: document.getElementById('editEmergencyContactPhone').value,
                 home_address: document.getElementById('editHomeAddress').value,
                 blood_group: document.getElementById('editBloodGroup').value,
+                gun_number: document.getElementById('editGunNumber').value,
                 status: document.getElementById('editStatus').value
             };
             
