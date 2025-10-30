@@ -31,7 +31,7 @@ testConnection();
 
 // ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
-// 1. Create soldiersRepository table
+// 1. Create soldiersRepository table with Gun_number
 app.get('/api/setup-soldiers', async (req, res) => {
   try {
     await pool.query(`
@@ -55,6 +55,7 @@ app.get('/api/setup-soldiers', async (req, res) => {
         emergency_contact_phone VARCHAR(15),
         home_address TEXT,
         blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+        gun_number VARCHAR(50),
         status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -63,7 +64,7 @@ app.get('/api/setup-soldiers', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Soldiers table created successfully with all 20 attributes'
+      message: 'Soldiers table created successfully with Gun_number field'
     });
   } catch (error) {
     res.status(500).json({
@@ -73,7 +74,7 @@ app.get('/api/setup-soldiers', async (req, res) => {
   }
 });
 
-// 2. Register new soldier
+// 2. Register new soldier with Gun_number
 app.post('/api/soldiers', async (req, res) => {
   try {
     const {
@@ -81,7 +82,7 @@ app.post('/api/soldiers', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status
+      blood_group, gun_number, status
     } = req.body;
 
     // Generate Soldier ID (CMJ00001 format)
@@ -95,8 +96,8 @@ app.post('/api/soldiers', async (req, res) => {
         rank_position, date_of_enlistment, horin_platoon, horin_commander,
         net_salary, tel_number, clan, guarantor_name, guarantor_phone,
         emergency_contact_name, emergency_contact_phone, home_address,
-        blood_group, status
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+        blood_group, gun_number, status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
       RETURNING *
     `;
 
@@ -105,7 +106,7 @@ app.post('/api/soldiers', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status || 'Active'
+      blood_group, gun_number, status || 'Active'
     ];
 
     const result = await pool.query(query, values);
@@ -196,7 +197,7 @@ app.get('/api/soldiers-search', async (req, res) => {
   }
 });
 
-// 6. Update soldier
+// 6. Update soldier with Gun_number
 app.put('/api/soldiers/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -205,7 +206,7 @@ app.put('/api/soldiers/:id', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status
+      blood_group, gun_number, status
     } = req.body;
 
     const query = `
@@ -214,8 +215,8 @@ app.put('/api/soldiers/:id', async (req, res) => {
         rank_position = $6, date_of_enlistment = $7, horin_platoon = $8, horin_commander = $9,
         net_salary = $10, tel_number = $11, clan = $12, guarantor_name = $13, guarantor_phone = $14,
         emergency_contact_name = $15, emergency_contact_phone = $16, home_address = $17,
-        blood_group = $18, status = $19, updated_at = CURRENT_TIMESTAMP
-      WHERE soldier_id = $20
+        blood_group = $18, gun_number = $19, status = $20, updated_at = CURRENT_TIMESTAMP
+      WHERE soldier_id = $21
       RETURNING *
     `;
 
@@ -224,7 +225,7 @@ app.put('/api/soldiers/:id', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status, id
+      blood_group, gun_number, status, id
     ];
 
     const result = await pool.query(query, values);
