@@ -31,40 +31,71 @@ testConnection();
 
 // ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
-// 1. Create soldiersRepository table with Gun_number
+// 1. Create soldiersRepository table with Gun_number (with migration)
 app.get('/api/setup-soldiers', async (req, res) => {
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS soldiersRepository (
-        soldier_id VARCHAR(20) PRIMARY KEY,
-        full_names VARCHAR(255) NOT NULL,
-        date_of_birth DATE NOT NULL,
-        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
-        photo TEXT,
-        fingerprint_data TEXT,
-        rank_position VARCHAR(50),
-        date_of_enlistment DATE NOT NULL,
-        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
-        horin_commander VARCHAR(255),
-        net_salary DECIMAL(10,2),
-        tel_number VARCHAR(15) UNIQUE,
-        clan VARCHAR(100),
-        guarantor_name VARCHAR(255),
-        guarantor_phone VARCHAR(15),
-        emergency_contact_name VARCHAR(255),
-        emergency_contact_phone VARCHAR(15),
-        home_address TEXT,
-        blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
-        gun_number VARCHAR(50),
-        status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+    // First, check if table exists
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_name = 'soldiersrepository'
+      );
     `);
+
+    const tableExists = tableCheck.rows[0].exists;
+
+    if (!tableExists) {
+      // Create new table with gun_number
+      await pool.query(`
+        CREATE TABLE soldiersRepository (
+          soldier_id VARCHAR(20) PRIMARY KEY,
+          full_names VARCHAR(255) NOT NULL,
+          date_of_birth DATE NOT NULL,
+          gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
+          photo TEXT,
+          fingerprint_data TEXT,
+          rank_position VARCHAR(50),
+          date_of_enlistment DATE NOT NULL,
+          horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
+          horin_commander VARCHAR(255),
+          net_salary DECIMAL(10,2),
+          tel_number VARCHAR(15) UNIQUE,
+          clan VARCHAR(100),
+          guarantor_name VARCHAR(255),
+          guarantor_phone VARCHAR(15),
+          emergency_contact_name VARCHAR(255),
+          emergency_contact_phone VARCHAR(15),
+          home_address TEXT,
+          blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+          gun_number VARCHAR(50),
+          status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } else {
+      // Table exists, check if gun_number column exists
+      const columnCheck = await pool.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = 'soldiersrepository' AND column_name = 'gun_number'
+      `);
+
+      const columnExists = columnCheck.rows.length > 0;
+
+      if (!columnExists) {
+        // Add gun_number column to existing table
+        await pool.query(`
+          ALTER TABLE soldiersRepository 
+          ADD COLUMN gun_number VARCHAR(50)
+        `);
+        console.log('✅ Added gun_number column to existing table');
+      }
+    }
 
     res.json({
       success: true,
-      message: 'Soldiers table created successfully with Gun_number field'
+      message: 'Soldiers table setup completed with gun_number field'
     });
   } catch (error) {
     res.status(500).json({
@@ -106,7 +137,7 @@ app.post('/api/soldiers', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, gun_number, status || 'Active'
+      blood_group, gun_number || null, status || 'Active'
     ];
 
     const result = await pool.query(query, values);
@@ -225,7 +256,7 @@ app.put('/api/soldiers/:id', async (req, res) => {
       rank_position, date_of_enlistment, horin_platoon, horin_commander,
       net_salary, tel_number, clan, guarantor_name, guarantor_phone,
       emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, gun_number, status, id
+      blood_group, gun_number || null, status, id
     ];
 
     const result = await pool.query(query, values);
@@ -321,6 +352,52 @@ app.get('/api/monthly-payroll', async (req, res) => {
   }
 });
 
+// 9. Reset database (DANGEROUS - use with caution)
+app.get('/api/reset-database', async (req, res) => {
+  try {
+    // Drop and recreate table (WILL DELETE ALL DATA)
+    await pool.query('DROP TABLE IF EXISTS soldiersRepository');
+    
+    await pool.query(`
+      CREATE TABLE soldiersRepository (
+        soldier_id VARCHAR(20) PRIMARY KEY,
+        full_names VARCHAR(255) NOT NULL,
+        date_of_birth DATE NOT NULL,
+        gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
+        photo TEXT,
+        fingerprint_data TEXT,
+        rank_position VARCHAR(50),
+        date_of_enlistment DATE NOT NULL,
+        horin_platoon VARCHAR(50) CHECK (horin_platoon IN ('Horin1', 'Horin2', 'Horin3', 'Horin4', 'Horin5', 'Horin6', 'Taliska', 'Fiat')),
+        horin_commander VARCHAR(255),
+        net_salary DECIMAL(10,2),
+        tel_number VARCHAR(15) UNIQUE,
+        clan VARCHAR(100),
+        guarantor_name VARCHAR(255),
+        guarantor_phone VARCHAR(15),
+        emergency_contact_name VARCHAR(255),
+        emergency_contact_phone VARCHAR(15),
+        home_address TEXT,
+        blood_group VARCHAR(5) CHECK (blood_group IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+        gun_number VARCHAR(50),
+        status VARCHAR(20) DEFAULT 'Active' CHECK (status IN ('Active', 'Wounded', 'Discharged', 'Dead')),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    res.json({
+      success: true,
+      message: 'Database reset successfully with gun_number field'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 // ================== BASIC ENDPOINTS ==================
 
 app.get('/api/health', async (req, res) => {
@@ -344,7 +421,8 @@ app.get('/api', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Database System',
     endpoints: {
-      setup: '/api/setup-soldiers & /api/setup-verification',
+      setup: '/api/setup-soldiers (safe migration)',
+      reset: '/api/reset-database (DANGEROUS - deletes all data)',
       soldiers: {
         getAll: 'GET /api/soldiers',
         getOne: 'GET /api/soldiers/:id',
@@ -372,4 +450,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Jubaland Military Database running on port ${PORT}`);
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔧 API: http://localhost:${PORT}/api`);
+  console.log(`🔄 Run http://localhost:${PORT}/api/setup-soldiers to add gun_number column`);
 });
