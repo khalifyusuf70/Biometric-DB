@@ -7,8 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 // PostgreSQL connection
@@ -73,7 +73,8 @@ app.get('/api/setup-soldiers', async (req, res) => {
   }
 });
 
-// 2. Register new soldier
+
+// 3. Register new soldier
 app.post('/api/soldiers', async (req, res) => {
   try {
     const {
@@ -123,7 +124,8 @@ app.post('/api/soldiers', async (req, res) => {
   }
 });
 
-// 3. Get all soldiers
+
+// 4. Get all soldiers
 app.get('/api/soldiers', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM soldiersRepository ORDER BY soldier_id');
@@ -139,144 +141,7 @@ app.get('/api/soldiers', async (req, res) => {
   }
 });
 
-// 4. Get single soldier by ID
-app.get('/api/soldiers/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await pool.query('SELECT * FROM soldiersRepository WHERE soldier_id = $1', [id]);
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Soldier not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      soldier: result.rows[0]
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 5. Search soldiers by ID or name
-app.get('/api/soldiers-search', async (req, res) => {
-  try {
-    const { query } = req.query;
-    
-    if (!query) {
-      return res.status(400).json({
-        success: false,
-        error: 'Search query is required'
-      });
-    }
-
-    const searchQuery = `
-      SELECT * FROM soldiersRepository 
-      WHERE soldier_id ILIKE $1 OR full_names ILIKE $1
-      ORDER BY soldier_id
-    `;
-    
-    const result = await pool.query(searchQuery, [`%${query}%`]);
-    
-    res.json({
-      success: true,
-      soldiers: result.rows
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 6. Update soldier
-app.put('/api/soldiers/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status
-    } = req.body;
-
-    const query = `
-      UPDATE soldiersRepository SET
-        full_names = $1, date_of_birth = $2, gender = $3, photo = $4, fingerprint_data = $5,
-        rank_position = $6, date_of_enlistment = $7, horin_platoon = $8, horin_commander = $9,
-        net_salary = $10, tel_number = $11, clan = $12, guarantor_name = $13, guarantor_phone = $14,
-        emergency_contact_name = $15, emergency_contact_phone = $16, home_address = $17,
-        blood_group = $18, status = $19, updated_at = CURRENT_TIMESTAMP
-      WHERE soldier_id = $20
-      RETURNING *
-    `;
-
-    const values = [
-      full_names, date_of_birth, gender, photo, fingerprint_data,
-      rank_position, date_of_enlistment, horin_platoon, horin_commander,
-      net_salary, tel_number, clan, guarantor_name, guarantor_phone,
-      emergency_contact_name, emergency_contact_phone, home_address,
-      blood_group, status, id
-    ];
-
-    const result = await pool.query(query, values);
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Soldier not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      message: 'Soldier updated successfully',
-      soldier: result.rows[0]
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 7. Delete soldier
-app.delete('/api/soldiers/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    const result = await pool.query('DELETE FROM soldiersRepository WHERE soldier_id = $1 RETURNING *', [id]);
-    
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Soldier not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      message: 'Soldier deleted successfully',
-      soldier: result.rows[0]
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 8. Monthly payroll report
+// 7. Monthly payroll report
 app.get('/api/monthly-payroll', async (req, res) => {
   try {
     const { month, year } = req.query;
@@ -344,14 +209,7 @@ app.get('/api', (req, res) => {
     message: 'Jubaland Statehouse Forces Database System',
     endpoints: {
       setup: '/api/setup-soldiers & /api/setup-verification',
-      soldiers: {
-        getAll: 'GET /api/soldiers',
-        getOne: 'GET /api/soldiers/:id',
-        create: 'POST /api/soldiers',
-        update: 'PUT /api/soldiers/:id',
-        delete: 'DELETE /api/soldiers/:id',
-        search: 'GET /api/soldiers-search?query='
-      },
+      soldiers: 'GET/POST /api/soldiers',
       verification: {
         manual: 'POST /api/manual-verification',
         today_report: 'GET /api/today-verifications'
