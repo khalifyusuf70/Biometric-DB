@@ -61,7 +61,7 @@
             cursor: not-allowed;
         }
         
-        /* Photo Section */
+        /* Photo Section - UPDATED WITH LARGER PHOTOS */
         .photo-section { 
             background: #ecf0f1; 
             padding: 20px; 
@@ -81,8 +81,8 @@
             border-color: #3498db;
         }
         .photo-preview { 
-            width: 150px; 
-            height: 180px; 
+            width: 200px; /* Increased from 150px */
+            height: 240px; /* Increased from 180px */
             background: white; 
             border: 1px solid #bdc3c7; 
             margin: 0 auto 15px; 
@@ -97,7 +97,7 @@
             display: none;
         }
         .upload-icon { 
-            font-size: 40px; 
+            font-size: 50px; /* Increased from 40px */
             color: #bdc3c7; 
             margin-bottom: 10px;
         }
@@ -167,12 +167,14 @@
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
         th { background: #f8f9fa; color: #2c3e50; }
         
+        /* UPDATED: Larger soldier photos in table */
         .soldier-photo {
-            width: 50px;
-            height: 60px;
+            width: 80px; /* Increased from 50px */
+            height: 100px; /* Increased from 60px */
             object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #ddd;
+            border-radius: 6px; /* Slightly larger radius */
+            border: 2px solid #ddd; /* Thicker border */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Added shadow for better visibility */
         }
         
         .search-section {
@@ -272,13 +274,13 @@
         }
         
         .middle-column {
-            width: 20%;
+            width: 25%; /* Increased to accommodate larger photo */
             text-align: center;
             vertical-align: top;
         }
         
         .right-column {
-            width: 50%;
+            width: 45%; /* Adjusted to balance the layout */
             vertical-align: top;
         }
         
@@ -302,6 +304,26 @@
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        /* UPDATED: Larger photo preview in edit modal */
+        .modal-photo-preview {
+            width: 180px; /* Larger preview in modal */
+            height: 220px;
+            background: white;
+            border: 1px solid #bdc3c7;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .modal-photo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
         }
     </style>
 </head>
@@ -441,7 +463,7 @@
                 <div class="form-group">
                     <label>Photo</label>
                     <input type="file" id="editPhotoInput" accept="image/*" onchange="previewEditPhoto(event)">
-                    <div class="photo-preview" style="margin-top: 10px;">
+                    <div class="modal-photo-preview">
                         <img id="editPhotoPreview" src="" alt="Photo Preview">
                         <div class="upload-icon">📷</div>
                     </div>
