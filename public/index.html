@@ -239,72 +239,93 @@
             color: #7f8c8d;
         }
 
-        /* View Soldiers Table Layout */
-        .soldiers-table-container {
-            overflow-x: auto;
+        /* NEW: Individual Soldier Table Styles */
+        .soldier-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
         
-        .soldiers-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        
-        .soldiers-table th {
+        .soldier-card-header {
             background: #34495e;
             color: white;
-            padding: 12px;
-            text-align: left;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .soldier-id {
+            font-size: 18px;
             font-weight: bold;
         }
         
-        .soldiers-table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            vertical-align: top;
+        .soldier-name {
+            font-size: 16px;
+            font-weight: bold;
         }
         
-        .soldiers-table tr:hover {
-            background-color: #f5f5f5;
+        .soldier-card-content {
+            padding: 20px;
         }
         
-        .left-column {
+        .soldier-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+        
+        .soldier-table th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: bold;
+            padding: 12px;
+            border: 1px solid #e1e8ed;
             width: 30%;
-            vertical-align: top;
         }
         
-        .middle-column {
-            width: 30%; /* Increased to accommodate larger photo */
+        .soldier-table td {
+            padding: 12px;
+            border: 1px solid #e1e8ed;
+            color: #34495e;
+            width: 70%;
+        }
+        
+        .soldier-table tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+        
+        .soldier-table tr:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .photo-section-card {
             text-align: center;
-            vertical-align: top;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
         
-        .right-column {
-            width: 40%; /* Adjusted to balance the layout */
-            vertical-align: top;
-        }
-        
-        .attribute-row {
-            margin-bottom: 8px;
+        .soldier-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e8ed;
         }
         
         .attribute-label {
             font-weight: bold;
             color: #2c3e50;
-            font-size: 12px;
         }
         
         .attribute-value {
             color: #34495e;
-            font-size: 13px;
-        }
-        
-        .full-name-display {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 10px;
-            margin-top: 10px;
         }
 
         /* UPDATED: 100% Larger photo preview in edit modal */
@@ -606,60 +627,60 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Blood_Group</label>
-                                    <select name="blood_group">
-                                        <option value="">Select</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select name="status">
-                                        <option value="Active">Active</option>
-                                        <option value="Wounded">Wounded</option>
-                                        <option value="Discharged">Discharged</option>
-                                        <option value="Dead">Dead</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Home Address -->
-                        <div class="form-section">
-                            <h3>HOME ADDRESS</h3>
-                            <div class="form-group">
-                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
-                        <div id="formMessage"></div>
+                        <select name="blood_group">
+                            <option value="">Select</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
                     </div>
-
-                    <!-- Right Column - Photo Section -->
-                    <div class="photo-section">
-                        <h3 style="margin-bottom: 15px;">SOLDIER PHOTO</h3>
-                        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                            <div class="upload-icon">📷</div>
-                            <p>Click to upload photo</p>
-                            <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
-                        </div>
-                        <div class="photo-preview">
-                            <img id="photoPreview" src="" alt="Photo Preview">
-                            <div class="upload-icon">👤</div>
-                        </div>
-                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Clear front-facing photo required</p>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="Active">Active</option>
+                            <option value="Wounded">Wounded</option>
+                            <option value="Discharged">Discharged</option>
+                            <option value="Dead">Dead</option>
+                        </select>
                     </div>
                 </div>
-            </form>
+            </div>
+
+            <!-- Home Address -->
+            <div class="form-section">
+                <h3>HOME ADDRESS</h3>
+                <div class="form-group">
+                    <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
+            <div id="formMessage"></div>
+        </div>
+
+        <!-- Right Column - Photo Section -->
+        <div class="photo-section">
+            <h3 style="margin-bottom: 15px;">SOLDIER PHOTO</h3>
+            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                <div class="upload-icon">📷</div>
+                <p>Click to upload photo</p>
+                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
+            </div>
+            <div class="photo-preview">
+                <img id="photoPreview" src="" alt="Photo Preview">
+                <div class="upload-icon">👤</div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+            <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Clear front-facing photo required</p>
+        </div>
+    </div>
+</form>
         </div>
 
         <!-- View Soldiers Tab -->
@@ -674,7 +695,7 @@
             </div>
             
             <div id="soldiersList">
-                <!-- Soldiers will be loaded here -->
+                <!-- Soldiers will be loaded here as individual tables -->
             </div>
         </div>
 
@@ -897,7 +918,7 @@
             loadSoldiers();
         }
 
-        // Display soldiers in table matching Excel layout
+        // NEW: Display soldiers as individual tables
         function displaySoldiers(soldiers) {
             const container = document.getElementById('soldiersList');
             
@@ -906,113 +927,106 @@
                 return;
             }
             
-            let html = `
-                <div class="soldiers-table-container">
-                    <table class="soldiers-table">
-                        <thead>
-                            <tr>
-                                <th class="left-column">Left Column</th>
-                                <th class="middle-column">Photo</th>
-                                <th class="right-column">Right Column</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
+            let html = '';
             
             soldiers.forEach(soldier => {
                 const photoSrc = soldier.photo ? soldier.photo : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA1MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRTVFNUU1Ii8+CjxwYXRoIGQ9Ik0yNSAzMEMzMS4wODI1IDMwIDM2IDI1LjA4MjUgMzYgMTlDMzYgMTIuOTE3NSAzMS4wODI1IDggMjUgOEMxOC45MTc1IDggMTQgMTIuOTE3NSAxNCAxOUMxNCAyNS4wODI1IDE4LjkxNzUgMzAgMjUgMzBaTTI1IDM0QzE3LjI2IDM0IDEwIDM3LjMzNSAxMCA0MlY0Nkg0MFY0MkM0MCAzNy4zMzUgMzIuNzQgMzQgMjUgMzRaIiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo=';
                 
                 html += `
-                    <tr>
-                        <td class="left-column">
-                            <div class="attribute-row">
-                                <div class="attribute-label">Soldier_id</div>
-                                <div class="attribute-value">${soldier.soldier_id}</div>
+                    <div class="soldier-card">
+                        <div class="soldier-card-header">
+                            <div class="soldier-id">${soldier.soldier_id}</div>
+                            <div class="soldier-name">${soldier.full_names}</div>
+                        </div>
+                        <div class="soldier-card-content">
+                            <div class="photo-section-card">
+                                <img src="${photoSrc}" alt="Photo" class="soldier-photo">
                             </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Date_of_birth</div>
-                                <div class="attribute-value">${new Date(soldier.date_of_birth).toLocaleDateString()}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Gender</div>
-                                <div class="attribute-value">${soldier.gender}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Fingerprint_data</div>
-                                <div class="attribute-value">${soldier.fingerprint_data ? 'Registered' : 'Not Registered'}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Rank_position</div>
-                                <div class="attribute-value">${soldier.rank_position}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Date_of_enlistment</div>
-                                <div class="attribute-value">${new Date(soldier.date_of_enlistment).toLocaleDateString()}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Horin_platoon</div>
-                                <div class="attribute-value">${soldier.horin_platoon}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Horin_commander</div>
-                                <div class="attribute-value">${soldier.horin_commander || 'N/A'}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Gun_number</div>
-                                <div class="attribute-value">${soldier.gun_number || 'N/A'}</div>
-                            </div>
-                        </td>
-                        <td class="middle-column">
-                            <img src="${photoSrc}" alt="Photo" class="soldier-photo">
-                            <div class="full-name-display">${soldier.full_names}</div>
-                            <div style="margin-top: 10px;">
+                            
+                            <table class="soldier-table">
+                                <tr>
+                                    <th>Date of Birth</th>
+                                    <td>${new Date(soldier.date_of_birth).toLocaleDateString()}</td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
+                                    <td>${soldier.gender}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fingerprint Data</th>
+                                    <td>${soldier.fingerprint_data ? 'Registered' : 'Not Registered'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rank/Position</th>
+                                    <td>${soldier.rank_position}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Enlistment</th>
+                                    <td>${new Date(soldier.date_of_enlistment).toLocaleDateString()}</td>
+                                </tr>
+                                <tr>
+                                    <th>Horin/Platoon</th>
+                                    <td>${soldier.horin_platoon}</td>
+                                </tr>
+                                <tr>
+                                    <th>Horin Commander</th>
+                                    <td>${soldier.horin_commander || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Gun Number</th>
+                                    <td>${soldier.gun_number || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Net Salary</th>
+                                    <td>$${soldier.net_salary}</td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>${soldier.tel_number}</td>
+                                </tr>
+                                <tr>
+                                    <th>Clan</th>
+                                    <td>${soldier.clan || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Guarantor Name</th>
+                                    <td>${soldier.guarantor_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Guarantor Phone</th>
+                                    <td>${soldier.guarantor_phone}</td>
+                                </tr>
+                                <tr>
+                                    <th>Emergency Contact</th>
+                                    <td>${soldier.emergency_contact_name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Emergency Phone</th>
+                                    <td>${soldier.emergency_contact_phone}</td>
+                                </tr>
+                                <tr>
+                                    <th>Home Address</th>
+                                    <td>${soldier.home_address || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Blood Group</th>
+                                    <td>${soldier.blood_group || 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <td>${soldier.status}</td>
+                                </tr>
+                            </table>
+                            
+                            <div class="soldier-actions">
                                 <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
                                 <button class="action-btn btn-danger" onclick="deleteSoldier('${soldier.soldier_id}')">Delete</button>
                             </div>
-                        </td>
-                        <td class="right-column">
-                            <div class="attribute-row">
-                                <div class="attribute-label">Net_salary</div>
-                                <div class="attribute-value">$${soldier.net_salary}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Tel_number</div>
-                                <div class="attribute-value">${soldier.tel_number}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Clan</div>
-                                <div class="attribute-value">${soldier.clan || 'N/A'}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Guarantor_name</div>
-                                <div class="attribute-value">${soldier.guarantor_name}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Guarantor_phone</div>
-                                <div class="attribute-value">${soldier.guarantor_phone}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Emergency_contact_name</div>
-                                <div class="attribute-value">${soldier.emergency_contact_name}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Emergency_contact_phone</div>
-                                <div class="attribute-value">${soldier.emergency_contact_phone}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Home_address</div>
-                                <div class="attribute-value">${soldier.home_address || 'N/A'}</div>
-                            </div>
-                            <div class="attribute-row">
-                                <div class="attribute-label">Blood_group</div>
-                                <div class="attribute-value">${soldier.blood_group || 'N/A'}</div>
-                            </div>
-                        </td>
-                    </tr>
+                        </div>
+                    </div>
                 `;
             });
             
-            html += '</tbody></table></div>';
             container.innerHTML = html;
         }
 
