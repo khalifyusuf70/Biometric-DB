@@ -3,1321 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</title>
+    <title>Soldier Details Management</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        
-        /* Header Styles */
-        .header { 
-            background: #2c3e50; 
-            color: white; 
-            padding: 20px; 
-            text-align: center; 
-            border-radius: 10px 10px 0 0;
-        }
-        .header-content { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px; 
-        }
-        .logo { height: 60px; }
-        .header-text { text-align: center; }
-        .header h1 { font-size: 24px; margin-bottom: 5px; }
-        .header p { font-size: 16px; opacity: 0.9; }
-        
-        /* Main Content Layout */
-        .main-content { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
-        
-        /* Form Styles */
-        .form-section { margin-bottom: 20px; }
-        .form-section h3 { background: #34495e; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-size: 16px; }
-        
-        .form-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
         
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; font-size: 14px; }
-        input, select, textarea { 
-            width: 100%; 
-            padding: 8px 12px; 
-            border: 2px solid #bdc3c7; 
-            border-radius: 5px; 
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        input[readonly] {
-            background-color: #ecf0f1;
-            color: #7f8c8d;
-            cursor: not-allowed;
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
         }
         
-        /* Photo Section - UPDATED WITH 100% LARGER PHOTOS */
-        .photo-section { 
-            background: #ecf0f1; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center;
-            height: fit-content;
-        }
-        .photo-upload { 
-            border: 2px dashed #bdc3c7; 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
-        .photo-upload:hover {
-            border-color: #3498db;
-        }
-        .photo-preview { 
-            width: 300px; /* Increased 100% from 150px */
-            height: 360px; /* Increased 100% from 180px */
-            background: white; 
-            border: 1px solid #bdc3c7; 
-            margin: 0 auto 15px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .photo-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-        }
-        .upload-icon { 
-            font-size: 60px; /* Increased from 40px */
-            color: #bdc3c7; 
-            margin-bottom: 10px;
-        }
-        
-        /* Button Styles */
-        .submit-btn { 
-            background: #3498db; 
-            color: white; 
-            padding: 12px 30px; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0;
-            transition: background 0.3s;
-        }
-        .submit-btn:hover { 
-            background: #2980b9; 
-        }
-        .btn-success { background: #27ae60; }
-        .btn-success:hover { background: #219a52; }
-        .btn-warning { background: #f39c12; }
-        .btn-warning:hover { background: #e67e22; }
-        .btn-danger { background: #e74c3c; }
-        .btn-danger:hover { background: #c0392b; }
-        
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin: 2px;
-        }
-        
-        /* Tabs */
-        .tabs { 
-            display: flex; 
-            background: #34495e; 
-            border-radius: 5px 5px 0 0;
-            overflow: hidden;
-        }
-        .tab { 
-            padding: 15px 20px; 
-            cursor: pointer; 
-            border: none; 
-            background: none; 
-            color: white;
-            flex: 1;
-            text-align: center;
-            transition: background 0.3s;
-        }
-        .tab.active { 
-            background: #3498db; 
-        }
-        .tab:hover {
-            background: #2980b9;
-        }
-        
-        .content { display: none; }
-        .content.active { display: block; }
-        
-        /* Table Styles */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f8f9fa; color: #2c3e50; }
-        
-        /* UPDATED: 100% Larger soldier photos in table */
-        .soldier-photo {
-            width: 100px; /* Increased 100% from 50px */
-            height: 120px; /* Increased 100% from 60px */
-            object-fit: cover;
-            border-radius: 8px; /* Slightly larger radius */
-            border: 2px solid #ddd; /* Thicker border */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Enhanced shadow for better visibility */
-        }
-        
-        .search-section {
-            background: #ecf0f1;
-            padding: 15px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
             border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
         
         .search-box {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .action-buttons {
             display: flex;
             gap: 10px;
-            align-items: center;
         }
         
-        .search-box input {
-            flex: 1;
-        }
-        
-        .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
-        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 700px; /* Increased to accommodate larger photos */
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ecf0f1;
-        }
-        
-        .close-btn {
-            background: none;
+        .btn {
+            padding: 8px 15px;
             border: none;
-            font-size: 24px;
+            border-radius: 4px;
             cursor: pointer;
-            color: #7f8c8d;
-        }
-
-        /* NEW: Individual Soldier Table Styles */
-        .soldier-card {
-            background: white;
-            border: 2px solid #e1e8ed;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
+            font-weight: bold;
         }
         
-        .soldier-card-header {
-            background: #34495e;
+        .btn-edit {
+            background-color: #4CAF50;
             color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         
-        .soldier-id {
-            font-size: 18px;
-            font-weight: bold;
+        .btn-search {
+            background-color: #2196F3;
+            color: white;
         }
         
-        .soldier-name {
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .soldier-card-content {
-            padding: 20px;
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
         }
         
         .soldier-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 0;
+            margin-bottom: 30px;
+            border: 3px solid #000;
         }
         
         .soldier-table th {
-            background: #f8f9fa;
-            color: #2c3e50;
-            font-weight: bold;
+            background-color: #f2f2f2;
             padding: 12px;
-            border: 1px solid #e1e8ed;
-            width: 30%;
+            text-align: left;
+            border: 2px solid #000;
+            font-weight: bold;
         }
         
         .soldier-table td {
             padding: 12px;
-            border: 1px solid #e1e8ed;
-            color: #34495e;
-            width: 70%;
+            border: 2px solid #000;
         }
         
         .soldier-table tr:nth-child(even) {
-            background-color: #fafbfc;
+            background-color: #f9f9f9;
         }
         
-        .soldier-table tr:hover {
-            background-color: #f5f7fa;
-        }
-        
-        .photo-section-card {
+        .full-names {
             text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .soldier-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e1e8ed;
-        }
-        
-        .attribute-label {
             font-weight: bold;
-            color: #2c3e50;
+            font-size: 1.2em;
+            margin: 20px 0;
         }
         
-        .attribute-value {
-            color: #34495e;
-        }
-
-        /* UPDATED: 100% Larger photo preview in edit modal */
-        .modal-photo-preview {
-            width: 300px; /* 100% larger preview in modal */
-            height: 360px;
-            background: white;
-            border: 1px solid #bdc3c7;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .modal-photo-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-        }
-
-        /* Additional styling for better photo display */
-        .photo-instructions {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-top: 10px;
-            line-height: 1.4;
+        .section-title {
+            font-weight: bold;
+            background-color: #e0e0e0;
         }
     </style>
 </head>
 <body>
-    <!-- Password Protection -->
-    <div id="loginOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;">
-        <div style="background:#2c3e50;color:white;padding:40px;border-radius:10px;text-align:center;box-shadow:0 0 20px rgba(0,0,0,0.3);">
-            <h2 style="margin-bottom:20px;">JUBALAND STATEHOUSE FORCES DATABASE</h2>
-            <h3 style="margin-bottom:20px;">Enter System Password</h3>
-            <input type="password" id="passwordInput" placeholder="Enter password" style="padding:12px;margin:10px;width:250px;border-radius:5px;border:none;font-size:16px;">
-            <br>
-            <button onclick="checkPassword()" style="padding:12px 30px;background:#27ae60;color:white;border:none;border-radius:5px;cursor:pointer;font-size:16px;margin-top:10px;">Access System</button>
-            <p style="margin-top:15px;font-size:12px;opacity:0.8;">Authorized Personnel Only</p>
-        </div>
-    </div>
-
-    <!-- Edit Soldier Modal -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Soldier Record</h2>
-                <button class="close-btn" onclick="closeEditModal()">&times;</button>
-            </div>
-            <form id="editSoldierForm">
-                <input type="hidden" id="editSoldierId">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Full Names *</label>
-                        <input type="text" id="editFullNames" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Date_of_Birth *</label>
-                        <input type="date" id="editDateOfBirth" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Gender *</label>
-                        <select id="editGender" required>
-                            <option value="">Select</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Rank/Position *</label>
-                        <select id="editRankPosition" required onchange="updateEditSalary()">
-                            <option value="">Select</option>
-                            <option value="Askari">Askari</option>
-                            <option value="Taliye Unug">Taliye Unug</option>
-                            <option value="Taliye Koox">Taliye Koox</option>
-                            <option value="Taliye Horin">Taliye Horin</option>
-                            <option value="Abandule">Abandule</option>
-                            <option value="Taliye Guuto">Taliye Guuto</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Date_of_Enlistment *</label>
-                        <input type="date" id="editDateOfEnlistment" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Horin/Platoon *</label>
-                        <select id="editHorinPlatoon" required onchange="updateEditCommander()">
-                            <option value="">Select</option>
-                            <option value="Horin1">Horin1</option>
-                            <option value="Horin2">Horin2</option>
-                            <option value="Horin3">Horin3</option>
-                            <option value="Horin4">Horin4</option>
-                            <option value="Horin5">Horin5</option>
-                            <option value="Horin6">Horin6</option>
-                            <option value="Taliska">Taliska</option>
-                            <option value="Fiat">Fiat</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Horin Commander *</label>
-                        <input type="text" id="editHorinCommander" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Net_Salary *</label>
-                        <input type="number" id="editNetSalary" step="0.01" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Gun Number</label>
-                        <input type="text" id="editGunNumber" placeholder="Enter gun number">
-                    </div>
-                    <div class="form-group">
-                        <label>Tel_Number (10 Digits) *</label>
-                        <input type="tel" id="editTelNumber" pattern="[0-9]{10}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Clan</label>
-                        <input type="text" id="editClan">
-                    </div>
-                    <div class="form-group">
-                        <label>Guarantor_Name *</label>
-                        <input type="text" id="editGuarantorName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Guarantor_Phone (10 Digits) *</label>
-                        <input type="tel" id="editGuarantorPhone" pattern="[0-9]{10}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Emergency_Contact_Name *</label>
-                        <input type="text" id="editEmergencyContactName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Emergency_Contact_Phone *</label>
-                        <input type="tel" id="editEmergencyContactPhone" pattern="[0-9]{10}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Blood_Group</label>
-                        <select id="editBloodGroup">
-                            <option value="">Select</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="editStatus">
-                            <option value="Active">Active</option>
-                            <option value="Wounded">Wounded</option>
-                            <option value="Discharged">Discharged</option>
-                            <option value="Dead">Dead</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Home Address</label>
-                    <textarea id="editHomeAddress" rows="3" placeholder="Enter complete home address"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Photo</label>
-                    <input type="file" id="editPhotoInput" accept="image/*" onchange="previewEditPhoto(event)">
-                    <div class="modal-photo-preview">
-                        <img id="editPhotoPreview" src="" alt="Photo Preview">
-                        <div class="upload-icon">📷</div>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn btn-warning">UPDATE SOLDIER RECORD</button>
-                <div id="editFormMessage"></div>
-            </form>
-        </div>
-    </div>
-
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <img src="logo.png" alt="Jubaland Logo" class="logo">
-                <div class="header-text">
-                    <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
-                    <p>Military Personnel Management & Payroll System</p>
-                </div>
+        <h1>Soldiers View Table</h1>
+        
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Search...">
+            <div class="action-buttons">
+                <button class="btn btn-edit">Edit</button>
+                <button class="btn btn-search">Search</button>
+                <button class="btn btn-delete">Delete</button>
             </div>
         </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('register')">Register Soldier</button>
-            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
-            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
-        </div>
-
-        <!-- Register Soldier Tab -->
-        <div id="register" class="content active">
-            <form id="soldierForm">
-                <div class="main-content">
-                    <!-- Left Column - Form Fields -->
-                    <div class="form-column">
-                        <!-- Personal Information -->
-                        <div class="form-section">
-                            <h3>PERSONAL INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Soldier_ID</label>
-                                    <input type="text" value="Auto-generated" disabled style="background: #ecf0f1;">
-                                </div>
-                                <div class="form-group">
-                                    <label>Full Names *</label>
-                                    <input type="text" name="full_names" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Birth *</label>
-                                    <input type="date" name="date_of_birth" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Gender *</label>
-                                    <select name="gender" required>
-                                        <option value="">Select</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Rank/Position *</label>
-                                    <select name="rank_position" required onchange="updateSalary()">
-                                        <option value="">Select</option>
-                                        <option value="Askari">Askari</option>
-                                        <option value="Taliye Unug">Taliye Unug</option>
-                                        <option value="Taliye Koox">Taliye Koox</option>
-                                        <option value="Taliye Horin">Taliye Horin</option>
-                                        <option value="Abandule">Abandule</option>
-                                        <option value="Taliye Guuto">Taliye Guuto</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Date_of_Enlistment *</label>
-                                    <input type="date" name="date_of_enlistment" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin/Platoon *</label>
-                                    <select name="horin_platoon" required onchange="updateCommander()">
-                                        <option value="">Select</option>
-                                        <option value="Horin1">Horin1</option>
-                                        <option value="Horin2">Horin2</option>
-                                        <option value="Horin3">Horin3</option>
-                                        <option value="Horin4">Horin4</option>
-                                        <option value="Horin5">Horin5</option>
-                                        <option value="Horin6">Horin6</option>
-                                        <option value="Taliska">Taliska</option>
-                                        <option value="Fiat">Fiat</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Horin Commander *</label>
-                                    <input type="text" name="horin_commander" required id="horin_commander" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Net_Salary *</label>
-                                    <input type="number" name="net_salary" step="0.01" required id="net_salary" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label>Gun Number</label>
-                                    <input type="text" name="gun_number" placeholder="Enter gun number">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Contact Information -->
-                        <div class="form-section">
-                            <h3>CONTACT INFORMATION</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Tel_Number (10 Digits) *</label>
-                                    <input type="tel" name="tel_number" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Clan</label>
-                                    <input type="text" name="clan">
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Name *</label>
-                                    <input type="text" name="guarantor_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Guarantor_Phone (10 Digits) *</label>
-                                    <input type="tel" name="guarantor_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Name *</label>
-                                    <input type="text" name="emergency_contact_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Emergency_Contact_Phone *</label>
-                                    <input type="tel" name="emergency_contact_phone" pattern="[0-9]{10}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Blood_Group</label>
-                        <select name="blood_group">
-                            <option value="">Select</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select name="status">
-                            <option value="Active">Active</option>
-                            <option value="Wounded">Wounded</option>
-                            <option value="Discharged">Discharged</option>
-                            <option value="Dead">Dead</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Home Address -->
-            <div class="form-section">
-                <h3>HOME ADDRESS</h3>
-                <div class="form-group">
-                    <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
-            <div id="formMessage"></div>
-        </div>
-
-        <!-- Right Column - Photo Section -->
-        <div class="photo-section">
-            <h3 style="margin-bottom: 15px;">SOLDIER PHOTO</h3>
-            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                <div class="upload-icon">📷</div>
-                <p>Click to upload photo</p>
-                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
-            </div>
-            <div class="photo-preview">
-                <img id="photoPreview" src="" alt="Photo Preview">
-                <div class="upload-icon">👤</div>
-            </div>
-            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-            <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Clear front-facing photo required</p>
-        </div>
+        
+        <div class="full-names">Full_names</div>
+        
+        <!-- Soldier 1 -->
+        <table class="soldier-table">
+            <tr>
+                <td class="section-title">Soldier_id</td>
+                <td>S001</td>
+                <td class="section-title">Net_salary</td>
+                <td>$2,500</td>
+            </tr>
+            <tr>
+                <td class="section-title">Date_of_birth</td>
+                <td>1995-03-15</td>
+                <td class="section-title">Tel_number</td>
+                <td>555-1234</td>
+            </tr>
+            <tr>
+                <td class="section-title">Gender</td>
+                <td>Male</td>
+                <td class="section-title">Clan</td>
+                <td>Alpha</td>
+            </tr>
+            <tr>
+                <td class="section-title">Fingerprint_data</td>
+                <td>Encrypted Data</td>
+                <td class="section-title">Guarantor_name</td>
+                <td>John Smith</td>
+            </tr>
+            <tr>
+                <td class="section-title">Rank_position</td>
+                <td>Sergeant</td>
+                <td class="section-title">Guarantor_phone</td>
+                <td>555-5678</td>
+            </tr>
+            <tr>
+                <td class="section-title">Date_of_enlistment</td>
+                <td>2018-06-10</td>
+                <td class="section-title">Emergency_contact_name</td>
+                <td>Jane Doe</td>
+            </tr>
+            <tr>
+                <td class="section-title">Horin_platoon</td>
+                <td>Platoon A</td>
+                <td class="section-title">Emergency_contact_phone</td>
+                <td>555-9012</td>
+            </tr>
+            <tr>
+                <td class="section-title">Horin_commander</td>
+                <td>Captain Johnson</td>
+                <td class="section-title">Home_address</td>
+                <td>123 Main St, City</td>
+            </tr>
+            <tr>
+                <td class="section-title">Gun_number</td>
+                <td>GUN-001</td>
+                <td class="section-title">Blood_group</td>
+                <td>O+</td>
+            </tr>
+        </table>
+        
+        <!-- Soldier 2 -->
+        <table class="soldier-table">
+            <tr>
+                <td class="section-title">Soldier_id</td>
+                <td>S002</td>
+                <td class="section-title">Net_salary</td>
+                <td>$2,300</td>
+            </tr>
+            <tr>
+                <td class="section-title">Date_of_birth</td>
+                <td>1997-08-22</td>
+                <td class="section-title">Tel_number</td>
+                <td>555-4321</td>
+            </tr>
+            <tr>
+                <td class="section-title">Gender</td>
+                <td>Female</td>
+                <td class="section-title">Clan</td>
+                <td>Beta</td>
+            </tr>
+            <tr>
+                <td class="section-title">Fingerprint_data</td>
+                <td>Encrypted Data</td>
+                <td class="section-title">Guarantor_name</td>
+                <td>Robert Brown</td>
+            </tr>
+            <tr>
+                <td class="section-title">Rank_position</td>
+                <td>Corporal</td>
+                <td class="section-title">Guarantor_phone</td>
+                <td>555-8765</td>
+            </tr>
+            <tr>
+                <td class="section-title">Date_of_enlistment</td>
+                <td>2019-02-14</td>
+                <td class="section-title">Emergency_contact_name</td>
+                <td>Mary Johnson</td>
+            </tr>
+            <tr>
+                <td class="section-title">Horin_platoon</td>
+                <td>Platoon B</td>
+                <td class="section-title">Emergency_contact_phone</td>
+                <td>555-2109</td>
+            </tr>
+            <tr>
+                <td class="section-title">Horin_commander</td>
+                <td>Captain Williams</td>
+                <td class="section-title">Home_address</td>
+                <td>456 Oak St, Town</td>
+            </tr>
+            <tr>
+                <td class="section-title">Gun_number</td>
+                <td>GUN-002</td>
+                <td class="section-title">Blood_group</td>
+                <td>A+</td>
+            </tr>
+        </table>
     </div>
-</form>
-        </div>
-
-        <!-- View Soldiers Tab -->
-        <div id="soldiers" class="content">
-            <div class="search-section">
-                <h3>Search Soldiers</h3>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search by Soldier ID or Name...">
-                    <button class="submit-btn" onclick="searchSoldiers()">Search</button>
-                    <button class="submit-btn btn-warning" onclick="clearSearch()">Clear</button>
-                </div>
-            </div>
-            
-            <div id="soldiersList">
-                <!-- Soldiers will be loaded here as individual tables -->
-            </div>
-        </div>
-
-        <!-- Monthly Payroll Tab -->
-        <div id="payroll" class="content">
-            <h3>Monthly Payroll Report</h3>
-            <div style="margin: 20px 0;">
-                <label>Select Month: </label>
-                <select id="monthSelect">
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-                <select id="yearSelect">
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                </select>
-                <button class="submit-btn" onclick="loadPayroll()">Generate Report</button>
-            </div>
-            <div id="payrollReport"></div>
-        </div>
-    </div>
-
-    <script>
-        // Password protection
-        function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'Jubaland2024') {
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else {
-                alert('Incorrect password. Access denied.');
-            }
-        }
-
-        // Tab navigation
-        function showTab(tabName) {
-            document.querySelectorAll('.content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-            
-            if (tabName === 'soldiers') {
-                loadSoldiers();
-            }
-        }
-
-        // Salary calculation based on rank
-        function updateSalary() {
-            const rank = document.querySelector('select[name="rank_position"]').value;
-            const salaryField = document.getElementById('net_salary');
-            
-            const salaries = {
-                'Askari': 300,
-                'Taliye Unug': 350,
-                'Taliye Koox': 400,
-                'Taliye Horin': 500,
-                'Abandule': 600,
-                'Taliye Guuto': 700
-            };
-            
-            salaryField.value = salaries[rank] || '';
-        }
-
-        // Commander assignment based on platoon
-        function updateCommander() {
-            const platoon = document.querySelector('select[name="horin_platoon"]').value;
-            const commanderField = document.getElementById('horin_commander');
-            
-            const commanders = {
-                'Horin1': 'Commander Ahmed',
-                'Horin2': 'Commander Omar',
-                'Horin3': 'Commander Hassan',
-                'Horin4': 'Commander Ali',
-                'Horin5': 'Commander Yusuf',
-                'Horin6': 'Commander Mohamed',
-                'Taliska': 'Commander Abdi',
-                'Fiat': 'Commander Ibrahim'
-            };
-            
-            commanderField.value = commanders[platoon] || '';
-        }
-
-        // Photo preview
-        function previewPhoto(event) {
-            const input = event.target;
-            const preview = document.getElementById('photoPreview');
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    preview.parentElement.querySelector('.upload-icon').style.display = 'none';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Form submission
-        document.getElementById('soldierForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const photoInput = document.getElementById('photoInput');
-            let photoBase64 = '';
-            
-            // Convert photo to base64
-            if (photoInput.files[0]) {
-                photoBase64 = await fileToBase64(photoInput.files[0]);
-            }
-            
-            const soldierData = {
-                full_names: formData.get('full_names'),
-                date_of_birth: formData.get('date_of_birth'),
-                gender: formData.get('gender'),
-                photo: photoBase64,
-                fingerprint_data: '',
-                rank_position: formData.get('rank_position'),
-                date_of_enlistment: formData.get('date_of_enlistment'),
-                horin_platoon: formData.get('horin_platoon'),
-                horin_commander: formData.get('horin_commander'),
-                net_salary: formData.get('net_salary'),
-                tel_number: formData.get('tel_number'),
-                clan: formData.get('clan'),
-                guarantor_name: formData.get('guarantor_name'),
-                guarantor_phone: formData.get('guarantor_phone'),
-                emergency_contact_name: formData.get('emergency_contact_name'),
-                emergency_contact_phone: formData.get('emergency_contact_phone'),
-                home_address: formData.get('home_address'),
-                blood_group: formData.get('blood_group'),
-                gun_number: formData.get('gun_number'),
-                status: formData.get('status')
-            };
-            
-            try {
-                const response = await fetch('/api/soldiers', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(soldierData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('formMessage', 'Soldier registered successfully!', 'success');
-                    this.reset();
-                    document.getElementById('photoPreview').style.display = 'none';
-                    document.getElementById('photoPreview').src = '';
-                    document.querySelector('.photo-preview .upload-icon').style.display = 'block';
-                } else {
-                    showMessage('formMessage', 'Error: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('formMessage', 'Network error: ' + error.message, 'error');
-            }
-        });
-
-        // Helper function to convert file to base64
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        // Load all soldiers
-        async function loadSoldiers() {
-            try {
-                const response = await fetch('/api/soldiers');
-                const result = await response.json();
-                
-                if (result.success) {
-                    displaySoldiers(result.soldiers);
-                } else {
-                    showMessage('soldiersList', 'Error loading soldiers: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('soldiersList', 'Network error: ' + error.message, 'error');
-            }
-        }
-
-        // Search soldiers
-        async function searchSoldiers() {
-            const query = document.getElementById('searchInput').value.trim();
-            
-            if (!query) {
-                loadSoldiers();
-                return;
-            }
-            
-            try {
-                const response = await fetch(`/api/soldiers-search?query=${encodeURIComponent(query)}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    displaySoldiers(result.soldiers);
-                } else {
-                    showMessage('soldiersList', 'Error searching soldiers: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('soldiersList', 'Network error: ' + error.message, 'error');
-            }
-        }
-
-        // Clear search
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            loadSoldiers();
-        }
-
-        // NEW: Display soldiers as individual tables
-        function displaySoldiers(soldiers) {
-            const container = document.getElementById('soldiersList');
-            
-            if (soldiers.length === 0) {
-                container.innerHTML = '<div class="alert info">No soldiers found</div>';
-                return;
-            }
-            
-            let html = '';
-            
-            soldiers.forEach(soldier => {
-                const photoSrc = soldier.photo ? soldier.photo : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA1MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRTVFNUU1Ii8+CjxwYXRoIGQ9Ik0yNSAzMEMzMS4wODI1IDMwIDM2IDI1LjA4MjUgMzYgMTlDMzYgMTIuOTE3NSAzMS4wODI1IDggMjUgOEMxOC45MTc1IDggMTQgMTIuOTE3NSAxNCAxOUMxNCAyNS4wODI1IDE4LjkxNzUgMzAgMjUgMzBaTTI1IDM0QzE3LjI2IDM0IDEwIDM3LjMzNSAxMCA0MlY0Nkg0MFY0MkM0MCAzNy4zMzUgMzIuNzQgMzQgMjUgMzRaIiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo=';
-                
-                html += `
-                    <div class="soldier-card">
-                        <div class="soldier-card-header">
-                            <div class="soldier-id">${soldier.soldier_id}</div>
-                            <div class="soldier-name">${soldier.full_names}</div>
-                        </div>
-                        <div class="soldier-card-content">
-                            <div class="photo-section-card">
-                                <img src="${photoSrc}" alt="Photo" class="soldier-photo">
-                            </div>
-                            
-                            <table class="soldier-table">
-                                <tr>
-                                    <th>Date of Birth</th>
-                                    <td>${new Date(soldier.date_of_birth).toLocaleDateString()}</td>
-                                </tr>
-                                <tr>
-                                    <th>Gender</th>
-                                    <td>${soldier.gender}</td>
-                                </tr>
-                                <tr>
-                                    <th>Fingerprint Data</th>
-                                    <td>${soldier.fingerprint_data ? 'Registered' : 'Not Registered'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Rank/Position</th>
-                                    <td>${soldier.rank_position}</td>
-                                </tr>
-                                <tr>
-                                    <th>Date of Enlistment</th>
-                                    <td>${new Date(soldier.date_of_enlistment).toLocaleDateString()}</td>
-                                </tr>
-                                <tr>
-                                    <th>Horin/Platoon</th>
-                                    <td>${soldier.horin_platoon}</td>
-                                </tr>
-                                <tr>
-                                    <th>Horin Commander</th>
-                                    <td>${soldier.horin_commander || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Gun Number</th>
-                                    <td>${soldier.gun_number || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Net Salary</th>
-                                    <td>$${soldier.net_salary}</td>
-                                </tr>
-                                <tr>
-                                    <th>Phone Number</th>
-                                    <td>${soldier.tel_number}</td>
-                                </tr>
-                                <tr>
-                                    <th>Clan</th>
-                                    <td>${soldier.clan || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Guarantor Name</th>
-                                    <td>${soldier.guarantor_name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Guarantor Phone</th>
-                                    <td>${soldier.guarantor_phone}</td>
-                                </tr>
-                                <tr>
-                                    <th>Emergency Contact</th>
-                                    <td>${soldier.emergency_contact_name}</td>
-                                </tr>
-                                <tr>
-                                    <th>Emergency Phone</th>
-                                    <td>${soldier.emergency_contact_phone}</td>
-                                </tr>
-                                <tr>
-                                    <th>Home Address</th>
-                                    <td>${soldier.home_address || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Blood Group</th>
-                                    <td>${soldier.blood_group || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td>${soldier.status}</td>
-                                </tr>
-                            </table>
-                            
-                            <div class="soldier-actions">
-                                <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
-                                <button class="action-btn btn-danger" onclick="deleteSoldier('${soldier.soldier_id}')">Delete</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // Edit soldier
-        async function editSoldier(soldierId) {
-            try {
-                const response = await fetch(`/api/soldiers/${soldierId}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    const soldier = result.soldier;
-                    
-                    // Populate form
-                    document.getElementById('editSoldierId').value = soldier.soldier_id;
-                    document.getElementById('editFullNames').value = soldier.full_names;
-                    document.getElementById('editDateOfBirth').value = soldier.date_of_birth;
-                    document.getElementById('editGender').value = soldier.gender;
-                    document.getElementById('editRankPosition').value = soldier.rank_position;
-                    document.getElementById('editDateOfEnlistment').value = soldier.date_of_enlistment;
-                    document.getElementById('editHorinPlatoon').value = soldier.horin_platoon;
-                    document.getElementById('editHorinCommander').value = soldier.horin_commander;
-                    document.getElementById('editNetSalary').value = soldier.net_salary;
-                    document.getElementById('editGunNumber').value = soldier.gun_number || '';
-                    document.getElementById('editTelNumber').value = soldier.tel_number;
-                    document.getElementById('editClan').value = soldier.clan || '';
-                    document.getElementById('editGuarantorName').value = soldier.guarantor_name;
-                    document.getElementById('editGuarantorPhone').value = soldier.guarantor_phone;
-                    document.getElementById('editEmergencyContactName').value = soldier.emergency_contact_name;
-                    document.getElementById('editEmergencyContactPhone').value = soldier.emergency_contact_phone;
-                    document.getElementById('editHomeAddress').value = soldier.home_address || '';
-                    document.getElementById('editBloodGroup').value = soldier.blood_group || '';
-                    document.getElementById('editStatus').value = soldier.status;
-                    
-                    // Handle photo
-                    const preview = document.getElementById('editPhotoPreview');
-                    if (soldier.photo) {
-                        preview.src = soldier.photo;
-                        preview.style.display = 'block';
-                        preview.parentElement.querySelector('.upload-icon').style.display = 'none';
-                    } else {
-                        preview.style.display = 'none';
-                        preview.parentElement.querySelector('.upload-icon').style.display = 'block';
-                    }
-                    
-                    // Show modal
-                    document.getElementById('editModal').style.display = 'flex';
-                } else {
-                    alert('Error loading soldier: ' + result.error);
-                }
-            } catch (error) {
-                alert('Network error: ' + error.message);
-            }
-        }
-
-        // Close edit modal
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-        // Preview photo in edit modal
-        function previewEditPhoto(event) {
-            const input = event.target;
-            const preview = document.getElementById('editPhotoPreview');
-            
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    preview.parentElement.querySelector('.upload-icon').style.display = 'none';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Update salary in edit form
-        function updateEditSalary() {
-            const rank = document.getElementById('editRankPosition').value;
-            const salaryField = document.getElementById('editNetSalary');
-            
-            const salaries = {
-                'Askari': 300,
-                'Taliye Unug': 350,
-                'Taliye Koox': 400,
-                'Taliye Horin': 500,
-                'Abandule': 600,
-                'Taliye Guuto': 700
-            };
-            
-            salaryField.value = salaries[rank] || '';
-        }
-
-        // Update commander in edit form
-        function updateEditCommander() {
-            const platoon = document.getElementById('editHorinPlatoon').value;
-            const commanderField = document.getElementById('editHorinCommander');
-            
-            const commanders = {
-                'Horin1': 'Commander Ahmed',
-                'Horin2': 'Commander Omar',
-                'Horin3': 'Commander Hassan',
-                'Horin4': 'Commander Ali',
-                'Horin5': 'Commander Yusuf',
-                'Horin6': 'Commander Mohamed',
-                'Taliska': 'Commander Abdi',
-                'Fiat': 'Commander Ibrahim'
-            };
-            
-            commanderField.value = commanders[platoon] || '';
-        }
-
-        // Edit form submission
-        document.getElementById('editSoldierForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const soldierId = document.getElementById('editSoldierId').value;
-            const photoInput = document.getElementById('editPhotoInput');
-            let photoBase64 = '';
-            
-            // Get current photo or convert new photo
-            const currentPreview = document.getElementById('editPhotoPreview');
-            if (photoInput.files[0]) {
-                photoBase64 = await fileToBase64(photoInput.files[0]);
-            } else if (currentPreview.src) {
-                photoBase64 = currentPreview.src;
-            }
-            
-            const soldierData = {
-                full_names: document.getElementById('editFullNames').value,
-                date_of_birth: document.getElementById('editDateOfBirth').value,
-                gender: document.getElementById('editGender').value,
-                photo: photoBase64,
-                fingerprint_data: '',
-                rank_position: document.getElementById('editRankPosition').value,
-                date_of_enlistment: document.getElementById('editDateOfEnlistment').value,
-                horin_platoon: document.getElementById('editHorinPlatoon').value,
-                horin_commander: document.getElementById('editHorinCommander').value,
-                net_salary: document.getElementById('editNetSalary').value,
-                tel_number: document.getElementById('editTelNumber').value,
-                clan: document.getElementById('editClan').value,
-                guarantor_name: document.getElementById('editGuarantorName').value,
-                guarantor_phone: document.getElementById('editGuarantorPhone').value,
-                emergency_contact_name: document.getElementById('editEmergencyContactName').value,
-                emergency_contact_phone: document.getElementById('editEmergencyContactPhone').value,
-                home_address: document.getElementById('editHomeAddress').value,
-                blood_group: document.getElementById('editBloodGroup').value,
-                gun_number: document.getElementById('editGunNumber').value,
-                status: document.getElementById('editStatus').value
-            };
-            
-            try {
-                const response = await fetch(`/api/soldiers/${soldierId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(soldierData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('editFormMessage', 'Soldier updated successfully!', 'success');
-                    closeEditModal();
-                    loadSoldiers(); // Refresh the list
-                } else {
-                    showMessage('editFormMessage', 'Error: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('editFormMessage', 'Network error: ' + error.message, 'error');
-            }
-        });
-
-        // Delete soldier
-        async function deleteSoldier(soldierId) {
-            if (!confirm('Are you sure you want to delete this soldier record? This action cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(`/api/soldiers/${soldierId}`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    alert('Soldier deleted successfully!');
-                    loadSoldiers(); // Refresh the list
-                } else {
-                    alert('Error: ' + result.error);
-                }
-            } catch (error) {
-                alert('Network error: ' + error.message);
-            }
-        }
-
-        // Load payroll
-        async function loadPayroll() {
-            const month = document.getElementById('monthSelect').value;
-            const year = document.getElementById('yearSelect').value;
-            
-            try {
-                const response = await fetch(`/api/monthly-payroll?month=${month}&year=${year}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayPayroll(result.report);
-                } else {
-                    document.getElementById('payrollReport').innerHTML = 
-                        '<div class="alert error">Error: ' + result.error + '</div>';
-                }
-            } catch (error) {
-                document.getElementById('payrollReport').innerHTML = 
-                    '<div class="alert error">Network error: ' + error.message + '</div>';
-            }
-        }
-
-        // Display payroll
-        function displayPayroll(report) {
-            const container = document.getElementById('payrollReport');
-            
-            let html = `
-                <div class="alert info">
-                    <strong>Payroll Report for ${getMonthName(report.month)} ${report.year}</strong><br>
-                    Total Soldiers: ${report.total_soldiers} | Total Salary: $${report.total_salary.toFixed(2)}
-                </div>
-            `;
-            
-            if (report.soldiers && report.soldiers.length > 0) {
-                html += `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Soldier ID</th>
-                                <th>Full Names</th>
-                                <th>Rank</th>
-                                <th>Platoon</th>
-                                <th>Salary ($)</th>
-                                <th>Last Verified</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                report.soldiers.forEach(soldier => {
-                    html += `
-                        <tr>
-                            <td>${soldier.soldier_id}</td>
-                            <td>${soldier.full_names}</td>
-                            <td>${soldier.rank_position}</td>
-                            <td>${soldier.horin_platoon}</td>
-                            <td>${parseFloat(soldier.net_salary).toFixed(2)}</td>
-                            <td>${soldier.verified_at ? new Date(soldier.verified_at).toLocaleDateString() : 'Never'}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += '</tbody></table>';
-            } else {
-                html += '<div class="alert info">No verification records found for this period</div>';
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Helper function to get month name
-        function getMonthName(monthNumber) {
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                          'July', 'August', 'September', 'October', 'November', 'December'];
-            return months[monthNumber - 1];
-        }
-
-        // Helper function to show messages
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<div class="alert ${type}">${message}</div>`;
-            setTimeout(() => element.innerHTML = '', 5000);
-        }
-
-        // Initialize the system
-        async function initializeSystem() {
-            try {
-                const response = await fetch('/api/setup-soldiers');
-                const result = await response.json();
-                console.log('System initialized:', result.message);
-            } catch (error) {
-                console.error('Initialization error:', error);
-            }
-        }
-
-        // Run initialization when page loads
-        window.onload = initializeSystem;
-    </script>
 </body>
 </html>
