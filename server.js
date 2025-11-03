@@ -2,7 +2,6 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const path = require('path');
-const twilio = require('twilio');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,26 +11,11 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static('public'));
 
-// Twilio configuration for 2FA
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
-
 // PostgreSQL connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
-
-// User authentication storage (in production, use a proper database)
-const users = {
-  'admin1': { password: 'Admin123!', phone: '+252612030127' },
-  'commander1': { password: 'Commander123!', phone: '+252612030127' }
-};
-
-// Store verification codes temporarily
-const verificationCodes = new Map();
 
 // Test database connection
 async function testConnection() {
@@ -44,106 +28,6 @@ async function testConnection() {
   }
 }
 testConnection();
-
-// ================== AUTHENTICATION ENDPOINTS ==================
-
-// 1. Request 2FA code
-app.post('/api/request-2fa', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    
-    // Verify username and password
-    if (!users[username] || users[username].password !== password) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid username or password'
-      });
-    }
-    
-    // Generate 4-digit code
-    const code = Math.floor(1000 + Math.random() * 9000).toString();
-    const phoneNumber = users[username].phone;
-    
-    // Store code temporarily (expires in 10 minutes)
-    verificationCodes.set(username, {
-      code: code,
-      expires: Date.now() + 10 * 60 * 1000
-    });
-    
-    // Send SMS via Twilio
-    try {
-      await twilioClient.messages.create({
-        body: `Your Jubaland Statehouse Forces verification code is: ${code}. This code expires in 10 minutes.`,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to: phoneNumber
-      });
-      
-      res.json({
-        success: true,
-        message: 'Verification code sent to your phone'
-      });
-    } catch (twilioError) {
-      console.error('Twilio error:', twilioError);
-      
-      // For development/demo purposes, return the code directly
-      res.json({
-        success: true,
-        message: 'Verification code generated (SMS simulation)',
-        demo_code: code // Remove this in production
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
-
-// 2. Verify 2FA code and login
-app.post('/api/verify-2fa', async (req, res) => {
-  try {
-    const { username, code } = req.body;
-    
-    const storedCode = verificationCodes.get(username);
-    
-    if (!storedCode) {
-      return res.status(401).json({
-        success: false,
-        error: 'No verification code requested or code expired'
-      });
-    }
-    
-    if (Date.now() > storedCode.expires) {
-      verificationCodes.delete(username);
-      return res.status(401).json({
-        success: false,
-        error: 'Verification code expired'
-      });
-    }
-    
-    if (storedCode.code !== code) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid verification code'
-      });
-    }
-    
-    // Code is valid - clear it and generate session
-    verificationCodes.delete(username);
-    
-    res.json({
-      success: true,
-      message: 'Login successful',
-      user: username
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
 
 // ================== SOLDIERS MANAGEMENT ENDPOINTS ==================
 
@@ -537,10 +421,6 @@ app.get('/api', (req, res) => {
   res.json({ 
     message: 'Jubaland Statehouse Forces Database System',
     endpoints: {
-      auth: {
-        request2FA: 'POST /api/request-2fa',
-        verify2FA: 'POST /api/verify-2fa'
-      },
       setup: '/api/setup-soldiers (safe migration)',
       reset: '/api/reset-database (DANGEROUS - deletes all data)',
       soldiers: {
@@ -571,5 +451,4 @@ app.listen(PORT, () => {
   console.log(`📱 Frontend: http://localhost:${PORT}`);
   console.log(`🔧 API: http://localhost:${PORT}/api`);
   console.log(`🔄 Run http://localhost:${PORT}/api/setup-soldiers to add gun_number column`);
-  console.log(`🔐 Available users: admin1/Admin123!, commander1/Commander123!`);
 });
