@@ -162,19 +162,72 @@
         .content { display: none; }
         .content.active { display: block; }
         
-        /* Table Styles */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #f8f9fa; color: #2c3e50; }
+        /* NEW: Compact Table Styles for Soldier Display */
+        .compact-soldier-table {
+            width: 100%;
+            border: 3px solid #2c3e50 !important; /* Bold border around entire table */
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 12px; /* Smaller font size */
+            background: white;
+        }
         
-        /* UPDATED: 100% Larger soldier photos in table */
-        .soldier-photo {
-            width: 100px; /* Increased 100% from 50px */
-            height: 120px; /* Increased 100% from 60px */
+        .compact-soldier-table th,
+        .compact-soldier-table td {
+            border: 1px solid #bdc3c7 !important; /* Individual cell borders */
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        
+        .compact-soldier-table th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+            width: 25%;
+            font-size: 11px;
+        }
+        
+        .compact-soldier-table td {
+            background: #f8f9fa;
+            color: #2c3e50;
+            width: 25%;
+            font-size: 11px;
+        }
+        
+        .compact-soldier-table tr:nth-child(even) td {
+            background: #f1f3f4;
+        }
+        
+        .compact-soldier-table tr:hover td {
+            background: #e8f4fd;
+        }
+        
+        /* Photo and Fingerprint section in compact table */
+        .photo-fingerprint-section {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #bdc3c7;
+            margin: 5px 0;
+        }
+        
+        .compact-soldier-photo {
+            width: 120px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 8px; /* Slightly larger radius */
-            border: 2px solid #ddd; /* Thicker border */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Enhanced shadow for better visibility */
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .fingerprint-indicator {
+            font-size: 10px;
+            color: #7f8c8d;
+            padding: 4px 8px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            display: inline-block;
         }
         
         .search-section {
@@ -239,7 +292,7 @@
             color: #7f8c8d;
         }
 
-        /* NEW: Individual Soldier Table Styles */
+        /* Soldier Card Styles */
         .soldier-card {
             background: white;
             border: 2px solid #e1e8ed;
@@ -270,44 +323,6 @@
         
         .soldier-card-content {
             padding: 20px;
-        }
-        
-        .soldier-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 0;
-        }
-        
-        .soldier-table th {
-            background: #f8f9fa;
-            color: #2c3e50;
-            font-weight: bold;
-            padding: 12px;
-            border: 1px solid #e1e8ed;
-            width: 30%;
-        }
-        
-        .soldier-table td {
-            padding: 12px;
-            border: 1px solid #e1e8ed;
-            color: #34495e;
-            width: 70%;
-        }
-        
-        .soldier-table tr:nth-child(even) {
-            background-color: #fafbfc;
-        }
-        
-        .soldier-table tr:hover {
-            background-color: #f5f7fa;
-        }
-        
-        .photo-section-card {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 15px;
         }
         
         .soldier-actions {
@@ -695,7 +710,7 @@
             </div>
             
             <div id="soldiersList">
-                <!-- Soldiers will be loaded here as individual tables -->
+                <!-- Soldiers will be loaded here as compact tables -->
             </div>
         </div>
 
@@ -918,7 +933,7 @@
             loadSoldiers();
         }
 
-        // NEW: Display soldiers as individual tables
+        // NEW: Display soldiers as compact tables matching the sample layout
         function displaySoldiers(soldiers) {
             const container = document.getElementById('soldiersList');
             
@@ -930,7 +945,8 @@
             let html = '';
             
             soldiers.forEach(soldier => {
-                const photoSrc = soldier.photo ? soldier.photo : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA1MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjRTVFNUU1Ii8+CjxwYXRoIGQ9Ik0yNSAzMEMzMS4wODI1IDMwIDM2IDI1LjA4MjUgMzYgMTlDMzYgMTIuOTE3NSAzMS4wODI1IDggMjUgOEMxOC45MTc1IDggMTQgMTIuOTE3NSAxNCAxOUMxNCAyNS4wODI1IDE4LjkxNzUgMzAgMjUgMzBaTTI1IDM0QzE3LjI2IDM0IDEwIDM3LjMzNSAxMCA0MlY0Nkg0MFY0MkM0MCAzNy4zMzUgMzIuNzQgMzQgMjUgMzRaIiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo=';
+                const photoSrc = soldier.photo ? soldier.photo : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDEyMCAxNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTQwIiBmaWxsPSIjRTVFNUU1Ii8+CjxwYXRoIGQ9Ik02MCA3MEM2OS4zODg4IDcwIDc3IDYyLjM4ODggNzcgNTNDNzcgNDMuNjExMiA2OS4zODg4IDM2IDYwIDM2QzUwLjYxMTIgMzYgNDMgNDMuNjExMiA0MyA1M0M0MyA2Mi4zODg4IDUwLjYxMTIgNzAgNjAgNzBaTTYwIDc4QzQ3Ljg1IDc4IDM4IDg0LjQ2IDM4IDkyVjEwMkg4MlY5MkM4MiA4NC40NiA3Mi4xNSA3OCA2MCA3OFoiIGZpbGw9IiM5OTkiLz4KPC9zdmc+Cg==';
+                const fingerprintStatus = soldier.fingerprint_data ? 'Registered' : 'Not Registered';
                 
                 html += `
                     <div class="soldier-card">
@@ -939,82 +955,70 @@
                             <div class="soldier-name">${soldier.full_names}</div>
                         </div>
                         <div class="soldier-card-content">
-                            <div class="photo-section-card">
-                                <img src="${photoSrc}" alt="Photo" class="soldier-photo">
-                            </div>
-                            
-                            <table class="soldier-table">
+                            <table class="compact-soldier-table">
                                 <tr>
-                                    <th>Date of Birth</th>
-                                    <td>${new Date(soldier.date_of_birth).toLocaleDateString()}</td>
-                                </tr>
-                                <tr>
-                                    <th>Gender</th>
-                                    <td>${soldier.gender}</td>
-                                </tr>
-                                <tr>
-                                    <th>Fingerprint Data</th>
-                                    <td>${soldier.fingerprint_data ? 'Registered' : 'Not Registered'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Rank/Position</th>
-                                    <td>${soldier.rank_position}</td>
-                                </tr>
-                                <tr>
-                                    <th>Date of Enlistment</th>
-                                    <td>${new Date(soldier.date_of_enlistment).toLocaleDateString()}</td>
-                                </tr>
-                                <tr>
-                                    <th>Horin/Platoon</th>
-                                    <td>${soldier.horin_platoon}</td>
-                                </tr>
-                                <tr>
-                                    <th>Horin Commander</th>
-                                    <td>${soldier.horin_commander || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Gun Number</th>
-                                    <td>${soldier.gun_number || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <th>Net Salary</th>
-                                    <td>$${soldier.net_salary}</td>
-                                </tr>
-                                <tr>
-                                    <th>Phone Number</th>
+                                    <th>Soldier_ID</th>
+                                    <td>${soldier.soldier_id}</td>
+                                    <th>Tel_Number (10 Digits)</th>
                                     <td>${soldier.tel_number}</td>
                                 </tr>
                                 <tr>
+                                    <th>Full Names</th>
+                                    <td>${soldier.full_names}</td>
                                     <th>Clan</th>
                                     <td>${soldier.clan || 'N/A'}</td>
                                 </tr>
                                 <tr>
-                                    <th>Guarantor Name</th>
+                                    <th>Date_of_Birth</th>
+                                    <td>${new Date(soldier.date_of_birth).toLocaleDateString()}</td>
+                                    <th>Guarantor_Name</th>
                                     <td>${soldier.guarantor_name}</td>
                                 </tr>
                                 <tr>
-                                    <th>Guarantor Phone</th>
+                                    <th>Gender</th>
+                                    <td>${soldier.gender}</td>
+                                    <th>Guarantor_Phone (10 Digits)</th>
                                     <td>${soldier.guarantor_phone}</td>
                                 </tr>
                                 <tr>
-                                    <th>Emergency Contact</th>
+                                    <th>Rank/Position</th>
+                                    <td>${soldier.rank_position}</td>
+                                    <th>Emergency_Contact_Name</th>
                                     <td>${soldier.emergency_contact_name}</td>
                                 </tr>
                                 <tr>
-                                    <th>Emergency Phone</th>
+                                    <th>Date_of_Enlistment</th>
+                                    <td>${new Date(soldier.date_of_enlistment).toLocaleDateString()}</td>
+                                    <th>Emergency_Contact_Phone</th>
                                     <td>${soldier.emergency_contact_phone}</td>
                                 </tr>
                                 <tr>
-                                    <th>Home Address</th>
+                                    <th>Horin/Platoon</th>
+                                    <td>${soldier.horin_platoon}</td>
+                                    <th>Home_Address</th>
                                     <td>${soldier.home_address || 'N/A'}</td>
                                 </tr>
                                 <tr>
-                                    <th>Blood Group</th>
+                                    <th>Horin Commander</th>
+                                    <td>${soldier.horin_commander || 'N/A'}</td>
+                                    <th>Blood_Group</th>
                                     <td>${soldier.blood_group || 'N/A'}</td>
                                 </tr>
                                 <tr>
+                                    <th>Net_Salary</th>
+                                    <td>$${soldier.net_salary}</td>
                                     <th>Status</th>
                                     <td>${soldier.status}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 10px;">
+                                        <div class="photo-fingerprint-section">
+                                            <img src="${photoSrc}" alt="Soldier Photo" class="compact-soldier-photo">
+                                            <div class="fingerprint-indicator">
+                                                Fingerprint: ${fingerprintStatus}
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                             
@@ -1256,7 +1260,7 @@
             
             if (report.soldiers && report.soldiers.length > 0) {
                 html += `
-                    <table>
+                    <table class="compact-soldier-table">
                         <thead>
                             <tr>
                                 <th>Soldier ID</th>
