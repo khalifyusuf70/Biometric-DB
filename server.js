@@ -155,10 +155,20 @@ app.post('/api/soldiers', async (req, res) => {
   }
 });
 
-// 3. Get all soldiers
+// 3. Get all soldiers (optimized - without photos)
 app.get('/api/soldiers', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM soldiersRepository ORDER BY soldier_id');
+    const result = await pool.query(`
+      SELECT 
+        soldier_id, full_names, date_of_birth, gender, 
+        fingerprint_data, rank_position, date_of_enlistment, 
+        horin_platoon, horin_commander, net_salary, tel_number, 
+        clan, guarantor_name, guarantor_phone, 
+        emergency_contact_name, emergency_contact_phone, home_address, 
+        blood_group, gun_number, status, created_at, updated_at
+      FROM soldiersRepository 
+      ORDER BY soldier_id
+    `);
     res.json({
       success: true,
       soldiers: result.rows
@@ -196,7 +206,7 @@ app.get('/api/soldiers/:id', async (req, res) => {
   }
 });
 
-// 5. Search soldiers by ID or name
+// 5. Search soldiers by ID or name (optimized)
 app.get('/api/soldiers-search', async (req, res) => {
   try {
     const { query } = req.query;
@@ -209,7 +219,14 @@ app.get('/api/soldiers-search', async (req, res) => {
     }
 
     const searchQuery = `
-      SELECT * FROM soldiersRepository 
+      SELECT 
+        soldier_id, full_names, date_of_birth, gender, 
+        fingerprint_data, rank_position, date_of_enlistment, 
+        horin_platoon, horin_commander, net_salary, tel_number, 
+        clan, guarantor_name, guarantor_phone, 
+        emergency_contact_name, emergency_contact_phone, home_address, 
+        blood_group, gun_number, status, created_at, updated_at
+      FROM soldiersRepository 
       WHERE soldier_id ILIKE $1 OR full_names ILIKE $1
       ORDER BY soldier_id
     `;
