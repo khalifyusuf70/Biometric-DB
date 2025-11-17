@@ -369,6 +369,61 @@
             margin-top: 10px;
             line-height: 1.4;
         }
+
+        /* Excel-like Table Styles */
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .excel-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #34495e;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .excel-table td {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .excel-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .excel-table tr:hover {
+            background: #e8f4fd;
+        }
+
+        .excel-table th:nth-child(1), .excel-table td:nth-child(1) { width: 80px; } /* Soldier_id */
+        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { width: 150px; } /* Full Names */
+        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { width: 100px; } /* Date_of_birth */
+        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { width: 70px; } /* Gender */
+        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { width: 100px; } /* Rank/Position */
+        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { width: 120px; } /* Date_of_Enlistment */
+        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { width: 100px; } /* Horin/Platoon */
+        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { width: 120px; } /* Horin Commander */
+        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { width: 80px; } /* Gun_number */
+        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { width: 80px; } /* Net_salary */
+        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { width: 100px; } /* Tel_number */
+        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { width: 80px; } /* Clan */
+        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { width: 120px; } /* Guarantor_name */
+        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { width: 100px; } /* Guarantor_phone */
+        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { width: 120px; } /* Emergency_contact_name */
+        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { width: 100px; } /* Emergency_contact_phone */
+        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { width: 70px; } /* Blood_group */
+        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { width: 80px; } /* Status */
     </style>
 </head>
 <body>
@@ -534,6 +589,7 @@
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
+            <button class="tab" onclick="showTab('soldiers-table')">Soldiers Table</button>
             <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
         </div>
 
@@ -642,60 +698,60 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Blood_Group</label>
-                        <select name="blood_group">
-                            <option value="">Select</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </select>
+                                    <select name="blood_group">
+                                        <option value="">Select</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select name="status">
+                                        <option value="Active">Active</option>
+                                        <option value="Wounded">Wounded</option>
+                                        <option value="Discharged">Discharged</option>
+                                        <option value="Dead">Dead</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Home Address -->
+                        <div class="form-section">
+                            <h3>HOME ADDRESS</h3>
+                            <div class="form-group">
+                                <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
+                        <div id="formMessage"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select name="status">
-                            <option value="Active">Active</option>
-                            <option value="Wounded">Wounded</option>
-                            <option value="Discharged">Discharged</option>
-                            <option value="Dead">Dead</option>
-                        </select>
+
+                    <!-- Right Column - Photo Section -->
+                    <div class="photo-section">
+                        <h3 style="margin-bottom: 15px;">SOLDIER PHOTO</h3>
+                        <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                            <div class="upload-icon">📷</div>
+                            <p>Click to upload photo</p>
+                            <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
+                        </div>
+                        <div class="photo-preview">
+                            <img id="photoPreview" src="" alt="Photo Preview">
+                            <div class="upload-icon">👤</div>
+                        </div>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                        <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Clear front-facing photo required</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Home Address -->
-            <div class="form-section">
-                <h3>HOME ADDRESS</h3>
-                <div class="form-group">
-                    <textarea name="home_address" rows="3" placeholder="Enter complete home address"></textarea>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="submit-btn btn-success">REGISTER SOLDIER</button>
-            <div id="formMessage"></div>
-        </div>
-
-        <!-- Right Column - Photo Section -->
-        <div class="photo-section">
-            <h3 style="margin-bottom: 15px;">SOLDIER PHOTO</h3>
-            <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
-                <div class="upload-icon">📷</div>
-                <p>Click to upload photo</p>
-                <p style="font-size: 12px; color: #7f8c8d;">JPG, PNG (Max 2MB)</p>
-            </div>
-            <div class="photo-preview">
-                <img id="photoPreview" src="" alt="Photo Preview">
-                <div class="upload-icon">👤</div>
-            </div>
-            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
-            <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">Clear front-facing photo required</p>
-        </div>
-    </div>
-</form>
+            </form>
         </div>
 
         <!-- View Soldiers Tab -->
@@ -711,6 +767,49 @@
             
             <div id="soldiersList">
                 <!-- Soldiers will be loaded here as compact tables -->
+            </div>
+        </div>
+
+        <!-- NEW: Soldiers Table Tab -->
+        <div id="soldiers-table" class="content">
+            <div class="search-section">
+                <h3>Soldiers Database Table</h3>
+                <div class="search-box">
+                    <input type="text" id="tableSearchInput" placeholder="Search in table...">
+                    <button class="submit-btn" onclick="filterTable()">Search</button>
+                    <button class="submit-btn btn-warning" onclick="clearTableFilter()">Clear</button>
+                    <button class="submit-btn btn-success" onclick="exportToExcel()">Export to Excel</button>
+                </div>
+            </div>
+            
+            <div style="overflow-x: auto; margin-top: 20px;">
+                <table id="soldiersDataTable" class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>Soldier_id</th>
+                            <th>Full Names</th>
+                            <th>Date_of_birth</th>
+                            <th>Gender</th>
+                            <th>Rank/Position</th>
+                            <th>Date_of_Enlistment</th>
+                            <th>Horin/Platoon</th>
+                            <th>Horin Commander</th>
+                            <th>Gun_number</th>
+                            <th>Net_salary</th>
+                            <th>Tel_number</th>
+                            <th>Clan</th>
+                            <th>Guarantor_name</th>
+                            <th>Guarantor_phone</th>
+                            <th>Emergency_contact_name</th>
+                            <th>Emergency_contact_phone</th>
+                            <th>Blood_group</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="soldiersTableBody">
+                        <!-- Table data will be loaded here -->
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -764,6 +863,8 @@
             
             if (tabName === 'soldiers') {
                 loadSoldiers();
+            } else if (tabName === 'soldiers-table') {
+                loadSoldiersTable();
             }
         }
 
@@ -933,7 +1034,7 @@
             loadSoldiers();
         }
 
-        // NEW: Display soldiers as compact tables matching the sample layout
+        // Display soldiers as compact tables matching the sample layout
         function displaySoldiers(soldiers) {
             const container = document.getElementById('soldiersList');
             
@@ -1224,6 +1325,104 @@
             } catch (error) {
                 alert('Network error: ' + error.message);
             }
+        }
+
+        // NEW: Load soldiers table data
+        async function loadSoldiersTable() {
+            try {
+                const response = await fetch('/api/soldiers-table');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySoldiersTable(result.soldiers);
+                } else {
+                    showMessage('soldiersTableBody', 'Error loading soldiers table: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('soldiersTableBody', 'Network error: ' + error.message, 'error');
+            }
+        }
+
+        // NEW: Display soldiers in Excel-like table format
+        function displaySoldiersTable(soldiers) {
+            const tbody = document.getElementById('soldiersTableBody');
+            
+            if (soldiers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="18" style="text-align: center; padding: 20px;">No soldiers found</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            
+            soldiers.forEach(soldier => {
+                html += `
+                    <tr>
+                        <td>${soldier.soldier_id}</td>
+                        <td>${soldier.full_names}</td>
+                        <td>${soldier.date_of_birth ? new Date(soldier.date_of_birth).toLocaleDateString() : 'N/A'}</td>
+                        <td>${soldier.gender}</td>
+                        <td>${soldier.rank_position}</td>
+                        <td>${soldier.date_of_enlistment ? new Date(soldier.date_of_enlistment).toLocaleDateString() : 'N/A'}</td>
+                        <td>${soldier.horin_platoon}</td>
+                        <td>${soldier.horin_commander || 'N/A'}</td>
+                        <td>${soldier.gun_number || 'N/A'}</td>
+                        <td>${soldier.net_salary ? '$' + parseFloat(soldier.net_salary).toFixed(2) : 'N/A'}</td>
+                        <td>${soldier.tel_number}</td>
+                        <td>${soldier.clan || 'N/A'}</td>
+                        <td>${soldier.guarantor_name}</td>
+                        <td>${soldier.guarantor_phone}</td>
+                        <td>${soldier.emergency_contact_name}</td>
+                        <td>${soldier.emergency_contact_phone}</td>
+                        <td>${soldier.blood_group || 'N/A'}</td>
+                        <td>${soldier.status}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // NEW: Filter table
+        function filterTable() {
+            const searchTerm = document.getElementById('tableSearchInput').value.toLowerCase();
+            const table = document.getElementById('soldiersDataTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let found = false;
+                
+                for (let j = 0; j < cells.length; j++) {
+                    const cellText = cells[j].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                rows[i].style.display = found ? '' : 'none';
+            }
+        }
+
+        // NEW: Clear table filter
+        function clearTableFilter() {
+            document.getElementById('tableSearchInput').value = '';
+            const rows = document.getElementById('soldiersDataTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].style.display = '';
+            }
+        }
+
+        // NEW: Export to Excel
+        function exportToExcel() {
+            const table = document.getElementById('soldiersDataTable');
+            const html = table.outerHTML;
+            const url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
+            const link = document.createElement('a');
+            link.download = 'soldiers_database.xls';
+            link.href = url;
+            link.click();
         }
 
         // Load payroll
