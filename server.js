@@ -308,7 +308,46 @@ app.delete('/api/soldiers/:id', async (req, res) => {
   }
 });
 
-// 8. Monthly payroll report
+// 8. NEW: Get soldiers data for Excel-like table view
+app.get('/api/soldiers-table', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        soldier_id,
+        full_names,
+        date_of_birth,
+        gender,
+        rank_position,
+        date_of_enlistment,
+        horin_platoon,
+        horin_commander,
+        gun_number,
+        net_salary,
+        tel_number,
+        clan,
+        guarantor_name,
+        guarantor_phone,
+        emergency_contact_name,
+        emergency_contact_phone,
+        blood_group,
+        status
+      FROM soldiersRepository 
+      ORDER BY soldier_id
+    `);
+    
+    res.json({
+      success: true,
+      soldiers: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// 9. Monthly payroll report
 app.get('/api/monthly-payroll', async (req, res) => {
   try {
     const { month, year } = req.query;
@@ -352,7 +391,7 @@ app.get('/api/monthly-payroll', async (req, res) => {
   }
 });
 
-// 9. Reset database (DANGEROUS - use with caution)
+// 10. Reset database (DANGEROUS - use with caution)
 app.get('/api/reset-database', async (req, res) => {
   try {
     // Drop and recreate table (WILL DELETE ALL DATA)
@@ -429,7 +468,8 @@ app.get('/api', (req, res) => {
         create: 'POST /api/soldiers',
         update: 'PUT /api/soldiers/:id',
         delete: 'DELETE /api/soldiers/:id',
-        search: 'GET /api/soldiers-search?query='
+        search: 'GET /api/soldiers-search?query=',
+        table: 'GET /api/soldiers-table (Excel-like format)'
       },
       verification: {
         manual: 'POST /api/manual-verification',
