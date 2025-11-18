@@ -370,32 +370,44 @@
             line-height: 1.4;
         }
 
-        /* Excel-like Table Styles */
+        /* Mobile Responsive Styles for Soldiers Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Excel-like Table Styles - UPDATED FOR MOBILE */
         .excel-table {
+            min-width: 1200px; /* Minimum width for table */
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
             background: white;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .excel-table th {
             background: #2c3e50;
             color: white;
-            padding: 10px 8px;
+            padding: 12px 8px;
             text-align: left;
             font-weight: bold;
             border: 1px solid #34495e;
             position: sticky;
-            top: 0;
-            z-index: 10;
+            left: 0;
+            white-space: nowrap;
         }
 
         .excel-table td {
-            padding: 8px;
+            padding: 10px 8px;
             border: 1px solid #bdc3c7;
             text-align: left;
             vertical-align: top;
+            white-space: nowrap;
         }
 
         .excel-table tr:nth-child(even) {
@@ -406,24 +418,167 @@
             background: #e8f4fd;
         }
 
-        .excel-table th:nth-child(1), .excel-table td:nth-child(1) { width: 80px; } /* Soldier_id */
-        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { width: 150px; } /* Full Names */
-        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { width: 100px; } /* Date_of_birth */
-        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { width: 70px; } /* Gender */
-        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { width: 100px; } /* Rank/Position */
-        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { width: 120px; } /* Date_of_Enlistment */
-        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { width: 100px; } /* Horin/Platoon */
-        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { width: 120px; } /* Horin Commander */
-        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { width: 80px; } /* Gun_number */
-        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { width: 80px; } /* Net_salary */
-        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { width: 100px; } /* Tel_number */
-        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { width: 80px; } /* Clan */
-        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { width: 120px; } /* Guarantor_name */
-        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { width: 100px; } /* Guarantor_phone */
-        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { width: 120px; } /* Emergency_contact_name */
-        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { width: 100px; } /* Emergency_contact_phone */
-        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { width: 70px; } /* Blood_group */
-        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { width: 80px; } /* Status */
+        /* Make first column sticky for better mobile navigation */
+        .excel-table th:first-child,
+        .excel-table td:first-child {
+            position: sticky;
+            left: 0;
+            background: #2c3e50;
+            color: white;
+            z-index: 2;
+        }
+
+        .excel-table td:first-child {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .excel-table tr:nth-child(even) td:first-child {
+            background: #f1f3f4;
+        }
+
+        .excel-table tr:hover td:first-child {
+            background: #e8f4fd;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .table-container {
+                margin: 10px 0;
+                border: 1px solid #bdc3c7;
+            }
+            
+            .excel-table {
+                font-size: 11px;
+                min-width: 1000px;
+            }
+            
+            .excel-table th,
+            .excel-table td {
+                padding: 8px 6px;
+            }
+            
+            /* Mobile table header */
+            .mobile-table-header {
+                background: #34495e;
+                color: white;
+                padding: 15px;
+                text-align: center;
+                font-weight: bold;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+            
+            /* Search section mobile optimization */
+            .search-section {
+                padding: 10px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .search-box .submit-btn {
+                width: 100%;
+                margin: 2px 0;
+            }
+
+            /* Main content layout for mobile */
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 15px;
+            }
+
+            /* Tabs for mobile */
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                padding: 12px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .excel-table {
+                font-size: 10px;
+                min-width: 900px;
+            }
+            
+            .excel-table th,
+            .excel-table td {
+                padding: 6px 4px;
+            }
+            
+            .table-container {
+                border-radius: 3px;
+            }
+
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+
+        /* Column widths for better mobile viewing */
+        .excel-table th:nth-child(1), .excel-table td:nth-child(1) { min-width: 80px; max-width: 80px; } /* Soldier_id */
+        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 120px; max-width: 120px; } /* Full Names */
+        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; } /* Date_of_birth */
+        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; } /* Gender */
+        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; } /* Rank/Position */
+        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; } /* Date_of_Enlistment */
+        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; } /* Horin/Platoon */
+        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; } /* Horin Commander */
+        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; } /* Gun_number */
+        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; } /* Net_salary */
+        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; } /* Tel_number */
+        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; } /* Clan */
+        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; } /* Guarantor_name */
+        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; } /* Guarantor_phone */
+        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; } /* Emergency_contact_name */
+        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; } /* Emergency_contact_phone */
+        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; } /* Blood_group */
+        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; } /* Status */
+
+        /* Mobile scroll indicator */
+        .table-container::after {
+            content: "← Scroll →";
+            display: block;
+            text-align: center;
+            padding: 8px;
+            background: #3498db;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @media (min-width: 769px) {
+            .table-container::after {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -770,7 +925,7 @@
             </div>
         </div>
 
-        <!-- NEW: Soldiers Table Tab -->
+        <!-- NEW: Soldiers Table Tab - MOBILE OPTIMIZED -->
         <div id="soldiers-table" class="content">
             <div class="search-section">
                 <h3>Soldiers Database Table</h3>
@@ -780,9 +935,15 @@
                     <button class="submit-btn btn-warning" onclick="clearTableFilter()">Clear</button>
                     <button class="submit-btn btn-success" onclick="exportToExcel()">Export to Excel</button>
                 </div>
+                <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px;">
+                    📱 <strong>Mobile Users:</strong> Scroll horizontally to view all columns
+                </div>
             </div>
             
-            <div style="overflow-x: auto; margin-top: 20px;">
+            <div class="table-container">
+                <div class="mobile-table-header">
+                    Soldiers Database - Scroll Horizontally →
+                </div>
                 <table id="soldiersDataTable" class="excel-table">
                     <thead>
                         <tr>
@@ -1335,6 +1496,7 @@
                 
                 if (result.success) {
                     displaySoldiersTable(result.soldiers);
+                    optimizeTableForMobile(); // Optimize after loading data
                 } else {
                     showMessage('soldiersTableBody', 'Error loading soldiers table: ' + result.error, 'error');
                 }
@@ -1424,6 +1586,28 @@
             link.href = url;
             link.click();
         }
+
+        // NEW: Mobile optimization for table
+        function optimizeTableForMobile() {
+            const tableContainer = document.querySelector('.table-container');
+            const table = document.getElementById('soldiersDataTable');
+            
+            if (!table || !tableContainer) return;
+            
+            // Add touch scrolling indicators
+            tableContainer.style.overflowX = 'auto';
+            tableContainer.style.WebkitOverflowScrolling = 'touch';
+            
+            // Add responsive class based on screen size
+            if (window.innerWidth <= 768) {
+                tableContainer.classList.add('mobile-view');
+            } else {
+                tableContainer.classList.remove('mobile-view');
+            }
+        }
+
+        // NEW: Update on resize
+        window.addEventListener('resize', optimizeTableForMobile);
 
         // Load payroll
         async function loadPayroll() {
@@ -1520,7 +1704,10 @@
         }
 
         // Run initialization when page loads
-        window.onload = initializeSystem;
+        window.onload = function() {
+            initializeSystem();
+            optimizeTableForMobile(); // Initialize mobile optimization
+        };
     </script>
 </body>
-</html>
+    </html>
