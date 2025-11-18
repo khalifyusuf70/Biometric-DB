@@ -370,7 +370,7 @@
             line-height: 1.4;
         }
 
-        /* Mobile Responsive Styles for Soldiers Table */
+        /* IMPROVED: Mobile Responsive Styles for Soldiers Table */
         .table-container {
             width: 100%;
             overflow-x: auto;
@@ -379,9 +379,10 @@
             border-radius: 5px;
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
         }
 
-        /* Excel-like Table Styles - UPDATED FOR MOBILE */
+        /* IMPROVED: Excel-like Table Styles with Better Soldier ID Visibility */
         .excel-table {
             min-width: 1200px; /* Minimum width for table */
             width: 100%;
@@ -398,8 +399,8 @@
             font-weight: bold;
             border: 1px solid #34495e;
             position: sticky;
-            left: 0;
-            white-space: nowrap;
+            top: 0;
+            z-index: 10;
         }
 
         .excel-table td {
@@ -418,27 +419,69 @@
             background: #e8f4fd;
         }
 
-        /* Make first column sticky for better mobile navigation */
-        .excel-table th:first-child,
-        .excel-table td:first-child {
+        /* IMPROVED: Make first TWO columns sticky for better mobile navigation */
+        .excel-table th:nth-child(1),
+        .excel-table th:nth-child(2),
+        .excel-table td:nth-child(1),
+        .excel-table td:nth-child(2) {
             position: sticky;
             left: 0;
+            z-index: 5;
+        }
+
+        /* Soldier ID Column - More Prominent */
+        .excel-table th:nth-child(1) {
+            background: #1a252f; /* Darker background for Soldier ID */
+            color: white;
+            border-right: 2px solid #34495e;
+            min-width: 100px !important;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .excel-table td:nth-child(1) {
+            background: #2c3e50; /* Dark background for Soldier ID */
+            color: white;
+            font-weight: bold;
+            border-right: 2px solid #34495e;
+            min-width: 100px !important;
+            font-size: 12px;
+        }
+
+        /* Full Names Column - Also Sticky */
+        .excel-table th:nth-child(2) {
             background: #2c3e50;
             color: white;
-            z-index: 2;
+            border-right: 2px solid #34495e;
+            left: 100px; /* Position after Soldier ID column */
+            min-width: 150px !important;
         }
 
-        .excel-table td:first-child {
-            background: #f8f9fa;
+        .excel-table td:nth-child(2) {
+            background: #ecf0f1;
             font-weight: bold;
+            border-right: 2px solid #bdc3c7;
+            left: 100px; /* Position after Soldier ID column */
+            min-width: 150px !important;
         }
 
-        .excel-table tr:nth-child(even) td:first-child {
-            background: #f1f3f4;
+        /* Ensure proper background colors for sticky columns on hover and even rows */
+        .excel-table tr:nth-child(even) td:nth-child(1) {
+            background: #2c3e50 !important; /* Keep dark for Soldier ID */
+            color: white;
         }
 
-        .excel-table tr:hover td:first-child {
-            background: #e8f4fd;
+        .excel-table tr:nth-child(even) td:nth-child(2) {
+            background: #dfe6e9 !important;
+        }
+
+        .excel-table tr:hover td:nth-child(1) {
+            background: #34495e !important; /* Slightly lighter on hover */
+            color: white;
+        }
+
+        .excel-table tr:hover td:nth-child(2) {
+            background: #d5dbdb !important;
         }
 
         /* Mobile-specific styles */
@@ -458,16 +501,31 @@
                 padding: 8px 6px;
             }
             
-            /* Mobile table header */
+            /* IMPROVED: Mobile table header */
             .mobile-table-header {
                 background: #34495e;
                 color: white;
-                padding: 15px;
+                padding: 12px 15px;
                 text-align: center;
                 font-weight: bold;
                 position: sticky;
                 top: 0;
-                z-index: 10;
+                z-index: 15;
+                font-size: 14px;
+                border-bottom: 2px solid #2c3e50;
+            }
+            
+            /* Soldier ID even more prominent on mobile */
+            .excel-table th:nth-child(1),
+            .excel-table td:nth-child(1) {
+                min-width: 90px !important;
+                font-size: 11px;
+            }
+
+            .excel-table th:nth-child(2),
+            .excel-table td:nth-child(2) {
+                left: 90px;
+                min-width: 130px !important;
             }
             
             /* Search section mobile optimization */
@@ -537,11 +595,22 @@
             .header h1 {
                 font-size: 20px;
             }
+
+            /* Even more compact Soldier ID on very small screens */
+            .excel-table th:nth-child(1),
+            .excel-table td:nth-child(1) {
+                min-width: 80px !important;
+                font-size: 10px;
+            }
+
+            .excel-table th:nth-child(2),
+            .excel-table td:nth-child(2) {
+                left: 80px;
+                min-width: 120px !important;
+            }
         }
 
         /* Column widths for better mobile viewing */
-        .excel-table th:nth-child(1), .excel-table td:nth-child(1) { min-width: 80px; max-width: 80px; } /* Soldier_id */
-        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 120px; max-width: 120px; } /* Full Names */
         .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; } /* Date_of_birth */
         .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; } /* Gender */
         .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; } /* Rank/Position */
@@ -559,25 +628,45 @@
         .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; } /* Blood_group */
         .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; } /* Status */
 
-        /* Mobile scroll indicator */
+        /* IMPROVED: Mobile scroll indicator */
         .table-container::after {
-            content: "← Scroll →";
+            content: "← Scroll to view all details →";
             display: block;
             text-align: center;
-            padding: 8px;
-            background: #3498db;
+            padding: 10px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             font-size: 12px;
             font-weight: bold;
             position: sticky;
             bottom: 0;
             width: 100%;
+            z-index: 10;
         }
 
         @media (min-width: 769px) {
             .table-container::after {
                 display: none;
             }
+            
+            .mobile-table-header {
+                display: none;
+            }
+        }
+
+        /* Visual indicator for sticky columns */
+        .sticky-column-indicator {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background: rgba(52, 152, 219, 0.1);
+            padding: 5px;
+            border-right: 2px solid #3498db;
+            font-size: 10px;
+            color: #3498db;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
         }
     </style>
 </head>
@@ -925,7 +1014,7 @@
             </div>
         </div>
 
-        <!-- NEW: Soldiers Table Tab - MOBILE OPTIMIZED -->
+        <!-- IMPROVED: Soldiers Table Tab - BETTER SOLDIER ID VISIBILITY -->
         <div id="soldiers-table" class="content">
             <div class="search-section">
                 <h3>Soldiers Database Table</h3>
@@ -936,13 +1025,13 @@
                     <button class="submit-btn btn-success" onclick="exportToExcel()">Export to Excel</button>
                 </div>
                 <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px;">
-                    📱 <strong>Mobile Users:</strong> Scroll horizontally to view all columns
+                    📱 <strong>Mobile Users:</strong> Soldier ID and Name stay visible while scrolling
                 </div>
             </div>
             
             <div class="table-container">
                 <div class="mobile-table-header">
-                    Soldiers Database - Scroll Horizontally →
+                    Soldiers Database - Soldier ID & Name Stay Visible ←
                 </div>
                 <table id="soldiersDataTable" class="excel-table">
                     <thead>
@@ -1710,4 +1799,4 @@
         };
     </script>
 </body>
-    </html>
+                                                                     </html>
