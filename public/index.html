@@ -384,7 +384,6 @@
 
         /* IMPROVED: Excel-like Table Styles with ONLY Soldier ID as Sticky */
         .excel-table {
-            min-width: 1200px; /* Minimum width for table */
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
@@ -466,12 +465,15 @@
             
             .excel-table {
                 font-size: 11px;
-                min-width: 1000px;
+                min-width: 100% !important; /* Changed from fixed width to 100% */
             }
             
             .excel-table th,
             .excel-table td {
                 padding: 8px 6px;
+                white-space: normal; /* Allow text wrapping */
+                min-width: auto !important; /* Remove fixed minimum widths */
+                max-width: none !important; /* Remove fixed maximum widths */
             }
             
             /* IMPROVED: Mobile table header */
@@ -529,12 +531,31 @@
             .tab {
                 padding: 12px 15px;
             }
+            
+            /* IMPROVED: Better column widths for mobile */
+            .excel-table th:nth-child(2), .excel-table td:nth-child(2) { width: 120px; } /* Full Names */
+            .excel-table th:nth-child(3), .excel-table td:nth-child(3) { width: 80px; } /* Date_of_birth */
+            .excel-table th:nth-child(4), .excel-table td:nth-child(4) { width: 60px; } /* Gender */
+            .excel-table th:nth-child(5), .excel-table td:nth-child(5) { width: 80px; } /* Rank/Position */
+            .excel-table th:nth-child(6), .excel-table td:nth-child(6) { width: 90px; } /* Date_of_Enlistment */
+            .excel-table th:nth-child(7), .excel-table td:nth-child(7) { width: 70px; } /* Horin/Platoon */
+            .excel-table th:nth-child(8), .excel-table td:nth-child(8) { width: 90px; } /* Horin Commander */
+            .excel-table th:nth-child(9), .excel-table td:nth-child(9) { width: 60px; } /* Gun_number */
+            .excel-table th:nth-child(10), .excel-table td:nth-child(10) { width: 60px; } /* Net_salary */
+            .excel-table th:nth-child(11), .excel-table td:nth-child(11) { width: 80px; } /* Tel_number */
+            .excel-table th:nth-child(12), .excel-table td:nth-child(12) { width: 60px; } /* Clan */
+            .excel-table th:nth-child(13), .excel-table td:nth-child(13) { width: 90px; } /* Guarantor_name */
+            .excel-table th:nth-child(14), .excel-table td:nth-child(14) { width: 80px; } /* Guarantor_phone */
+            .excel-table th:nth-child(15), .excel-table td:nth-child(15) { width: 90px; } /* Emergency_contact_name */
+            .excel-table th:nth-child(16), .excel-table td:nth-child(16) { width: 80px; } /* Emergency_contact_phone */
+            .excel-table th:nth-child(17), .excel-table td:nth-child(17) { width: 50px; } /* Blood_group */
+            .excel-table th:nth-child(18), .excel-table td:nth-child(18) { width: 60px; } /* Status */
         }
 
         @media (max-width: 480px) {
             .excel-table {
                 font-size: 10px;
-                min-width: 900px;
+                min-width: 100% !important; /* Changed from fixed width to 100% */
             }
             
             .excel-table th,
@@ -569,26 +590,26 @@
                 min-width: 80px !important;
                 font-size: 10px;
             }
+            
+            /* IMPROVED: Even more compact column widths for very small screens */
+            .excel-table th:nth-child(2), .excel-table td:nth-child(2) { width: 100px; } /* Full Names */
+            .excel-table th:nth-child(3), .excel-table td:nth-child(3) { width: 70px; } /* Date_of_birth */
+            .excel-table th:nth-child(4), .excel-table td:nth-child(4) { width: 50px; } /* Gender */
+            .excel-table th:nth-child(5), .excel-table td:nth-child(5) { width: 70px; } /* Rank/Position */
+            .excel-table th:nth-child(6), .excel-table td:nth-child(6) { width: 80px; } /* Date_of_Enlistment */
+            .excel-table th:nth-child(7), .excel-table td:nth-child(7) { width: 60px; } /* Horin/Platoon */
+            .excel-table th:nth-child(8), .excel-table td:nth-child(8) { width: 80px; } /* Horin Commander */
+            .excel-table th:nth-child(9), .excel-table td:nth-child(9) { width: 50px; } /* Gun_number */
+            .excel-table th:nth-child(10), .excel-table td:nth-child(10) { width: 50px; } /* Net_salary */
+            .excel-table th:nth-child(11), .excel-table td:nth-child(11) { width: 70px; } /* Tel_number */
+            .excel-table th:nth-child(12), .excel-table td:nth-child(12) { width: 50px; } /* Clan */
+            .excel-table th:nth-child(13), .excel-table td:nth-child(13) { width: 80px; } /* Guarantor_name */
+            .excel-table th:nth-child(14), .excel-table td:nth-child(14) { width: 70px; } /* Guarantor_phone */
+            .excel-table th:nth-child(15), .excel-table td:nth-child(15) { width: 80px; } /* Emergency_contact_name */
+            .excel-table th:nth-child(16), .excel-table td:nth-child(16) { width: 70px; } /* Emergency_contact_phone */
+            .excel-table th:nth-child(17), .excel-table td:nth-child(17) { width: 40px; } /* Blood_group */
+            .excel-table th:nth-child(18), .excel-table td:nth-child(18) { width: 50px; } /* Status */
         }
-
-        /* Column widths for better mobile viewing */
-        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; max-width: 150px; } /* Full Names */
-        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; } /* Date_of_birth */
-        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; } /* Gender */
-        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; } /* Rank/Position */
-        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; } /* Date_of_Enlistment */
-        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; } /* Horin/Platoon */
-        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; } /* Horin Commander */
-        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; } /* Gun_number */
-        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; } /* Net_salary */
-        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; } /* Tel_number */
-        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; } /* Clan */
-        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; } /* Guarantor_name */
-        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; } /* Guarantor_phone */
-        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; } /* Emergency_contact_name */
-        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; } /* Emergency_contact_phone */
-        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; } /* Blood_group */
-        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; } /* Status */
 
         /* IMPROVED: Mobile scroll indicator */
         .table-container::after {
@@ -614,6 +635,25 @@
             .mobile-table-header {
                 display: none;
             }
+            
+            /* Desktop column widths */
+            .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; } /* Full Names */
+            .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; } /* Date_of_birth */
+            .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; } /* Gender */
+            .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; } /* Rank/Position */
+            .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; } /* Date_of_Enlistment */
+            .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; } /* Horin/Platoon */
+            .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; } /* Horin Commander */
+            .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; } /* Gun_number */
+            .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; } /* Net_salary */
+            .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; } /* Tel_number */
+            .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; } /* Clan */
+            .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; } /* Guarantor_name */
+            .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; } /* Guarantor_phone */
+            .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; } /* Emergency_contact_name */
+            .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; } /* Emergency_contact_phone */
+            .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; } /* Blood_group */
+            .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; } /* Status */
         }
     </style>
 </head>
@@ -1746,4 +1786,4 @@
         };
     </script>
 </body>
-                                        </html>
+</html>
