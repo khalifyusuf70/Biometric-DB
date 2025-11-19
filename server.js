@@ -347,7 +347,7 @@ app.get('/api/soldiers-table', async (req, res) => {
   }
 });
 
-// 9. Monthly payroll report
+// 9. Monthly payroll report - KEPT for API compatibility but not used in frontend
 app.get('/api/monthly-payroll', async (req, res) => {
   try {
     const { month, year } = req.query;
