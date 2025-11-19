@@ -778,9 +778,10 @@
             </div>
         </div>
 
-        <!-- Tabs - REMOVED: View Soldiers and Monthly Payroll tabs -->
+        <!-- Tabs - ADDED: Search Soldiers tab -->
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
+            <button class="tab" onclick="showTab('search')">Search Soldiers</button>
             <button class="tab" onclick="showTab('soldiers-table')">Soldiers Table</button>
         </div>
 
@@ -945,7 +946,24 @@
             </form>
         </div>
 
-        <!-- REMOVED: View Soldiers Tab -->
+        <!-- NEW: Search Soldiers Tab -->
+        <div id="search" class="content">
+            <div class="search-section">
+                <h3>Search Soldiers Database</h3>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by Soldier ID, Name, Phone, Clan, or Rank...">
+                    <button class="submit-btn" onclick="searchSoldiers()">Search</button>
+                    <button class="submit-btn btn-warning" onclick="clearSearch()">Clear</button>
+                </div>
+                <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px;">
+                    🔍 Search by Soldier ID, Full Name, Phone Number, Clan, or Rank/Position
+                </div>
+            </div>
+            
+            <div id="searchResults">
+                <!-- Search results will be displayed here in the same format as previous "View Soldiers" -->
+            </div>
+        </div>
 
         <!-- IMPROVED: Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
         <div id="soldiers-table" class="content">
@@ -995,8 +1013,6 @@
                 </table>
             </div>
         </div>
-
-        <!-- REMOVED: Monthly Payroll Tab -->
     </div>
 
     <script>
@@ -1144,28 +1160,12 @@
             });
         }
 
-        // Load all soldiers
-        async function loadSoldiers() {
-            try {
-                const response = await fetch('/api/soldiers');
-                const result = await response.json();
-                
-                if (result.success) {
-                    displaySoldiers(result.soldiers);
-                } else {
-                    showMessage('soldiersList', 'Error loading soldiers: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showMessage('soldiersList', 'Network error: ' + error.message, 'error');
-            }
-        }
-
-        // Search soldiers
+        // NEW: Search soldiers function for the Search tab
         async function searchSoldiers() {
             const query = document.getElementById('searchInput').value.trim();
             
             if (!query) {
-                loadSoldiers();
+                showMessage('searchResults', 'Please enter a search term', 'error');
                 return;
             }
             
@@ -1174,31 +1174,31 @@
                 const result = await response.json();
                 
                 if (result.success) {
-                    displaySoldiers(result.soldiers);
+                    displaySearchResults(result.soldiers);
                 } else {
-                    showMessage('soldiersList', 'Error searching soldiers: ' + result.error, 'error');
+                    showMessage('searchResults', 'Error searching soldiers: ' + result.error, 'error');
                 }
             } catch (error) {
-                showMessage('soldiersList', 'Network error: ' + error.message, 'error');
+                showMessage('searchResults', 'Network error: ' + error.message, 'error');
             }
         }
 
-        // Clear search
+        // NEW: Clear search function for the Search tab
         function clearSearch() {
             document.getElementById('searchInput').value = '';
-            loadSoldiers();
+            document.getElementById('searchResults').innerHTML = '';
         }
 
-        // Display soldiers as compact tables matching the sample layout
-        function displaySoldiers(soldiers) {
-            const container = document.getElementById('soldiersList');
+        // NEW: Display search results in the same format as previous "View Soldiers"
+        function displaySearchResults(soldiers) {
+            const container = document.getElementById('searchResults');
             
             if (soldiers.length === 0) {
-                container.innerHTML = '<div class="alert info">No soldiers found</div>';
+                container.innerHTML = '<div class="alert info">No soldiers found matching your search criteria</div>';
                 return;
             }
             
-            let html = '';
+            let html = `<div class="alert success">Found ${soldiers.length} soldier(s) matching your search</div>`;
             
             soldiers.forEach(soldier => {
                 const photoSrc = soldier.photo ? soldier.photo : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDEyMCAxNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTQwIiBmaWxsPSIjRTVFNUU1Ii8+CjxwYXRoIGQ9Ik02MCA3MEM2OS4zODg4IDcwIDc3IDYyLjM4ODggNzcgNTNDNzcgNDMuNjExMiA2OS4zODg4IDM2IDYwIDM2QzUwLjYxMTIgMzYgNDMgNDMuNjExMiA0MyA1M0M0MyA2Mi4zODg4IDUwLjYxMTIgNzAgNjAgNzBaTTYwIDc4QzQ3Ljg1IDc4IDM4IDg0LjQ2IDM4IDkyVjEwMkg4MlY5MkM4MiA4NC40NiA3Mi4xNSA3OCA2MCA3OFoiIGZpbGw9IiM5OTkiLz4KPC9zdmc+Cg==';
@@ -1449,7 +1449,13 @@
                 if (result.success) {
                     showMessage('editFormMessage', 'Soldier updated successfully!', 'success');
                     closeEditModal();
-                    loadSoldiers(); // Refresh the list
+                    // Refresh both search results and table view
+                    if (document.getElementById('search').classList.contains('active')) {
+                        searchSoldiers();
+                    }
+                    if (document.getElementById('soldiers-table').classList.contains('active')) {
+                        loadSoldiersTable();
+                    }
                 } else {
                     showMessage('editFormMessage', 'Error: ' + result.error, 'error');
                 }
@@ -1473,7 +1479,13 @@
                 
                 if (result.success) {
                     alert('Soldier deleted successfully!');
-                    loadSoldiers(); // Refresh the list
+                    // Refresh both search results and table view
+                    if (document.getElementById('search').classList.contains('active')) {
+                        searchSoldiers();
+                    }
+                    if (document.getElementById('soldiers-table').classList.contains('active')) {
+                        loadSoldiersTable();
+                    }
                 } else {
                     alert('Error: ' + result.error);
                 }
@@ -1600,85 +1612,6 @@
             }
         }
 
-        // NEW: Update on resize
-        window.addEventListener('resize', optimizeTableForMobile);
-
-        // Load payroll
-        async function loadPayroll() {
-            const month = document.getElementById('monthSelect').value;
-            const year = document.getElementById('yearSelect').value;
-            
-            try {
-                const response = await fetch(`/api/monthly-payroll?month=${month}&year=${year}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayPayroll(result.report);
-                } else {
-                    document.getElementById('payrollReport').innerHTML = 
-                        '<div class="alert error">Error: ' + result.error + '</div>';
-                }
-            } catch (error) {
-                document.getElementById('payrollReport').innerHTML = 
-                    '<div class="alert error">Network error: ' + error.message + '</div>';
-            }
-        }
-
-        // Display payroll
-        function displayPayroll(report) {
-            const container = document.getElementById('payrollReport');
-            
-            let html = `
-                <div class="alert info">
-                    <strong>Payroll Report for ${getMonthName(report.month)} ${report.year}</strong><br>
-                    Total Soldiers: ${report.total_soldiers} | Total Salary: $${report.total_salary.toFixed(2)}
-                </div>
-            `;
-            
-            if (report.soldiers && report.soldiers.length > 0) {
-                html += `
-                    <table class="compact-soldier-table">
-                        <thead>
-                            <tr>
-                                <th>Soldier ID</th>
-                                <th>Full Names</th>
-                                <th>Rank</th>
-                                <th>Platoon</th>
-                                <th>Salary ($)</th>
-                                <th>Last Verified</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                report.soldiers.forEach(soldier => {
-                    html += `
-                        <tr>
-                            <td>${soldier.soldier_id}</td>
-                            <td>${soldier.full_names}</td>
-                            <td>${soldier.rank_position}</td>
-                            <td>${soldier.horin_platoon}</td>
-                            <td>${parseFloat(soldier.net_salary).toFixed(2)}</td>
-                            <td>${soldier.verified_at ? new Date(soldier.verified_at).toLocaleDateString() : 'Never'}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += '</tbody></table>';
-            } else {
-                html += '<div class="alert info">No verification records found for this period</div>';
-            }
-            
-            container.innerHTML = html;
-        }
-
-        // Helper function to get month name
-        function getMonthName(monthNumber) {
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                          'July', 'August', 'September', 'October', 'November', 'December'];
-            return months[monthNumber - 1];
-        }
-
         // Helper function to show messages
         function showMessage(elementId, message, type) {
             const element = document.getElementById(elementId);
@@ -1696,6 +1629,9 @@
                 console.error('Initialization error:', error);
             }
         }
+
+        // NEW: Update on resize
+        window.addEventListener('resize', optimizeTableForMobile);
 
         // Run initialization when page loads
         window.onload = function() {
