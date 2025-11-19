@@ -408,7 +408,9 @@
             border: 1px solid #bdc3c7;
             text-align: left;
             vertical-align: top;
-            white-space: nowrap;
+            white-space: normal; /* FIXED: Changed from nowrap to normal to prevent text overlap */
+            word-wrap: break-word;
+            line-height: 1.4;
         }
 
         .excel-table tr:nth-child(even) {
@@ -571,24 +573,24 @@
             }
         }
 
-        /* Column widths for better mobile viewing */
-        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; max-width: 150px; } /* Full Names */
-        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; } /* Date_of_birth */
-        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; } /* Gender */
-        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; } /* Rank/Position */
-        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; } /* Date_of_Enlistment */
-        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; } /* Horin/Platoon */
-        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; } /* Horin Commander */
-        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; } /* Gun_number */
-        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; } /* Net_salary */
-        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; } /* Tel_number */
-        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; } /* Clan */
-        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; } /* Guarantor_name */
-        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; } /* Guarantor_phone */
-        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; } /* Emergency_contact_name */
-        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; } /* Emergency_contact_phone */
-        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; } /* Blood_group */
-        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; } /* Status */
+        /* Column widths for better mobile viewing - FIXED: Added proper text wrapping */
+        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; max-width: 150px; white-space: normal; word-wrap: break-word; } /* Full Names */
+        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; white-space: normal; } /* Date_of_birth */
+        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; white-space: normal; } /* Gender */
+        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; white-space: normal; word-wrap: break-word; } /* Rank/Position */
+        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; white-space: normal; } /* Date_of_Enlistment */
+        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; white-space: normal; } /* Horin/Platoon */
+        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Horin Commander */
+        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; white-space: normal; } /* Gun_number */
+        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; white-space: normal; } /* Net_salary */
+        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; white-space: normal; } /* Tel_number */
+        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; white-space: normal; } /* Clan */
+        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Guarantor_name */
+        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; white-space: normal; } /* Guarantor_phone */
+        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Emergency_contact_name */
+        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; white-space: normal; } /* Emergency_contact_phone */
+        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; white-space: normal; } /* Blood_group */
+        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; white-space: normal; } /* Status */
 
         /* IMPROVED: Mobile scroll indicator */
         .table-container::after {
@@ -771,17 +773,15 @@
                 <img src="logo.png" alt="Jubaland Logo" class="logo">
                 <div class="header-text">
                     <h1>JUBALAND STATEHOUSE FORCES DATABASE MANAGEMENT SYSTEM</h1>
-                    <p>Military Personnel Management & Payroll System</p>
+                    <!-- REMOVED: "Military Personnel Management & Payroll System" -->
                 </div>
             </div>
         </div>
 
-        <!-- Tabs -->
+        <!-- Tabs - REMOVED: View Soldiers and Monthly Payroll tabs -->
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
-            <button class="tab" onclick="showTab('soldiers')">View Soldiers</button>
             <button class="tab" onclick="showTab('soldiers-table')">Soldiers Table</button>
-            <button class="tab" onclick="showTab('payroll')">Monthly Payroll</button>
         </div>
 
         <!-- Register Soldier Tab -->
@@ -945,21 +945,7 @@
             </form>
         </div>
 
-        <!-- View Soldiers Tab -->
-        <div id="soldiers" class="content">
-            <div class="search-section">
-                <h3>Search Soldiers</h3>
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search by Soldier ID or Name...">
-                    <button class="submit-btn" onclick="searchSoldiers()">Search</button>
-                    <button class="submit-btn btn-warning" onclick="clearSearch()">Clear</button>
-                </div>
-            </div>
-            
-            <div id="soldiersList">
-                <!-- Soldiers will be loaded here as compact tables -->
-            </div>
-        </div>
+        <!-- REMOVED: View Soldiers Tab -->
 
         <!-- IMPROVED: Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
         <div id="soldiers-table" class="content">
@@ -1010,33 +996,7 @@
             </div>
         </div>
 
-        <!-- Monthly Payroll Tab -->
-        <div id="payroll" class="content">
-            <h3>Monthly Payroll Report</h3>
-            <div style="margin: 20px 0;">
-                <label>Select Month: </label>
-                <select id="monthSelect">
-                    <option value="1">January</option>
-                    <option value="2">February</option>
-                    <option value="3">March</option>
-                    <option value="4">April</option>
-                    <option value="5">May</option>
-                    <option value="6">June</option>
-                    <option value="7">July</option>
-                    <option value="8">August</option>
-                    <option value="9">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-                <select id="yearSelect">
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                </select>
-                <button class="submit-btn" onclick="loadPayroll()">Generate Report</button>
-            </div>
-            <div id="payrollReport"></div>
-        </div>
+        <!-- REMOVED: Monthly Payroll Tab -->
     </div>
 
     <script>
@@ -1058,9 +1018,7 @@
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
             
-            if (tabName === 'soldiers') {
-                loadSoldiers();
-            } else if (tabName === 'soldiers-table') {
+            if (tabName === 'soldiers-table') {
                 loadSoldiersTable();
             }
         }
