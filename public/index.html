@@ -162,19 +162,19 @@
         .content { display: none; }
         .content.active { display: block; }
         
-        /* NEW: Compact Table Styles for Soldier Display */
+        /* IMPROVED: Mobile-responsive Compact Table Styles for Soldier Display */
         .compact-soldier-table {
             width: 100%;
-            border: 3px solid #2c3e50 !important; /* Bold border around entire table */
+            border: 3px solid #2c3e50 !important;
             border-collapse: collapse;
             margin: 15px 0;
-            font-size: 12px; /* Smaller font size */
+            font-size: 12px;
             background: white;
         }
         
         .compact-soldier-table th,
         .compact-soldier-table td {
-            border: 1px solid #bdc3c7 !important; /* Individual cell borders */
+            border: 1px solid #bdc3c7 !important;
             padding: 8px 10px;
             text-align: left;
             vertical-align: top;
@@ -269,7 +269,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            max-width: 700px; /* Increased to accommodate larger photos */
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -292,7 +292,7 @@
             color: #7f8c8d;
         }
 
-        /* Soldier Card Styles */
+        /* Soldier Card Styles - IMPROVED FOR MOBILE */
         .soldier-card {
             background: white;
             border: 2px solid #e1e8ed;
@@ -345,7 +345,7 @@
 
         /* UPDATED: 100% Larger photo preview in edit modal */
         .modal-photo-preview {
-            width: 300px; /* 100% larger preview in modal */
+            width: 300px;
             height: 360px;
             background: white;
             border: 1px solid #bdc3c7;
@@ -384,7 +384,7 @@
 
         /* IMPROVED: Excel-like Table Styles with ONLY Soldier ID as Sticky */
         .excel-table {
-            min-width: 1200px; /* Minimum width for table */
+            min-width: 1200px;
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
@@ -408,7 +408,7 @@
             border: 1px solid #bdc3c7;
             text-align: left;
             vertical-align: top;
-            white-space: normal; /* FIXED: Changed from nowrap to normal to prevent text overlap */
+            white-space: normal;
             word-wrap: break-word;
             line-height: 1.4;
         }
@@ -431,7 +431,7 @@
 
         /* Soldier ID Column - More Prominent */
         .excel-table th:nth-child(1) {
-            background: #1a252f; /* Darker background for Soldier ID */
+            background: #1a252f;
             color: white;
             border-right: 2px solid #34495e;
             min-width: 100px !important;
@@ -440,7 +440,7 @@
         }
 
         .excel-table td:nth-child(1) {
-            background: #2c3e50; /* Dark background for Soldier ID */
+            background: #2c3e50;
             color: white;
             font-weight: bold;
             border-right: 2px solid #34495e;
@@ -450,13 +450,38 @@
 
         /* Ensure proper background colors for sticky Soldier ID on hover and even rows */
         .excel-table tr:nth-child(even) td:nth-child(1) {
-            background: #2c3e50 !important; /* Keep dark for Soldier ID */
+            background: #2c3e50 !important;
             color: white;
         }
 
         .excel-table tr:hover td:nth-child(1) {
-            background: #34495e !important; /* Slightly lighter on hover */
+            background: #34495e !important;
             color: white;
+        }
+
+        /* NEW: Mobile-responsive soldier details - Stacked layout for small screens */
+        .mobile-soldier-details {
+            display: none;
+        }
+
+        .soldier-detail-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .soldier-detail-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .soldier-detail-value {
+            color: #34495e;
+            font-size: 14px;
         }
 
         /* Mobile-specific styles */
@@ -531,6 +556,48 @@
             .tab {
                 padding: 12px 15px;
             }
+
+            /* IMPROVED: Soldier card mobile optimization */
+            .soldier-card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .soldier-id, .soldier-name {
+                font-size: 16px;
+            }
+
+            /* Hide table on mobile and show stacked layout */
+            .compact-soldier-table {
+                display: none;
+            }
+
+            .mobile-soldier-details {
+                display: block;
+            }
+
+            /* Photo section mobile optimization */
+            .compact-soldier-photo {
+                width: 100px;
+                height: 120px;
+            }
+
+            .photo-fingerprint-section {
+                padding: 15px;
+            }
+
+            /* Soldier actions mobile optimization */
+            .soldier-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .action-btn {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -571,26 +638,44 @@
                 min-width: 80px !important;
                 font-size: 10px;
             }
+
+            /* Further mobile optimization for soldier cards */
+            .soldier-card-content {
+                padding: 15px;
+            }
+
+            .soldier-detail-label {
+                font-size: 11px;
+            }
+
+            .soldier-detail-value {
+                font-size: 13px;
+            }
+
+            .compact-soldier-photo {
+                width: 80px;
+                height: 100px;
+            }
         }
 
-        /* Column widths for better mobile viewing - FIXED: Added proper text wrapping */
-        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; max-width: 150px; white-space: normal; word-wrap: break-word; } /* Full Names */
-        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; white-space: normal; } /* Date_of_birth */
-        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; white-space: normal; } /* Gender */
-        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; white-space: normal; word-wrap: break-word; } /* Rank/Position */
-        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; white-space: normal; } /* Date_of_Enlistment */
-        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; white-space: normal; } /* Horin/Platoon */
-        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Horin Commander */
-        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; white-space: normal; } /* Gun_number */
-        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; white-space: normal; } /* Net_salary */
-        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; white-space: normal; } /* Tel_number */
-        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; white-space: normal; } /* Clan */
-        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Guarantor_name */
-        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; white-space: normal; } /* Guarantor_phone */
-        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; } /* Emergency_contact_name */
-        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; white-space: normal; } /* Emergency_contact_phone */
-        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; white-space: normal; } /* Blood_group */
-        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; white-space: normal; } /* Status */
+        /* Column widths for better mobile viewing */
+        .excel-table th:nth-child(2), .excel-table td:nth-child(2) { min-width: 150px; max-width: 150px; white-space: normal; word-wrap: break-word; }
+        .excel-table th:nth-child(3), .excel-table td:nth-child(3) { min-width: 90px; max-width: 90px; white-space: normal; }
+        .excel-table th:nth-child(4), .excel-table td:nth-child(4) { min-width: 60px; max-width: 60px; white-space: normal; }
+        .excel-table th:nth-child(5), .excel-table td:nth-child(5) { min-width: 90px; max-width: 90px; white-space: normal; word-wrap: break-word; }
+        .excel-table th:nth-child(6), .excel-table td:nth-child(6) { min-width: 100px; max-width: 100px; white-space: normal; }
+        .excel-table th:nth-child(7), .excel-table td:nth-child(7) { min-width: 80px; max-width: 80px; white-space: normal; }
+        .excel-table th:nth-child(8), .excel-table td:nth-child(8) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; }
+        .excel-table th:nth-child(9), .excel-table td:nth-child(9) { min-width: 70px; max-width: 70px; white-space: normal; }
+        .excel-table th:nth-child(10), .excel-table td:nth-child(10) { min-width: 70px; max-width: 70px; white-space: normal; }
+        .excel-table th:nth-child(11), .excel-table td:nth-child(11) { min-width: 90px; max-width: 90px; white-space: normal; }
+        .excel-table th:nth-child(12), .excel-table td:nth-child(12) { min-width: 70px; max-width: 70px; white-space: normal; }
+        .excel-table th:nth-child(13), .excel-table td:nth-child(13) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; }
+        .excel-table th:nth-child(14), .excel-table td:nth-child(14) { min-width: 90px; max-width: 90px; white-space: normal; }
+        .excel-table th:nth-child(15), .excel-table td:nth-child(15) { min-width: 100px; max-width: 100px; white-space: normal; word-wrap: break-word; }
+        .excel-table th:nth-child(16), .excel-table td:nth-child(16) { min-width: 90px; max-width: 90px; white-space: normal; }
+        .excel-table th:nth-child(17), .excel-table td:nth-child(17) { min-width: 60px; max-width: 60px; white-space: normal; }
+        .excel-table th:nth-child(18), .excel-table td:nth-child(18) { min-width: 70px; max-width: 70px; white-space: normal; }
 
         /* IMPROVED: Mobile scroll indicator */
         .table-container::after {
@@ -1045,12 +1130,12 @@
             const salaryField = document.getElementById('net_salary');
             
             const salaries = {
-                'Askari': 200,          // Changed from 300 to 200
-                'Taliye Unug': 250,     // Changed from 350 to 250
-                'Taliye Koox': 300,     // Changed from 400 to 300
-                'Taliye Horin': 350,    // Changed from 500 to 350
-                'Abandule': 450,        // Changed from 600 to 450
-                'Taliye Guuto': 500     // Changed from 700 to 500
+                'Askari': 200,
+                'Taliye Unug': 250,
+                'Taliye Koox': 300,
+                'Taliye Horin': 350,
+                'Abandule': 450,
+                'Taliye Guuto': 500
             };
             
             salaryField.value = salaries[rank] || '';
@@ -1062,14 +1147,14 @@
             const commanderField = document.getElementById('horin_commander');
             
             const commanders = {
-                'Horin1': 'Cabdi Yusuf Awowe',        // Updated commander
-                'Horin2': 'Moge Xusen Guhad',         // Updated commander
-                'Horin3': 'Maxamed Cabdullahi Maxamed', // Updated commander
-                'Horin4': 'Hareri Kulow Keynan',      // Updated commander
-                'Horin5': 'Maxamed Adan Xashi',       // Updated commander
-                'Horin6': 'Maxamed Axmed Rashid',     // Updated commander
-                'Taliska': 'Gowracdiid',              // Updated commander
-                'Fiat': 'Xiis Cabdi Cali'             // Updated commander
+                'Horin1': 'Cabdi Yusuf Awowe',
+                'Horin2': 'Moge Xusen Guhad',
+                'Horin3': 'Maxamed Cabdullahi Maxamed',
+                'Horin4': 'Hareri Kulow Keynan',
+                'Horin5': 'Maxamed Adan Xashi',
+                'Horin6': 'Maxamed Axmed Rashid',
+                'Taliska': 'Gowracdiid',
+                'Fiat': 'Xiis Cabdi Cali'
             };
             
             commanderField.value = commanders[platoon] || '';
@@ -1189,7 +1274,7 @@
             document.getElementById('searchResults').innerHTML = '';
         }
 
-        // NEW: Display search results in the same format as previous "View Soldiers"
+        // NEW: Display search results with improved mobile responsiveness
         function displaySearchResults(soldiers) {
             const container = document.getElementById('searchResults');
             
@@ -1211,6 +1296,7 @@
                             <div class="soldier-name">${soldier.full_names}</div>
                         </div>
                         <div class="soldier-card-content">
+                            <!-- Desktop Table View -->
                             <table class="compact-soldier-table">
                                 <tr>
                                     <th>Soldier_ID</th>
@@ -1277,6 +1363,92 @@
                                     </td>
                                 </tr>
                             </table>
+                            
+                            <!-- Mobile Stacked View -->
+                            <div class="mobile-soldier-details">
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Soldier ID</div>
+                                    <div class="soldier-detail-value">${soldier.soldier_id}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Full Names</div>
+                                    <div class="soldier-detail-value">${soldier.full_names}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Date of Birth</div>
+                                    <div class="soldier-detail-value">${new Date(soldier.date_of_birth).toLocaleDateString()}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Gender</div>
+                                    <div class="soldier-detail-value">${soldier.gender}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Rank/Position</div>
+                                    <div class="soldier-detail-value">${soldier.rank_position}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Date of Enlistment</div>
+                                    <div class="soldier-detail-value">${new Date(soldier.date_of_enlistment).toLocaleDateString()}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Horin/Platoon</div>
+                                    <div class="soldier-detail-value">${soldier.horin_platoon}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Horin Commander</div>
+                                    <div class="soldier-detail-value">${soldier.horin_commander || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Net Salary</div>
+                                    <div class="soldier-detail-value">$${soldier.net_salary}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Tel Number</div>
+                                    <div class="soldier-detail-value">${soldier.tel_number}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Clan</div>
+                                    <div class="soldier-detail-value">${soldier.clan || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Guarantor Name</div>
+                                    <div class="soldier-detail-value">${soldier.guarantor_name}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Guarantor Phone</div>
+                                    <div class="soldier-detail-value">${soldier.guarantor_phone}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Emergency Contact Name</div>
+                                    <div class="soldier-detail-value">${soldier.emergency_contact_name}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Emergency Contact Phone</div>
+                                    <div class="soldier-detail-value">${soldier.emergency_contact_phone}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Home Address</div>
+                                    <div class="soldier-detail-value">${soldier.home_address || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Blood Group</div>
+                                    <div class="soldier-detail-value">${soldier.blood_group || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Status</div>
+                                    <div class="soldier-detail-value">${soldier.status}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Gun Number</div>
+                                    <div class="soldier-detail-value">${soldier.gun_number || 'N/A'}</div>
+                                </div>
+                                <div class="photo-fingerprint-section">
+                                    <img src="${photoSrc}" alt="Soldier Photo" class="compact-soldier-photo">
+                                    <div class="fingerprint-indicator">
+                                        Fingerprint: ${fingerprintStatus}
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="soldier-actions">
                                 <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
@@ -1368,12 +1540,12 @@
             const salaryField = document.getElementById('editNetSalary');
             
             const salaries = {
-                'Askari': 200,          // Changed from 300 to 200
-                'Taliye Unug': 250,     // Changed from 350 to 250
-                'Taliye Koox': 300,     // Changed from 400 to 300
-                'Taliye Horin': 350,    // Changed from 500 to 350
-                'Abandule': 450,        // Changed from 600 to 450
-                'Taliye Guuto': 500     // Changed from 700 to 500
+                'Askari': 200,
+                'Taliye Unug': 250,
+                'Taliye Koox': 300,
+                'Taliye Horin': 350,
+                'Abandule': 450,
+                'Taliye Guuto': 500
             };
             
             salaryField.value = salaries[rank] || '';
@@ -1385,14 +1557,14 @@
             const commanderField = document.getElementById('editHorinCommander');
             
             const commanders = {
-                'Horin1': 'Cabdi Yusuf Awowe',        // Updated commander
-                'Horin2': 'Moge Xusen Guhad',         // Updated commander
-                'Horin3': 'Maxamed Cabdullahi Maxamed', // Updated commander
-                'Horin4': 'Hareri Kulow Keynan',      // Updated commander
-                'Horin5': 'Maxamed Adan Xashi',       // Updated commander
-                'Horin6': 'Maxamed Axmed Rashid',     // Updated commander
-                'Taliska': 'Gowracdiid',              // Updated commander
-                'Fiat': 'Xiis Cabdi Cali'             // Updated commander
+                'Horin1': 'Cabdi Yusuf Awowe',
+                'Horin2': 'Moge Xusen Guhad',
+                'Horin3': 'Maxamed Cabdullahi Maxamed',
+                'Horin4': 'Hareri Kulow Keynan',
+                'Horin5': 'Maxamed Adan Xashi',
+                'Horin6': 'Maxamed Axmed Rashid',
+                'Taliska': 'Gowracdiid',
+                'Fiat': 'Xiis Cabdi Cali'
             };
             
             commanderField.value = commanders[platoon] || '';
@@ -1502,7 +1674,7 @@
                 
                 if (result.success) {
                     displaySoldiersTable(result.soldiers);
-                    optimizeTableForMobile(); // Optimize after loading data
+                    optimizeTableForMobile();
                 } else {
                     showMessage('soldiersTableBody', 'Error loading soldiers table: ' + result.error, 'error');
                 }
@@ -1636,7 +1808,7 @@
         // Run initialization when page loads
         window.onload = function() {
             initializeSystem();
-            optimizeTableForMobile(); // Initialize mobile optimization
+            optimizeTableForMobile();
         };
     </script>
 </body>
