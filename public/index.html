@@ -484,52 +484,31 @@
             font-size: 14px;
         }
 
-        /* Summary Report Table Styles */
-        .summary-table {
-            min-width: auto !important;
-            width: 100% !important;
+        /* Summary Report Card Styles - Matching Search Soldiers */
+        .summary-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-
-        .summary-table th,
-        .summary-table td {
-            text-align: center !important;
-            padding: 15px 10px !important;
-            font-size: 14px !important;
+        
+        .summary-card-header {
+            background: #34495e;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
         }
-
-        .summary-table th {
-            background: #2c3e50 !important;
-            color: white !important;
-            font-weight: bold !important;
-            font-size: 14px !important;
+        
+        .summary-card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
         }
-
-        .summary-table td {
-            background: #f8f9fa !important;
-            color: #2c3e50 !important;
-            font-weight: normal !important;
-        }
-
-        .summary-table tr:nth-child(even) td {
-            background: #e8f4fd !important;
-        }
-
-        .summary-table tr:hover td {
-            background: #d1ecf1 !important;
-        }
-
-        /* Remove sticky columns for summary table */
-        .summary-table th:nth-child(1),
-        .summary-table td:nth-child(1),
-        .summary-table th:nth-child(2),
-        .summary-table td:nth-child(2),
-        .summary-table th:nth-child(3),
-        .summary-table td:nth-child(3),
-        .summary-table th:nth-child(4),
-        .summary-table td:nth-child(4) {
-            position: static !important;
-            min-width: auto !important;
-            max-width: none !important;
+        
+        .summary-card-content {
+            padding: 20px;
         }
 
         /* Mobile-specific styles */
@@ -647,11 +626,9 @@
                 font-size: 14px;
             }
 
-            /* Mobile responsive for summary table */
-            .summary-table th,
-            .summary-table td {
-                padding: 12px 8px !important;
-                font-size: 12px !important;
+            /* Summary card mobile optimization */
+            .summary-card-content {
+                padding: 15px;
             }
         }
 
@@ -1155,7 +1132,7 @@
             </div>
         </div>
 
-        <!-- NEW: Summary Report Tab -->
+        <!-- NEW: Summary Report Tab - Matching Search Soldiers Style -->
         <div id="summary-report" class="content">
             <div class="search-section">
                 <h3>Forces Summary Report</h3>
@@ -1169,7 +1146,7 @@
             </div>
             
             <div id="summaryReportContent">
-                <!-- Summary report will be loaded here -->
+                <!-- Summary report will be loaded here in the same format as Search Soldiers -->
             </div>
         </div>
     </div>
@@ -1863,80 +1840,73 @@
             }
         }
 
-        // NEW: Display summary report
+        // NEW: Display summary report in the same format as Search Soldiers
         function displaySummaryReport(summary) {
             const container = document.getElementById('summaryReportContent');
             
             let html = `
-                <div class="table-container">
-                    <div class="mobile-table-header">
-                        Forces Summary Report
+                <div class="alert success">
+                    <strong>Summary Report Generated:</strong> ${summary.total_soldiers} active soldiers with total monthly salary of $${summary.total_net_salary.toFixed(2)}
+                </div>
+            `;
+            
+            // Create a summary card that matches the Search Soldiers style
+            html += `
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <div class="summary-card-title">FORCES SUMMARY OVERVIEW</div>
                     </div>
-                    <table class="excel-table summary-table">
-                        <thead>
+                    <div class="summary-card-content">
+                        <table class="compact-soldier-table">
                             <tr>
-                                <th>Category</th>
-                                <th>Count</th>
-                                <th>Category</th>
-                                <th>Count</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Total Number of Soldiers Horin 1</strong></td>
+                                <th>Total Number of Soldiers Horin 1</th>
                                 <td>${summary.horin1}</td>
-                                <td><strong>Total Number of Askari</strong></td>
-                                <td>${summary.askari}</td>
+                                <th>Total Number of Soldiers Horin 2</th>
+                                <td>${summary.horin2}</td>
                             </tr>
                             <tr>
-                                <td><strong>Total Number of Soldiers Horin 2</strong></td>
-                                <td>${summary.horin2}</td>
-                                <td><strong>Total Number of Taliye Unug</strong></td>
+                                <th>Total Number of Soldiers Horin 3</th>
+                                <td>${summary.horin3}</td>
+                                <th>Total Number of Soldiers Horin 4</th>
+                                <td>${summary.horin4}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers Horin 5</th>
+                                <td>${summary.horin5}</td>
+                                <th>Total Number of Soldiers Horin 6</th>
+                                <td>${summary.horin6}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers Taliska</th>
+                                <td>${summary.taliska}</td>
+                                <th>Total Number of Soldiers Fiat</th>
+                                <td>${summary.fiat}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Askari</th>
+                                <td>${summary.askari}</td>
+                                <th>Total Number of Taliye Unug</th>
                                 <td>${summary.taliye_unug}</td>
                             </tr>
                             <tr>
-                                <td><strong>Total Number of Soldiers Horin 3</strong></td>
-                                <td>${summary.horin3}</td>
-                                <td><strong>Total Number of Taliye Koox</strong></td>
+                                <th>Total Number of Taliye Koox</th>
                                 <td>${summary.taliye_koox}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Total Number of Soldiers Horin 4</strong></td>
-                                <td>${summary.horin4}</td>
-                                <td><strong>Total Number of Taliye Horin</strong></td>
+                                <th>Total Number of Taliye Horin</th>
                                 <td>${summary.taliye_horin}</td>
                             </tr>
                             <tr>
-                                <td><strong>Total Number of Soldiers Horin 5</strong></td>
-                                <td>${summary.horin5}</td>
-                                <td><strong>Total Number of Abandule</strong></td>
+                                <th>Total Number of Abandule</th>
                                 <td>${summary.abandule}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Total Number of Soldiers Horin 6</strong></td>
-                                <td>${summary.horin6}</td>
-                                <td><strong>Total Number of Taliye Guuto</strong></td>
+                                <th>Total Number of Taliye Guuto</th>
                                 <td>${summary.taliye_guuto}</td>
                             </tr>
                             <tr>
-                                <td><strong>Total Number of Soldiers Taliska</strong></td>
-                                <td>${summary.taliska}</td>
-                                <td><strong>Total Number of Soldiers</strong></td>
-                                <td>${summary.total_soldiers}</td>
+                                <th>Total Number of Soldiers</th>
+                                <td><strong>${summary.total_soldiers}</strong></td>
+                                <th>Total Net Salary</th>
+                                <td><strong>$${summary.total_net_salary.toFixed(2)}</strong></td>
                             </tr>
-                            <tr>
-                                <td><strong>Total Number of Soldiers Fiat</strong></td>
-                                <td>${summary.fiat}</td>
-                                <td><strong>Total Net Salary</strong></td>
-                                <td>$${summary.total_net_salary.toFixed(2)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div style="margin-top: 20px; text-align: center;">
-                    <div class="alert info">
-                        <strong>Report Summary:</strong> ${summary.total_soldiers} active soldiers with total monthly salary of $${summary.total_net_salary.toFixed(2)}
+                        </table>
                     </div>
                 </div>
             `;
@@ -1946,11 +1916,68 @@
 
         // NEW: Export summary to Excel
         function exportSummaryToExcel() {
-            const table = document.querySelector('.summary-table');
-            if (!table) {
-                alert('Please load the summary report first');
-                return;
-            }
+            // Create a temporary table for export
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 1</td>
+                        <td>${document.querySelector('.summary-card td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 2</td>
+                        <td>${document.querySelector('.summary-card td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 3</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(2) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 4</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(2) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 5</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(3) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 6</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(3) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Taliska</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(4) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Fiat</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(4) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Askari</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(5) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Unug</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(5) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Taliye Koox</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(6) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Horin</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(6) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Abandule</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(7) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Guuto</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(7) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(8) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Net Salary</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(8) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                </tbody>
+            `;
             
             const html = table.outerHTML;
             const url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
