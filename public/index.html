@@ -484,6 +484,54 @@
             font-size: 14px;
         }
 
+        /* Summary Report Table Styles */
+        .summary-table {
+            min-width: auto !important;
+            width: 100% !important;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            text-align: center !important;
+            padding: 15px 10px !important;
+            font-size: 14px !important;
+        }
+
+        .summary-table th {
+            background: #2c3e50 !important;
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+        }
+
+        .summary-table td {
+            background: #f8f9fa !important;
+            color: #2c3e50 !important;
+            font-weight: normal !important;
+        }
+
+        .summary-table tr:nth-child(even) td {
+            background: #e8f4fd !important;
+        }
+
+        .summary-table tr:hover td {
+            background: #d1ecf1 !important;
+        }
+
+        /* Remove sticky columns for summary table */
+        .summary-table th:nth-child(1),
+        .summary-table td:nth-child(1),
+        .summary-table th:nth-child(2),
+        .summary-table td:nth-child(2),
+        .summary-table th:nth-child(3),
+        .summary-table td:nth-child(3),
+        .summary-table th:nth-child(4),
+        .summary-table td:nth-child(4) {
+            position: static !important;
+            min-width: auto !important;
+            max-width: none !important;
+        }
+
         /* Mobile-specific styles */
         @media (max-width: 768px) {
             .table-container {
@@ -597,6 +645,13 @@
                 width: 100%;
                 padding: 10px;
                 font-size: 14px;
+            }
+
+            /* Mobile responsive for summary table */
+            .summary-table th,
+            .summary-table td {
+                padding: 12px 8px !important;
+                font-size: 12px !important;
             }
         }
 
@@ -863,11 +918,12 @@
             </div>
         </div>
 
-        <!-- Tabs - ADDED: Search Soldiers tab -->
+        <!-- Tabs - ADDED: Summary Report tab -->
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('search')">Search Soldiers</button>
             <button class="tab" onclick="showTab('soldiers-table')">Soldiers Table</button>
+            <button class="tab" onclick="showTab('summary-report')">Summary Report</button>
         </div>
 
         <!-- Register Soldier Tab -->
@@ -1031,7 +1087,7 @@
             </form>
         </div>
 
-        <!-- NEW: Search Soldiers Tab -->
+        <!-- Search Soldiers Tab -->
         <div id="search" class="content">
             <div class="search-section">
                 <h3>Search Soldiers Database</h3>
@@ -1050,7 +1106,7 @@
             </div>
         </div>
 
-        <!-- IMPROVED: Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
+        <!-- Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
         <div id="soldiers-table" class="content">
             <div class="search-section">
                 <h3>Soldiers Database Table</h3>
@@ -1098,6 +1154,24 @@
                 </table>
             </div>
         </div>
+
+        <!-- NEW: Summary Report Tab -->
+        <div id="summary-report" class="content">
+            <div class="search-section">
+                <h3>Forces Summary Report</h3>
+                <div class="search-box">
+                    <button class="submit-btn" onclick="loadSummaryReport()">Refresh Report</button>
+                    <button class="submit-btn btn-success" onclick="exportSummaryToExcel()">Export to Excel</button>
+                </div>
+                <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px;">
+                    📊 Overview of all registered soldiers with statistics
+                </div>
+            </div>
+            
+            <div id="summaryReportContent">
+                <!-- Summary report will be loaded here -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1121,6 +1195,8 @@
             
             if (tabName === 'soldiers-table') {
                 loadSoldiersTable();
+            } else if (tabName === 'summary-report') {
+                loadSummaryReport();
             }
         }
 
@@ -1245,7 +1321,7 @@
             });
         }
 
-        // NEW: Search soldiers function for the Search tab
+        // Search soldiers function for the Search tab
         async function searchSoldiers() {
             const query = document.getElementById('searchInput').value.trim();
             
@@ -1268,13 +1344,13 @@
             }
         }
 
-        // NEW: Clear search function for the Search tab
+        // Clear search function for the Search tab
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('searchResults').innerHTML = '';
         }
 
-        // NEW: Display search results with improved mobile responsiveness
+        // Display search results with improved mobile responsiveness
         function displaySearchResults(soldiers) {
             const container = document.getElementById('searchResults');
             
@@ -1628,6 +1704,9 @@
                     if (document.getElementById('soldiers-table').classList.contains('active')) {
                         loadSoldiersTable();
                     }
+                    if (document.getElementById('summary-report').classList.contains('active')) {
+                        loadSummaryReport();
+                    }
                 } else {
                     showMessage('editFormMessage', 'Error: ' + result.error, 'error');
                 }
@@ -1658,6 +1737,9 @@
                     if (document.getElementById('soldiers-table').classList.contains('active')) {
                         loadSoldiersTable();
                     }
+                    if (document.getElementById('summary-report').classList.contains('active')) {
+                        loadSummaryReport();
+                    }
                 } else {
                     alert('Error: ' + result.error);
                 }
@@ -1666,7 +1748,7 @@
             }
         }
 
-        // NEW: Load soldiers table data
+        // Load soldiers table data
         async function loadSoldiersTable() {
             try {
                 const response = await fetch('/api/soldiers-table');
@@ -1683,7 +1765,7 @@
             }
         }
 
-        // NEW: Display soldiers in Excel-like table format
+        // Display soldiers in Excel-like table format
         function displaySoldiersTable(soldiers) {
             const tbody = document.getElementById('soldiersTableBody');
             
@@ -1722,7 +1804,7 @@
             tbody.innerHTML = html;
         }
 
-        // NEW: Filter table
+        // Filter table
         function filterTable() {
             const searchTerm = document.getElementById('tableSearchInput').value.toLowerCase();
             const table = document.getElementById('soldiersDataTable');
@@ -1744,7 +1826,7 @@
             }
         }
 
-        // NEW: Clear table filter
+        // Clear table filter
         function clearTableFilter() {
             document.getElementById('tableSearchInput').value = '';
             const rows = document.getElementById('soldiersDataTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -1754,7 +1836,7 @@
             }
         }
 
-        // NEW: Export to Excel
+        // Export to Excel
         function exportToExcel() {
             const table = document.getElementById('soldiersDataTable');
             const html = table.outerHTML;
@@ -1765,7 +1847,120 @@
             link.click();
         }
 
-        // NEW: Mobile optimization for table
+        // NEW: Load summary report
+        async function loadSummaryReport() {
+            try {
+                const response = await fetch('/api/summary-report');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySummaryReport(result.summary);
+                } else {
+                    showMessage('summaryReportContent', 'Error loading summary report: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('summaryReportContent', 'Network error: ' + error.message, 'error');
+            }
+        }
+
+        // NEW: Display summary report
+        function displaySummaryReport(summary) {
+            const container = document.getElementById('summaryReportContent');
+            
+            let html = `
+                <div class="table-container">
+                    <div class="mobile-table-header">
+                        Forces Summary Report
+                    </div>
+                    <table class="excel-table summary-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Count</th>
+                                <th>Category</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 1</strong></td>
+                                <td>${summary.horin1}</td>
+                                <td><strong>Total Number of Askari</strong></td>
+                                <td>${summary.askari}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 2</strong></td>
+                                <td>${summary.horin2}</td>
+                                <td><strong>Total Number of Taliye Unug</strong></td>
+                                <td>${summary.taliye_unug}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 3</strong></td>
+                                <td>${summary.horin3}</td>
+                                <td><strong>Total Number of Taliye Koox</strong></td>
+                                <td>${summary.taliye_koox}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 4</strong></td>
+                                <td>${summary.horin4}</td>
+                                <td><strong>Total Number of Taliye Horin</strong></td>
+                                <td>${summary.taliye_horin}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 5</strong></td>
+                                <td>${summary.horin5}</td>
+                                <td><strong>Total Number of Abandule</strong></td>
+                                <td>${summary.abandule}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Horin 6</strong></td>
+                                <td>${summary.horin6}</td>
+                                <td><strong>Total Number of Taliye Guuto</strong></td>
+                                <td>${summary.taliye_guuto}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Taliska</strong></td>
+                                <td>${summary.taliska}</td>
+                                <td><strong>Total Number of Soldiers</strong></td>
+                                <td>${summary.total_soldiers}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Number of Soldiers Fiat</strong></td>
+                                <td>${summary.fiat}</td>
+                                <td><strong>Total Net Salary</strong></td>
+                                <td>$${summary.total_net_salary.toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <div class="alert info">
+                        <strong>Report Summary:</strong> ${summary.total_soldiers} active soldiers with total monthly salary of $${summary.total_net_salary.toFixed(2)}
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // NEW: Export summary to Excel
+        function exportSummaryToExcel() {
+            const table = document.querySelector('.summary-table');
+            if (!table) {
+                alert('Please load the summary report first');
+                return;
+            }
+            
+            const html = table.outerHTML;
+            const url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
+            const link = document.createElement('a');
+            link.download = 'forces_summary_report.xls';
+            link.href = url;
+            link.click();
+        }
+
+        // Mobile optimization for table
         function optimizeTableForMobile() {
             const tableContainer = document.querySelector('.table-container');
             const table = document.getElementById('soldiersDataTable');
@@ -1802,7 +1997,7 @@
             }
         }
 
-        // NEW: Update on resize
+        // Update on resize
         window.addEventListener('resize', optimizeTableForMobile);
 
         // Run initialization when page loads
