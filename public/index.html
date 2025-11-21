@@ -162,19 +162,19 @@
         .content { display: none; }
         .content.active { display: block; }
         
-        /* NEW: Compact Table Styles for Soldier Display - IMPROVED FOR MOBILE */
+        /* IMPROVED: Mobile-responsive Compact Table Styles for Soldier Display */
         .compact-soldier-table {
             width: 100%;
-            border: 3px solid #2c3e50 !important; /* Bold border around entire table */
+            border: 3px solid #2c3e50 !important;
             border-collapse: collapse;
             margin: 15px 0;
-            font-size: 12px; /* Smaller font size */
+            font-size: 12px;
             background: white;
         }
         
         .compact-soldier-table th,
         .compact-soldier-table td {
-            border: 1px solid #bdc3c7 !important; /* Individual cell borders */
+            border: 1px solid #bdc3c7 !important;
             padding: 8px 10px;
             text-align: left;
             vertical-align: top;
@@ -269,7 +269,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            max-width: 700px; /* Increased to accommodate larger photos */
+            max-width: 700px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
@@ -292,7 +292,7 @@
             color: #7f8c8d;
         }
 
-        /* Soldier Card Styles */
+        /* Soldier Card Styles - IMPROVED FOR MOBILE */
         .soldier-card {
             background: white;
             border: 2px solid #e1e8ed;
@@ -345,7 +345,7 @@
 
         /* UPDATED: 100% Larger photo preview in edit modal */
         .modal-photo-preview {
-            width: 300px; /* 100% larger preview in modal */
+            width: 300px;
             height: 360px;
             background: white;
             border: 1px solid #bdc3c7;
@@ -384,7 +384,7 @@
 
         /* IMPROVED: Excel-like Table Styles with ONLY Soldier ID as Sticky */
         .excel-table {
-            min-width: 1200px; /* Minimum width for table */
+            min-width: 1200px;
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
@@ -408,7 +408,7 @@
             border: 1px solid #bdc3c7;
             text-align: left;
             vertical-align: top;
-            white-space: normal; /* FIXED: Changed from nowrap to normal to prevent text overlap */
+            white-space: normal;
             word-wrap: break-word;
             line-height: 1.4;
         }
@@ -431,7 +431,7 @@
 
         /* Soldier ID Column - More Prominent */
         .excel-table th:nth-child(1) {
-            background: #1a252f; /* Darker background for Soldier ID */
+            background: #1a252f;
             color: white;
             border-right: 2px solid #34495e;
             min-width: 100px !important;
@@ -440,7 +440,7 @@
         }
 
         .excel-table td:nth-child(1) {
-            background: #2c3e50; /* Dark background for Soldier ID */
+            background: #2c3e50;
             color: white;
             font-weight: bold;
             border-right: 2px solid #34495e;
@@ -450,13 +450,65 @@
 
         /* Ensure proper background colors for sticky Soldier ID on hover and even rows */
         .excel-table tr:nth-child(even) td:nth-child(1) {
-            background: #2c3e50 !important; /* Keep dark for Soldier ID */
+            background: #2c3e50 !important;
             color: white;
         }
 
         .excel-table tr:hover td:nth-child(1) {
-            background: #34495e !important; /* Slightly lighter on hover */
+            background: #34495e !important;
             color: white;
+        }
+
+        /* NEW: Mobile-responsive soldier details - Stacked layout for small screens */
+        .mobile-soldier-details {
+            display: none;
+        }
+
+        .soldier-detail-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .soldier-detail-label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .soldier-detail-value {
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        /* Summary Report Card Styles - Matching Search Soldiers */
+        .summary-card {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .summary-card-header {
+            background: #34495e;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .summary-card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .summary-card-content {
+            padding: 20px;
         }
 
         /* Mobile-specific styles */
@@ -532,7 +584,7 @@
                 padding: 12px 15px;
             }
 
-            /* IMPROVED: Soldier card mobile optimization - KEEPING TABLE FORMAT */
+            /* IMPROVED: Soldier card mobile optimization */
             .soldier-card-header {
                 flex-direction: column;
                 text-align: center;
@@ -543,40 +595,40 @@
                 font-size: 16px;
             }
 
-            /* Ensure compact table is properly displayed on mobile */
+            /* Hide table on mobile and show stacked layout */
             .compact-soldier-table {
-                display: table;
-                width: 100%;
-                font-size: 10px;
+                display: none;
             }
 
-            .compact-soldier-table th,
-            .compact-soldier-table td {
-                padding: 6px 4px;
-                font-size: 9px;
-                word-break: break-word;
+            .mobile-soldier-details {
+                display: block;
             }
 
             /* Photo section mobile optimization */
             .compact-soldier-photo {
-                width: 80px;
-                height: 100px;
+                width: 100px;
+                height: 120px;
             }
 
             .photo-fingerprint-section {
-                padding: 8px;
+                padding: 15px;
             }
 
             /* Soldier actions mobile optimization */
             .soldier-actions {
-                flex-direction: row;
+                flex-direction: column;
                 gap: 5px;
             }
 
             .action-btn {
-                padding: 8px 12px;
-                font-size: 11px;
-                flex: 1;
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            /* Summary card mobile optimization */
+            .summary-card-content {
+                padding: 15px;
             }
         }
 
@@ -621,22 +673,20 @@
 
             /* Further mobile optimization for soldier cards */
             .soldier-card-content {
-                padding: 10px;
+                padding: 15px;
             }
 
-            .compact-soldier-table {
-                font-size: 9px;
+            .soldier-detail-label {
+                font-size: 11px;
             }
 
-            .compact-soldier-table th,
-            .compact-soldier-table td {
-                padding: 4px 3px;
-                font-size: 8px;
+            .soldier-detail-value {
+                font-size: 13px;
             }
 
             .compact-soldier-photo {
-                width: 60px;
-                height: 80px;
+                width: 80px;
+                height: 100px;
             }
         }
 
@@ -845,11 +895,12 @@
             </div>
         </div>
 
-        <!-- Tabs - ADDED: Search Soldiers tab -->
+        <!-- Tabs - ADDED: Summary Report tab -->
         <div class="tabs">
             <button class="tab active" onclick="showTab('register')">Register Soldier</button>
             <button class="tab" onclick="showTab('search')">Search Soldiers</button>
             <button class="tab" onclick="showTab('soldiers-table')">Soldiers Table</button>
+            <button class="tab" onclick="showTab('summary-report')">Summary Report</button>
         </div>
 
         <!-- Register Soldier Tab -->
@@ -1013,7 +1064,7 @@
             </form>
         </div>
 
-        <!-- NEW: Search Soldiers Tab -->
+        <!-- Search Soldiers Tab -->
         <div id="search" class="content">
             <div class="search-section">
                 <h3>Search Soldiers Database</h3>
@@ -1032,7 +1083,7 @@
             </div>
         </div>
 
-        <!-- IMPROVED: Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
+        <!-- Soldiers Table Tab - ONLY SOLDIER ID STATIC -->
         <div id="soldiers-table" class="content">
             <div class="search-section">
                 <h3>Soldiers Database Table</h3>
@@ -1080,6 +1131,24 @@
                 </table>
             </div>
         </div>
+
+        <!-- NEW: Summary Report Tab - Matching Search Soldiers Style -->
+        <div id="summary-report" class="content">
+            <div class="search-section">
+                <h3>Forces Summary Report</h3>
+                <div class="search-box">
+                    <button class="submit-btn" onclick="loadSummaryReport()">Refresh Report</button>
+                    <button class="submit-btn btn-success" onclick="exportSummaryToExcel()">Export to Excel</button>
+                </div>
+                <div style="font-size: 12px; color: #7f8c8d; margin-top: 8px;">
+                    📊 Overview of all registered soldiers with statistics
+                </div>
+            </div>
+            
+            <div id="summaryReportContent">
+                <!-- Summary report will be loaded here in the same format as Search Soldiers -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1103,6 +1172,8 @@
             
             if (tabName === 'soldiers-table') {
                 loadSoldiersTable();
+            } else if (tabName === 'summary-report') {
+                loadSummaryReport();
             }
         }
 
@@ -1227,7 +1298,7 @@
             });
         }
 
-        // NEW: Search soldiers function for the Search tab
+        // Search soldiers function for the Search tab
         async function searchSoldiers() {
             const query = document.getElementById('searchInput').value.trim();
             
@@ -1250,13 +1321,13 @@
             }
         }
 
-        // NEW: Clear search function for the Search tab
+        // Clear search function for the Search tab
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('searchResults').innerHTML = '';
         }
 
-        // NEW: Display search results in the same format as previous "View Soldiers"
+        // Display search results with improved mobile responsiveness
         function displaySearchResults(soldiers) {
             const container = document.getElementById('searchResults');
             
@@ -1278,6 +1349,7 @@
                             <div class="soldier-name">${soldier.full_names}</div>
                         </div>
                         <div class="soldier-card-content">
+                            <!-- Desktop Table View -->
                             <table class="compact-soldier-table">
                                 <tr>
                                     <th>Soldier_ID</th>
@@ -1344,6 +1416,92 @@
                                     </td>
                                 </tr>
                             </table>
+                            
+                            <!-- Mobile Stacked View -->
+                            <div class="mobile-soldier-details">
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Soldier ID</div>
+                                    <div class="soldier-detail-value">${soldier.soldier_id}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Full Names</div>
+                                    <div class="soldier-detail-value">${soldier.full_names}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Date of Birth</div>
+                                    <div class="soldier-detail-value">${new Date(soldier.date_of_birth).toLocaleDateString()}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Gender</div>
+                                    <div class="soldier-detail-value">${soldier.gender}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Rank/Position</div>
+                                    <div class="soldier-detail-value">${soldier.rank_position}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Date of Enlistment</div>
+                                    <div class="soldier-detail-value">${new Date(soldier.date_of_enlistment).toLocaleDateString()}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Horin/Platoon</div>
+                                    <div class="soldier-detail-value">${soldier.horin_platoon}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Horin Commander</div>
+                                    <div class="soldier-detail-value">${soldier.horin_commander || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Net Salary</div>
+                                    <div class="soldier-detail-value">$${soldier.net_salary}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Tel Number</div>
+                                    <div class="soldier-detail-value">${soldier.tel_number}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Clan</div>
+                                    <div class="soldier-detail-value">${soldier.clan || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Guarantor Name</div>
+                                    <div class="soldier-detail-value">${soldier.guarantor_name}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Guarantor Phone</div>
+                                    <div class="soldier-detail-value">${soldier.guarantor_phone}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Emergency Contact Name</div>
+                                    <div class="soldier-detail-value">${soldier.emergency_contact_name}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Emergency Contact Phone</div>
+                                    <div class="soldier-detail-value">${soldier.emergency_contact_phone}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Home Address</div>
+                                    <div class="soldier-detail-value">${soldier.home_address || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Blood Group</div>
+                                    <div class="soldier-detail-value">${soldier.blood_group || 'N/A'}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Status</div>
+                                    <div class="soldier-detail-value">${soldier.status}</div>
+                                </div>
+                                <div class="soldier-detail-row">
+                                    <div class="soldier-detail-label">Gun Number</div>
+                                    <div class="soldier-detail-value">${soldier.gun_number || 'N/A'}</div>
+                                </div>
+                                <div class="photo-fingerprint-section">
+                                    <img src="${photoSrc}" alt="Soldier Photo" class="compact-soldier-photo">
+                                    <div class="fingerprint-indicator">
+                                        Fingerprint: ${fingerprintStatus}
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="soldier-actions">
                                 <button class="action-btn btn-warning" onclick="editSoldier('${soldier.soldier_id}')">Edit</button>
@@ -1523,6 +1681,9 @@
                     if (document.getElementById('soldiers-table').classList.contains('active')) {
                         loadSoldiersTable();
                     }
+                    if (document.getElementById('summary-report').classList.contains('active')) {
+                        loadSummaryReport();
+                    }
                 } else {
                     showMessage('editFormMessage', 'Error: ' + result.error, 'error');
                 }
@@ -1553,6 +1714,9 @@
                     if (document.getElementById('soldiers-table').classList.contains('active')) {
                         loadSoldiersTable();
                     }
+                    if (document.getElementById('summary-report').classList.contains('active')) {
+                        loadSummaryReport();
+                    }
                 } else {
                     alert('Error: ' + result.error);
                 }
@@ -1561,7 +1725,7 @@
             }
         }
 
-        // NEW: Load soldiers table data
+        // Load soldiers table data
         async function loadSoldiersTable() {
             try {
                 const response = await fetch('/api/soldiers-table');
@@ -1578,7 +1742,7 @@
             }
         }
 
-        // NEW: Display soldiers in Excel-like table format
+        // Display soldiers in Excel-like table format
         function displaySoldiersTable(soldiers) {
             const tbody = document.getElementById('soldiersTableBody');
             
@@ -1617,7 +1781,7 @@
             tbody.innerHTML = html;
         }
 
-        // NEW: Filter table
+        // Filter table
         function filterTable() {
             const searchTerm = document.getElementById('tableSearchInput').value.toLowerCase();
             const table = document.getElementById('soldiersDataTable');
@@ -1639,7 +1803,7 @@
             }
         }
 
-        // NEW: Clear table filter
+        // Clear table filter
         function clearTableFilter() {
             document.getElementById('tableSearchInput').value = '';
             const rows = document.getElementById('soldiersDataTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -1649,7 +1813,7 @@
             }
         }
 
-        // NEW: Export to Excel
+        // Export to Excel
         function exportToExcel() {
             const table = document.getElementById('soldiersDataTable');
             const html = table.outerHTML;
@@ -1660,7 +1824,170 @@
             link.click();
         }
 
-        // NEW: Mobile optimization for table
+        // NEW: Load summary report
+        async function loadSummaryReport() {
+            try {
+                const response = await fetch('/api/summary-report');
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySummaryReport(result.summary);
+                } else {
+                    showMessage('summaryReportContent', 'Error loading summary report: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('summaryReportContent', 'Network error: ' + error.message, 'error');
+            }
+        }
+
+        // NEW: Display summary report in the same format as Search Soldiers
+        function displaySummaryReport(summary) {
+            const container = document.getElementById('summaryReportContent');
+            
+            let html = `
+                <div class="alert success">
+                    <strong>Summary Report Generated:</strong> ${summary.total_soldiers} active soldiers with total monthly salary of $${summary.total_net_salary.toFixed(2)}
+                </div>
+            `;
+            
+            // Create a summary card that matches the Search Soldiers style
+            html += `
+                <div class="summary-card">
+                    <div class="summary-card-header">
+                        <div class="summary-card-title">FORCES SUMMARY OVERVIEW</div>
+                    </div>
+                    <div class="summary-card-content">
+                        <table class="compact-soldier-table">
+                            <tr>
+                                <th>Total Number of Soldiers Horin 1</th>
+                                <td>${summary.horin1}</td>
+                                <th>Total Number of Soldiers Horin 2</th>
+                                <td>${summary.horin2}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers Horin 3</th>
+                                <td>${summary.horin3}</td>
+                                <th>Total Number of Soldiers Horin 4</th>
+                                <td>${summary.horin4}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers Horin 5</th>
+                                <td>${summary.horin5}</td>
+                                <th>Total Number of Soldiers Horin 6</th>
+                                <td>${summary.horin6}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers Taliska</th>
+                                <td>${summary.taliska}</td>
+                                <th>Total Number of Soldiers Fiat</th>
+                                <td>${summary.fiat}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Askari</th>
+                                <td>${summary.askari}</td>
+                                <th>Total Number of Taliye Unug</th>
+                                <td>${summary.taliye_unug}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Taliye Koox</th>
+                                <td>${summary.taliye_koox}</td>
+                                <th>Total Number of Taliye Horin</th>
+                                <td>${summary.taliye_horin}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Abandule</th>
+                                <td>${summary.abandule}</td>
+                                <th>Total Number of Taliye Guuto</th>
+                                <td>${summary.taliye_guuto}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Number of Soldiers</th>
+                                <td><strong>${summary.total_soldiers}</strong></td>
+                                <th>Total Net Salary</th>
+                                <td><strong>$${summary.total_net_salary.toFixed(2)}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // NEW: Export summary to Excel
+        function exportSummaryToExcel() {
+            // Create a temporary table for export
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Count</th>
+                        <th>Category</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 1</td>
+                        <td>${document.querySelector('.summary-card td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 2</td>
+                        <td>${document.querySelector('.summary-card td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 3</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(2) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 4</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(2) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Horin 5</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(3) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Horin 6</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(3) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers Taliska</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(4) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Soldiers Fiat</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(4) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Askari</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(5) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Unug</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(5) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Taliye Koox</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(6) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Horin</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(6) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Abandule</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(7) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Number of Taliye Guuto</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(7) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Number of Soldiers</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(8) td:nth-child(2)')?.textContent || '0'}</td>
+                        <td>Total Net Salary</td>
+                        <td>${document.querySelector('.summary-card tr:nth-child(8) td:nth-child(4)')?.textContent || '0'}</td>
+                    </tr>
+                </tbody>
+            `;
+            
+            const html = table.outerHTML;
+            const url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
+            const link = document.createElement('a');
+            link.download = 'forces_summary_report.xls';
+            link.href = url;
+            link.click();
+        }
+
+        // Mobile optimization for table
         function optimizeTableForMobile() {
             const tableContainer = document.querySelector('.table-container');
             const table = document.getElementById('soldiersDataTable');
@@ -1697,7 +2024,7 @@
             }
         }
 
-        // NEW: Update on resize
+        // Update on resize
         window.addEventListener('resize', optimizeTableForMobile);
 
         // Run initialization when page loads
