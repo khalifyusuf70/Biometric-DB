@@ -1,3 +1,4 @@
+
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
@@ -308,7 +309,7 @@ app.delete('/api/soldiers/:id', async (req, res) => {
   }
 });
 
-// 8. NEW: Get soldiers data for Excel-like table view
+// 8. Get soldiers data for Excel-like table view
 app.get('/api/soldiers-table', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -347,7 +348,90 @@ app.get('/api/soldiers-table', async (req, res) => {
   }
 });
 
-// 9. Monthly payroll report - KEPT for API compatibility but not used in frontend
+// 9. NEW: Get summary report data
+app.get('/api/summary-report', async (req, res) => {
+  try {
+    // Get counts by Horin/Platoon
+    const horinCounts = await pool.query(`
+      SELECT 
+        horin_platoon,
+        COUNT(*) as count
+      FROM soldiersRepository 
+      WHERE status = 'Active'
+      GROUP BY horin_platoon
+      ORDER BY horin_platoon
+    `);
+
+    // Get counts by Rank/Position
+    const rankCounts = await pool.query(`
+      SELECT 
+        rank_position,
+        COUNT(*) as count
+      FROM soldiersRepository 
+      WHERE status = 'Active'
+      GROUP BY rank_position
+      ORDER BY rank_position
+    `);
+
+    // Get total soldiers and total salary
+    const totals = await pool.query(`
+      SELECT 
+        COUNT(*) as total_soldiers,
+        COALESCE(SUM(net_salary), 0) as total_net_salary
+      FROM soldiersRepository 
+      WHERE status = 'Active'
+    `);
+
+    // Format the data according to the summary report structure
+    const summaryData = {
+      // Initialize all counts to 0
+      horin1: 0,
+      horin2: 0,
+      horin3: 0,
+      horin4: 0,
+      horin5: 0,
+      horin6: 0,
+      taliska: 0,
+      fiat: 0,
+      askari: 0,
+      taliye_unug: 0,
+      taliye_koox: 0,
+      taliye_horin: 0,
+      abandule: 0,
+      taliye_guuto: 0,
+      total_soldiers: totals.rows[0].total_soldiers,
+      total_net_salary: parseFloat(totals.rows[0].total_net_salary) || 0
+    };
+
+    // Populate Horin counts
+    horinCounts.rows.forEach(row => {
+      const key = row.horin_platoon.toLowerCase();
+      if (summaryData.hasOwnProperty(key)) {
+        summaryData[key] = parseInt(row.count);
+      }
+    });
+
+    // Populate Rank counts
+    rankCounts.rows.forEach(row => {
+      const key = row.rank_position.toLowerCase().replace(/ /g, '_');
+      if (summaryData.hasOwnProperty(key)) {
+        summaryData[key] = parseInt(row.count);
+      }
+    });
+
+    res.json({
+      success: true,
+      summary: summaryData
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// 10. Monthly payroll report - KEPT for API compatibility but not used in frontend
 app.get('/api/monthly-payroll', async (req, res) => {
   try {
     const { month, year } = req.query;
@@ -391,7 +475,7 @@ app.get('/api/monthly-payroll', async (req, res) => {
   }
 });
 
-// 10. Reset database (DANGEROUS - use with caution)
+// 11. Reset database (DANGEROUS - use with caution)
 app.get('/api/reset-database', async (req, res) => {
   try {
     // Drop and recreate table (WILL DELETE ALL DATA)
@@ -469,7 +553,8 @@ app.get('/api', (req, res) => {
         update: 'PUT /api/soldiers/:id',
         delete: 'DELETE /api/soldiers/:id',
         search: 'GET /api/soldiers-search?query=',
-        table: 'GET /api/soldiers-table (Excel-like format)'
+        table: 'GET /api/soldiers-table (Excel-like format)',
+        summary: 'GET /api/summary-report (Overview statistics)'
       },
       verification: {
         manual: 'POST /api/manual-verification',
